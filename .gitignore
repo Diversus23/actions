@@ -1,3 +1,4 @@
+*.ospx
 .env
 build_info.txt
 .DS_Store
