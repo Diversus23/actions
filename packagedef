@@ -30,5 +30,5 @@
 
 	.ВключитьФайл("README.md")
 
-	.ИсполняемыйФайл("src/main.os", "cicd-runner")
-	.ИсполняемыйФайл("src/main.os", "cicd")
+	.ИсполняемыйФайл("src/cicd.os", "cicd-runner")
+	.ИсполняемыйФайл("src/cicd.os", "cicd")
