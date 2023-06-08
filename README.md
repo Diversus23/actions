@@ -77,7 +77,7 @@ before_script:
 - [ ] SetURLS
 - [ ] SendNews
 - [X] **obfuscation** Obfuscate
-- [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк.
+  - [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк в обфусированном файле.
 - [X] **checkconfig** CheckConfig
 - [ ] FindFilesAndCopy
 - [ ] WriteFileAsErrorInConsole
@@ -93,8 +93,8 @@ before_script:
 - [ ] CheckVanessaErrors
 - [ ] TaskKill
 - [ ] RunVanessaAutomation
-- [ ] FileCheckSum
-- [ ] FolderCheckSum
+- [X] **checksum** FileCheckSum
+- [X] **checksum** FolderCheckSum
 - [ ] ConfigVersionFromEdtSrc
 - [ ] StartDebugFile
 - [ ] StartCoverage41C
