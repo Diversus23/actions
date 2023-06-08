@@ -49,63 +49,63 @@ before_script:
 
 ## ToDo
 
-1. [ ] DumpConfigToFiles
-1. [ ] DumpIB
-1. [ ] DumpIBWithoutLock
-1. [ ] RestoreIB
-1. [ ] RestoreIBWithoutLock
-1. [ ] Lock
-1. [ ] Unlock
-1. [ ] Terminate
-1. [ ] ClearOldFiles
-1. [ ] TestUpdate
-1. [ ] CopyFTP
-1. [ ] DownloadFTP
-1. [ ] BuildDistribRepo
-1. [ ] SaveLastConfigUpdateText
-1. [ ] ConfigurationRepositoryUpdateCfg
-1. [ ] LoadConfigFromFiles
-1. [ ] LoadExtensionFromFiles
-1. [ ] SaveExtensionInFile
-1. [ ] GitLoad
-1. [ ] EdtProjectExportToConfigFiles
-1. [ ] CreateInfoBase
-1. [ ] DeleteInfoBase
-1. [ ] BuildDistrib
-1. [ ] Save1cv8_mft
-1. [ ] SaveInstall_edf
-1. [ ] SetURLS
-1. [ ] SendNews
-1. [X] Obfuscate
-1.1. [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк.
-1. [X] CheckConfig
-1. [ ] FindFilesAndCopy
-1. [ ] WriteFileAsErrorInConsole
-1. [ ] UpdateIB
-1. [ ] GetImageForMailing
-1. [ ] MakeMailing
-1. [ ] MakeUpdatesXmlZip
-1. [ ] CreateZip
-1. [ ] BuildDistribEpfErf
-1. [ ] ConvertChangeLog
-1. [ ] GetVideoPreviewFromMarkDown
-1. [ ] MakeMailingFiles
-1. [ ] CheckVanessaErrors
-1. [ ] TaskKill
-1. [ ] RunVanessaAutomation
-1. [ ] FileCheckSum
-1. [ ] FolderCheckSum
-1. [ ] ConfigVersionFromEdtSrc
-1. [ ] StartDebugFile
-1. [ ] StartCoverage41C
-1. [ ] StopCoverage41C
-1. [ ] CreateSettingsFileVanessaAutomation
-1. [ ] MergeLogsVanessaAutomation
-1. [ ] MergeCoverage41CFiles
-1. [ ] CreateMaileTemplate
-1. [ ] SendMailOnApiSendSay
-1. [ ] DumpExternalDataProcessorOrReportToFiles
-1. [ ] VanessaAutomationTest
+- [ ] DumpConfigToFiles
+- [ ] DumpIB
+- [ ] DumpIBWithoutLock
+- [ ] RestoreIB
+- [ ] RestoreIBWithoutLock
+- [ ] Lock
+- [ ] Unlock
+- [ ] Terminate
+- [ ] ClearOldFiles
+- [ ] TestUpdate
+- [ ] CopyFTP
+- [ ] DownloadFTP
+- [ ] BuildDistribRepo
+- [ ] SaveLastConfigUpdateText
+- [ ] ConfigurationRepositoryUpdateCfg
+- [ ] LoadConfigFromFiles
+- [ ] LoadExtensionFromFiles
+- [ ] SaveExtensionInFile
+- [ ] GitLoad
+- [ ] EdtProjectExportToConfigFiles
+- [ ] CreateInfoBase
+- [ ] DeleteInfoBase
+- [ ] BuildDistrib
+- [ ] Save1cv8_mft
+- [ ] SaveInstall_edf
+- [ ] SetURLS
+- [ ] SendNews
+- [X] **obfuscation** Obfuscate
+- [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк.
+- [X] **checkconfig** CheckConfig
+- [ ] FindFilesAndCopy
+- [ ] WriteFileAsErrorInConsole
+- [ ] UpdateIB
+- [ ] GetImageForMailing
+- [ ] MakeMailing
+- [ ] MakeUpdatesXmlZip
+- [X] **zip** и **unzip** CreateZip
+- [ ] BuildDistribEpfErf
+- [ ] ConvertChangeLog
+- [ ] GetVideoPreviewFromMarkDown
+- [ ] MakeMailingFiles
+- [ ] CheckVanessaErrors
+- [ ] TaskKill
+- [ ] RunVanessaAutomation
+- [ ] FileCheckSum
+- [ ] FolderCheckSum
+- [ ] ConfigVersionFromEdtSrc
+- [ ] StartDebugFile
+- [ ] StartCoverage41C
+- [ ] StopCoverage41C
+- [ ] CreateSettingsFileVanessaAutomation
+- [ ] MergeLogsVanessaAutomation
+- [ ] MergeCoverage41CFiles
+- [ ] CreateMaileTemplate
+- [ ] SendMailOnApiSendSay
+- [ ] DumpExternalDataProcessorOrReportToFiles
+- [ ] VanessaAutomationTest
 
 ## Описание команд
 
