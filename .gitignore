@@ -6,3 +6,4 @@ out/
 oscript_modules/
 *.ospx
 tests.xml
+coverage/
