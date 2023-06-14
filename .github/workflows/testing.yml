@@ -30,7 +30,8 @@ jobs:
           opm install 1testrunner
           opm install 1bdd
           opm install notify
-          opm install coverage          
+          opm install coverage
+          opm install 1connector
           
       # Задача тестирования, в результате ожидается успешное выполнение
       - name: Тестирование
