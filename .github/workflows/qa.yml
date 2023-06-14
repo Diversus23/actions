@@ -48,8 +48,8 @@ jobs:
           opm install 1connector
 
       # Запуск тестов и сбор покрытия кода
-      # - name: Покрытие кода
-      #   run: oscript ./tasks/coverage.os true
+      - name: Покрытие кода
+        run: oscript ./tasks/coverage.os true
 
       - name: Извлечение версии пакета
         shell: bash
