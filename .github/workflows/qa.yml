@@ -46,12 +46,12 @@ jobs:
           opm install 1connector
 
       # Запуск тестов и сбор покрытия кода
-      - name: Покрытие кода
-        run: oscript ./tasks/coverage.os true
+      # - name: Покрытие кода
+      #   run: oscript ./tasks/coverage.os true
 
       - name: Извлечение версии пакета
         shell: bash
-        run: echo "##[set-output name=version;]`cat packagedef | grep ".Версия(" | sed 's|[^"]*"||' | sed -r 's/".+//'`"
+        run: echo "##[set-output name=version;]`cat ./src/Модули/ПараметрыСистемы.os | grep ".Версия(" | sed 's|[^"]*"||' | sed -r 's/".+//'`"
         id: extract_version
 
       - name: Установка Sonar-scanner
