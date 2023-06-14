@@ -9,6 +9,8 @@ jobs:
   build:
     if: github.repository == 'Diversus23/cicd'
     runs-on: ${{ matrix.os }}
+    env:
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true    
     strategy:
       fail-fast: false
       matrix:
@@ -51,7 +53,7 @@ jobs:
 
       - name: Извлечение версии пакета
         shell: bash
-        run: echo "##[set-output name=version;]`cat ./src/Модули/ПараметрыСистемы.os | grep ".Версия(" | sed 's|[^"]*"||' | sed -r 's/".+//'`"
+        run: echo "##[set-output name=version;]`cat ./src/Модули/ПараметрыСистемы.os | grep "Версия = " | sed 's|[^"]*"||' | sed -r 's/".+//'`"
         id: extract_version
 
       - name: Установка Sonar-scanner
