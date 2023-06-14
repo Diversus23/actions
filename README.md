@@ -49,6 +49,8 @@ before_script:
 
 ## ToDo
 
+Сделать все по статье [Создаем свою библиотеку для OneScript](https://infostart.ru/1c/articles/791568/)
+
 - [ ] DumpConfigToFiles
 - [ ] DumpIB
 - [ ] DumpIBWithoutLock
