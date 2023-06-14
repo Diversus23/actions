@@ -2,4 +2,6 @@
 .env
 build_info.txt
 .DS_Store
-out
+out/
+oscript_modules/
+*.ospx
