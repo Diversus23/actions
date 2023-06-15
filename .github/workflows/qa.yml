@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        oscript_version: ['1.8.3']
+        oscript_version: ['stable']
 
     steps:
       # Загрузка проекта
@@ -30,7 +30,7 @@ jobs:
 
       # Установка OneScript конкретной версии
       - name: Установка OneScript
-        uses: otymko/setup-onescript@v1.0
+        uses: otymko/setup-onescript@v1.1
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: true
         with:
@@ -40,16 +40,11 @@ jobs:
       - name: Установка зависимостей
         run: |
           opm install opm
-          opm install --dev
-          opm install 1testrunner
-          opm install 1bdd 
-          opm install notify
-          opm install coverage
-          opm install 1connector
+          opm install -l --dev
 
       # Запуск тестов и сбор покрытия кода
       - name: Покрытие кода
-        run: oscript ./tasks/coverage.os true
+        run: oscript ./tasks/coverage.os
 
       - name: Извлечение версии пакета
         shell: bash
@@ -57,11 +52,15 @@ jobs:
         id: extract_version
 
       - name: Установка Sonar-scanner
-        uses: warchant/setup-sonar-scanner@v1
+        uses: warchant/setup-sonar-scanner@v3
 
       # Анализ проекта в SonarQube (ветка)
       - name: Анализ в SonarQube (branch)
         if: github.event_name == 'push'
+        if: github.event_name == 'push'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}        
         run: sonar-scanner
             -Dsonar.login=${{ secrets.SONARQUBE_TOKEN }}
             -Dsonar.host.url=${{ secrets.SONARQUBE_HOST }}
