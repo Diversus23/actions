@@ -47,6 +47,11 @@ jobs:
           opm install coverage
           opm install 1connector
           
+      # Сохраняем файл env.json с настройками среды
+      - name: 'Create env file'
+        run: |
+          echo "${{ secrets.ENV_JSON }}" > ./env.json
+                    
       # Запуск тестов и сбор покрытия кода
       - name: Покрытие кода
         run: oscript ./tasks/coverage.os

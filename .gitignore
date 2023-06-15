@@ -5,6 +5,5 @@ build_info.txt
 out/
 oscript_modules/
 *.ospx
-tests.xml
 coverage/
-env.json
+/env.json
