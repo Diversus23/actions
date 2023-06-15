@@ -36,7 +36,7 @@ jobs:
       # Сохраняем файл env.json с настройками среды
       - name: 'Create env file'
         run: |
-          echo "${{ secrets.ENV_JSON }}" > ./env.json
+          echo "${{ secrets.ENV_JSON }}" > env.json
 
       # Задача тестирования, в результате ожидается успешное выполнение
       - name: Тестирование
