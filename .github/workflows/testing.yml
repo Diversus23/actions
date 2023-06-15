@@ -40,7 +40,7 @@ jobs:
 
       # Задача тестирования, в результате ожидается успешное выполнение
       - name: Тестирование
-        run: oscript ./tasks/test.os true
+        run: oscript ./tasks/test.os
 
       # Публикация результатов тестирования
       - name: Publish Test Report
