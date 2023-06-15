@@ -10,11 +10,13 @@ on:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
+        oscript_version: ['stable']
+        #os: [ubuntu-latest]
         oscript_version: ['stable']
         package_mask: ["cicd-*.ospx"]
         
