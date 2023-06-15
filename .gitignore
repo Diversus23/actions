@@ -1,5 +1,5 @@
 *.ospx
-.env
+env.json
 build_info.txt
 .DS_Store
 out/
