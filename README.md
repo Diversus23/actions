@@ -1,5 +1,7 @@
 # CI/CD для 1C на базе oscript
 
+[![Тестирование](https://github.com/Diversus23/cicd/actions/workflows/testing.yml/badge.svg)](https://github.com/Diversus23/cicd/actions/workflows/testing.yml)
+
 ## Что это такое и где будет полезно?
 
 **cicd** - это программная среда CI/CD для платформы 1С.

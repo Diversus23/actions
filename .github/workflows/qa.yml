@@ -8,13 +8,12 @@ on: [push, pull_request]
 jobs:
   build:
     if: github.repository == 'Diversus23/cicd'
-    runs-on: ${{ matrix.os }}
+    runs-on: self-hosted
     env:
       ACTIONS_ALLOW_UNSECURE_COMMANDS: true    
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest]
         oscript_version: ['stable']
 
     steps:
