@@ -48,9 +48,11 @@ jobs:
           opm install 1connector
           
       # Сохраняем файл env.json с настройками среды
-      - name: 'Create env file'
-        run: |
-          echo "${{ secrets.ENV_JSON }}" > env.json
+      - name: 'Create env.json file'
+        uses: jsdaniell/create-json@v1.2.2
+        with:
+          name: "env.json"
+          json: ${{ secrets.ENV_JSON }}
                     
       # Запуск тестов и сбор покрытия кода
       - name: Покрытие кода
