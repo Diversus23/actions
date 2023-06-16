@@ -7,9 +7,15 @@
 // Codebase: https://github.com/ArKuznetsov/irac/
 // ----------------------------------------------------------
 
+// BSLLS:ExportVariables-off
+// BSLLS:MissingVariablesDescription-off
+
 Перем ДействияСАрхивом Экспорт;
 Перем ДействияСFTP Экспорт;
 Перем ФорматChangeLog Экспорт;
+
+// BSLLS:MissingVariablesDescription-on
+// BSLLS:ExportVariables-on
 
 Функция Значение(Знач ПутьКЗначению) Экспорт
 	
