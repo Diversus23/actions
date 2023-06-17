@@ -172,7 +172,7 @@ ChangeLog — это файл, который содержит поддержи�
 Выполняем команду changelog c `-format html` это создает **КРАТКИЙ** файл HTML без стилей. Т.е. шапка и подвал страницы не будут добавлены в итоговый файл:
 
 ```cmd
-oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format html
+oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format html
 ```
 
 Получаем:
@@ -218,7 +218,7 @@ oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\f
 Выполняем команду changelog c `-format htmlfull` это создает **ПОЛНЫЙ** файл HTML со всеми стилями. Т.е. шапка и подвал страницы будут добавлены в итоговый файл:
 
 ```cmd
-oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format htmlfull
+oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format htmlfull
 ```
 
 Получаем:
@@ -329,7 +329,7 @@ oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\f
 Выполняем команду changelog для получения текстового :
 
 ```cmd
-oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.txt -format txt
+oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.txt -format txt
 ```
 
 Получаем текстовое описание файла changelog.md описанного выше:
@@ -617,7 +617,7 @@ oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\f
 Выполняем команду в консоли (в папке src)
 
 ```cmd
-oscript cicd.os obfuscation -file c:\Temp\ПростыеЧисла.bsl -outfile c:\Temp\ПростыеЧислаОбфусцированный.bsl -APIKey 4447C4CB6DDFF7597277904444F8F024945DB382993D1A9403F27F4760B19B719662424EE1AAA34A85C0444D828CB8F54433F82BC8448185F915E9B8768DEBDF
+oscript actions.os obfuscation -file c:\Temp\ПростыеЧисла.bsl -outfile c:\Temp\ПростыеЧислаОбфусцированный.bsl -APIKey 4447C4CB6DDFF7597277904444F8F024945DB382993D1A9403F27F4760B19B719662424EE1AAA34A85C0444D828CB8F54433F82BC8448185F915E9B8768DEBDF
 ```
 
 И получаем обфусцированный файл:
