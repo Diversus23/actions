@@ -1,14 +1,24 @@
-# CI/CD для 1C на базе oscript
+# Actions для 1C на базе oscript
 
 [![Тестирование](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml/badge.svg)](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml)
 
 ## Что это такое и где будет полезно?
 
-**Actions1c** - это программная среда своеобразный аналог Github Actions для DevOps задач в том числе CI/CD для платформы 1С. Так же прекрасно подойдет для исползования в gitlab pipeline.
+**Actions1c** - это программная среда своеобразный аналог Github Actions для DevOps задач, в том числе CI/CD для платформы 1С. Так же прекрасно подойдет для использования в Gitlab Pipelines. Собственно и родилась эта разработка именно благодаря необходимости выполнять самые разные команды для сборки/тестирования/доставки конфигурации Управление IT-отделом 8.
 
 Система построена на базе [oscript](https://oscript.io).
 
 ## Как работает?
+
+Это программная среда, которая умеет кратко с параметрами из командной строки или сохраненными в файле выполнять различные операции в ОС. Ситаксис:
+
+```cmd
+oscript src/actions.os Команда Параметры
+```
+
+Где Команда может быть любой из доступных (работа с конфигурациями 1С, с сервером 1С, с обновлением и проверкой баз 1С, создание архивов, копирование на FTP, создание дистрибутивов, завершение процессов в ОС и т.д. и т.п.).
+
+У каждой команды есть свои индивидуальные параметры.
 
 Создается файл `env.json` в котором указываются обязательные и дополнительные настройки для работы с проектом, например, имя проекта, его названия, токены доступа куда устанавливать в рабочем контуре и т.д.
 
@@ -31,7 +41,7 @@ before_script:
     - git config --local core.quotepath false
     - git clone https://github.com/Diversus23/cicd.git
     # Добавление настроек в файл env.json
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/cicd/src/cicd.os" set -name "defailt.ibconnection" -value "/F /opt/1c/base"
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/cicd/src/actions.os" set -name "defailt.ibconnection" -value "/F /opt/1c/base"
     only:
         refs:
         - develop
@@ -41,7 +51,7 @@ before_script:
 Проверка конфигурации на ошибки:
     stage: test
     script:
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/cicd/src/cicd.os" checkconfig
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/actions/src/actions.os" checkconfig
     only:
         refs:
         - develop
