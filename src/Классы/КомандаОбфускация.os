@@ -1,7 +1,7 @@
 #Использовать 1connector
 
-// oscript cicd.os obfuscation -file "c:\Temp\000_tempbase\ЗапускПриложений.os" -outfile "c:\Temp\000_tempbase\ЗапускПриложений.os.txt" -APIKey "91A7C..."
-// oscript cicd.os obfuscation -file "c:\Temp\000_tempbase\ЗапускПриложений.os" -APIKey "91A7C..."
+// oscript actions.os obfuscation -file "c:\Temp\000_tempbase\ЗапускПриложений.os" -outfile "c:\Temp\000_tempbase\ЗапускПриложений.os.txt" -APIKey "91A7C..."
+// oscript actions.os obfuscation -file "c:\Temp\000_tempbase\ЗапускПриложений.os" -APIKey "91A7C..."
 Процедура ЗарегистрироватьКоманду(Знач ИмяКоманды, Знач Парсер) Экспорт
     
     ТекстОписаниеКоманды = "Обфускация (запутывание) кода файла общего модуля на языке 1С";

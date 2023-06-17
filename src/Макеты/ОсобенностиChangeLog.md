@@ -123,7 +123,7 @@ ChangeLog — это файл, который содержит поддержи�
 Выполняем команду changelog c `-format html` это создает **КРАТКИЙ** файл HTML без стилей. Т.е. шапка и подвал страницы не будут добавлены в итоговый файл:
 
 ```cmd
-oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format html
+oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format html
 ```
 
 Получаем:
@@ -169,7 +169,7 @@ oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\f
 Выполняем команду changelog c `-format htmlfull` это создает **ПОЛНЫЙ** файл HTML со всеми стилями. Т.е. шапка и подвал страницы будут добавлены в итоговый файл:
 
 ```cmd
-oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format htmlfull
+oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.html -format htmlfull
 ```
 
 Получаем:
@@ -280,7 +280,7 @@ oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\f
 Выполняем команду changelog для получения текстового :
 
 ```cmd
-oscript src\cicd.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.txt -format txt
+oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile tests\fixtures\changelog.txt -format txt
 ```
 
 Получаем текстовое описание файла changelog.md описанного выше:

@@ -1,8 +1,8 @@
 ﻿Перем мЭтоИнициализация;
 Перем мЭтоИнформация;
 
-// oscript cicd.os changelog-init -file c:\Temp\000_tempbase\1.md
-// oscript cicd.os changelog -file c:\Temp\000_tempbase\1.md -outfile c:\Temp\000_tempbase\news.html -version 1.0.0.0
+// oscript actions.os changelog-init -file c:\Temp\000_tempbase\1.md
+// oscript actions.os changelog -file c:\Temp\000_tempbase\1.md -outfile c:\Temp\000_tempbase\news.html -version 1.0.0.0
 Процедура ЗарегистрироватьКоманду(Знач ИмяКоманды, Знач Парсер) Экспорт
 	
 	мЭтоИнициализация = НРег(ИмяКоманды) = "changelog-init";
