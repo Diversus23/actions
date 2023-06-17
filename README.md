@@ -1,13 +1,12 @@
 # CI/CD для 1C на базе oscript
 
-[![Тестирование](https://github.com/Diversus23/cicd/actions/workflows/testing.yml/badge.svg)](https://github.com/Diversus23/cicd/actions/workflows/testing.yml)
+[![Тестирование](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml/badge.svg)](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml)
 
 ## Что это такое и где будет полезно?
 
-**cicd** - это программная среда CI/CD для платформы 1С.
+**Actions1c** - это программная среда своеобразный аналог Github Actions для DevOps задач в том числе CI/CD для платформы 1С. Так же прекрасно подойдет для исползования в gitlab pipeline.
 
-
-Система построена на базе oscript.
+Система построена на базе [oscript](https://oscript.io).
 
 ## Как работает?
 
