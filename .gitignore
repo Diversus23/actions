@@ -1,4 +1,3 @@
-*.ospx
 env.json
 build_info.txt
 .DS_Store
@@ -6,5 +5,4 @@ out/
 oscript_modules/
 *.ospx
 coverage/
-/env.json
 env.json
