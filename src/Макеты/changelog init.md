@@ -1,4 +1,4 @@
-﻿### Как инициализируется файл Changelog?
+﻿##### Как инициализируется файл Changelog?
 
 ```markdown
 # Changelog
