@@ -1,4 +1,4 @@
-# Actions для 1C на базе oscript
+# Actions для 1C на базе oscript CI/CD
 
 [![Тестирование](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml/badge.svg)](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml)
 
