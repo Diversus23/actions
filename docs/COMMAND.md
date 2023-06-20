@@ -2,17 +2,19 @@
 
 <!-- TOC -->
 
-- [actions](#actions) Приложение для CI/CD
+- [actions](#) Приложение для CI/CD
   - [autodoc](#autodoc) Автоформирование документации по этому проекту CI/CD. Системная команда
   - [changelog](#changelog) Команды работы с ChangeLog.md
-    - [init](#init) Инициализировать ChangeLog.md
-    - [convert](#convert) Конвертировать ChangeLog.md в другой формат
+    - [init](#changelog-init) Инициализировать ChangeLog.md
+    - [convert](#changelog-convert) Конвертировать ChangeLog.md в другой формат
   - [checksum](#checksum) Выводит в консоль контрольную сумма файла или директории в формате md5
   - [obfuscation](#obfuscation) Обфускация (запутывание) кода на языке 1С
-    - [module](#module) Обфускация общего модуля 1С:Предприятие 8
+    - [module](#obfuscation-module) Обфускация общего модуля 1С:Предприятие 8
   - [zip](#zip) Команды работы с ZIP-архивами
-    - [add](#add) Добавить файлы в zip-архив
-    - [extract](#extract) Распаковать zip-архив
+    - [add](#zip-add) Добавить файлы в zip-архив
+    - [extract](#zip-extract) Распаковать zip-архив
+  - [json](#json) Команды работы с json
+    - [write](#json-write) Запись значения по ключу в файл json
 
 <!-- /TOC -->
 
@@ -592,6 +594,62 @@ goto ~44; ~IL_13:; goto ~43; ~43:; goto ~46; ~44:; ~45:; goto ~47; ~46:; _0=a_; 
 Синонимы: [--file, -f].
 - *path*: Директория куда необходимо распаковать архив (обязательный).
 Синонимы: [--path, -p].
+
+---
+
+### json
+
+Команды работы с json.
+
+---
+
+#### json write
+
+Запись значения по ключу в файл json.
+
+##### Опции команды
+
+- *key*: Имя ключа в точечной нотации. Пример "zip.add" - добавит настройку для команды {"zip": {"add": "value"}} (обязательный).
+Синонимы: [--key, -k].
+- *string*: Значение-строка.
+Синонимы: [--string, --str, -s].
+- *number*: Значение-число.
+Синонимы: [--number, --num, -n].
+- *boolean*: Значение-булево (True/False, 1/0, Истина/Ложь).
+Синонимы: [--boolean, --bool, -b].
+- *date*: Значение-дата в формате yyyy-MM-dd_HH:mm:ss.
+Синонимы: [--date, -d].
+- *file*: Имя файла json. Если не задано, то будет дозапись в файл settings.json. Если файла нет, он будет создан (не обязательный).
+Синонимы: [--file, -f].
+
+Записываемое значение может быть различных типов.
+
+1. Записываем строку. Приоритет 1:
+    ```bash
+    oscript actions.os json write --key "add.zip" --string "Привет мир"
+    ```
+2. Записываем число. Приоритет 2:
+    ```bash
+    oscript actions.os json write --key "add.zip" --number 555
+    ```
+3. Записываем булево. Приоритет 3:
+    ```bash
+    # Присваиваем Истина
+    oscript actions.os json write --key "add.zip" --boolean true
+    oscript actions.os json write --key "add.zip" --boolean 1    
+    oscript actions.os json write --key "add.zip" --boolean Истина
+    # Присваиваем Ложь
+    oscript actions.os json write --key "add.zip" --boolean false
+    oscript actions.os json write --key "add.zip" --boolean 0
+    oscript actions.os json write --key "add.zip" --boolean Ложь
+    ```
+4. Записываем дату. Приоритет 4:
+    ```bash
+    oscript actions.os json write --key "add.zip" --date 2023-06-05_23:59:59
+    ```
+    
+> **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-4).
+
 
 ---
 
