@@ -52,7 +52,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "settings.json"
-          json: ${{ secrets.ENV_JSON }}
+          json: ${{ secrets.SETTINGS_JSON }}
                     
       # Запуск тестов и сбор покрытия кода
       - name: Покрытие кода

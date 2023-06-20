@@ -98,7 +98,7 @@ before_script:
 - [ ] GetImageForMailing
 - [ ] MakeMailing
 - [ ] MakeUpdatesXmlZip
-- [X] **zip-add** и **zip-extract** CreateZip
+- [X] **zip add** и **zip extract** CreateZip
 - [ ] BuildDistribEpfErf
 - [ ] ConvertChangeLog
 - [ ] GetVideoPreviewFromMarkDown

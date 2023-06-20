@@ -38,7 +38,7 @@ jobs:
         uses: jsdaniell/create-json@v1.2.2
         with:
           name: "settings.json"
-          json: ${{ secrets.ENV_JSON }}
+          json: ${{ secrets.SETTINGS_JSON }}
 
       # Задача тестирования, в результате ожидается успешное выполнение
       - name: Тестирование
