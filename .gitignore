@@ -5,4 +5,4 @@ out/
 oscript_modules/
 *.ospx
 coverage/
-env.json
+settings.json
