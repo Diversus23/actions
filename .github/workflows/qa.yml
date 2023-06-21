@@ -46,6 +46,7 @@ jobs:
           opm install notify
           opm install coverage
           opm install 1connector
+          opm install ftp
           
       # Сохраняем файл env.json с настройками среды
       - name: 'Create settings.json file'
