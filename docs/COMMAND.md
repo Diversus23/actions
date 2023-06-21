@@ -496,7 +496,7 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 
 ##### Опции команды
 
-- *key*: Имя ключа в точечной нотации. Пример "zip.add" - добавит настройку для команды {"zip": {"add": "value"}} (обязательный).
+- *key*: Имя ключа в точечной нотации. Пример "zip.add" - добавит {"zip": {"add": "value"}} (обязательный).
 Синонимы: [--key, -k].
 - *string*: Значение-строка.
 Синонимы: [--string, --str, -s].
@@ -506,7 +506,8 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 Синонимы: [--boolean, --bool, -b].
 - *date*: Значение-дата в формате yyyy-MM-dd_HH:mm:ss.
 Синонимы: [--date, -d].
-- *file*: Имя файла json. Если не задано, то будет дозапись в файл settings.json. Если файла нет, он будет создан (не обязательный).
+- *file*: Имя файла json. Если не задано, то будет дозапись в файл settings.json.
+Если файла нет, он будет создан (не обязательный).
 Синонимы: [--file, -f].
 
 Записываемое значение может быть различных типов.
