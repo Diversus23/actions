@@ -72,8 +72,8 @@ before_script:
 - [ ] Terminate
 - [ ] ClearOldFiles
 - [ ] TestUpdate
-- [ ] CopyFTP
-- [ ] DownloadFTP
+- [X] **ftp put** CopyFTP
+- [X] **ftp get** + **ftp delete** DownloadFTP
 - [ ] BuildDistribRepo
 - [ ] SaveLastConfigUpdateText
 - [ ] ConfigurationRepositoryUpdateCfg
