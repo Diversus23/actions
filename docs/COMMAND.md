@@ -573,6 +573,8 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 - *subject*: Тема письма (не обязательный).
 Синонимы: [--subject, --sub].
 Значение по умолчанию: "Тема письма".
+- *from*: От имени кого будет отправлено письмо (обязательный).
+- *email*: С какого e-mail будет отправлено письмо (обязательный).
 
 ---
 
