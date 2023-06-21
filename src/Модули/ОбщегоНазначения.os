@@ -272,6 +272,7 @@
 	
 КонецПроцедуры
 
+// BSLLS:MissingParameterDescription-off
 // BSLLS:NumberOfOptionalParams-off
 Процедура ЗавершениеРаботыОшибка(Знач ТекстОшибки, 
 	Знач Параметр1 = Неопределено, Знач Параметр2 = Неопределено, Знач Параметр3 = Неопределено,
@@ -290,6 +291,7 @@
 	
 КонецПроцедуры
 // BSLLS:NumberOfOptionalParams-on
+// BSLLS:MissingParameterDescription-on
 
 Процедура ЗавершениеРаботыПредупреждение(Знач ТекстПредупреждения) Экспорт
 	
