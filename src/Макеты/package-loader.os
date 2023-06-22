@@ -1,3 +1,4 @@
+// BSLLS:MissingParameterDescription-off
 // BSLLS:UnusedParameters-off
 // BSLLS:UnusedLocalMethod-off
 Процедура ПриЗагрузкеБиблиотеки(Знач Путь, СтандартнаяОбработка, Отказ)
@@ -11,3 +12,4 @@
 КонецПроцедуры
 // BSLLS:UnusedLocalMethod-on
 // BSLLS:UnusedParameters-on
+// BSLLS:MissingParameterDescription-on
