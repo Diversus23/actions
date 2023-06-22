@@ -6,7 +6,8 @@
 # [Unreleased]
 
 * Переименованы классы команд, для удобной группировки
-* Добавление команд ftp get, ftp put, ftp delete
+* Добавление команд для работы с FTP: ftp get, ftp put, ftp delete
+* Добавление команд для создания ИБ 1С: infobase create file, infobase create server
 
 # [0.0.2] - 2023-06-20
 

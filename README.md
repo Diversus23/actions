@@ -82,7 +82,7 @@ before_script:
 - [ ] SaveExtensionInFile
 - [ ] GitLoad
 - [ ] EdtProjectExportToConfigFiles
-- [ ] CreateInfoBase
+- [X] **infobase create file** и **infobase create server** CreateInfoBase
 - [ ] DeleteInfoBase
 - [ ] BuildDistrib
 - [ ] Save1cv8_mft
