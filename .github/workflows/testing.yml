@@ -33,6 +33,7 @@ jobs:
           opm install coverage
           opm install 1connector
           opm install ftp
+          opm install v8storage
 
       # Сохраняем файл env.json с настройками среды
       - name: 'Create settings.json file'

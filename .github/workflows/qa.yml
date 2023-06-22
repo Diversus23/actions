@@ -46,6 +46,7 @@ jobs:
           opm install notify
           opm install coverage
           opm install 1connector
+          opm install v8storage
           opm install ftp
           
       # Сохраняем файл env.json с настройками среды
