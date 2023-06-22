@@ -9,6 +9,7 @@
 * Добавление команд для работы с FTP: ftp get, ftp put, ftp delete
 * Добавление команд для создания ИБ 1С: infobase create file, infobase create server
 * Добавление команд для работы с файловой системой: fs delete, fs newtempfile, fs newtemppath
+* Добавление команды для экспорта проекта EDT в XML 1C: edt export xml1c
 
 # [0.0.2] - 2023-06-20
 

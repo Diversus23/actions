@@ -81,7 +81,8 @@ before_script:
 - [ ] LoadExtensionFromFiles
 - [ ] SaveExtensionInFile
 - [ ] GitLoad
-- [ ] EdtProjectExportToConfigFiles
+- [X] **edt export xml1c** EdtProjectExportToConfigFiles
+  - [ ] Заменить ЗапуститьПриложение на ОбщегоНазначения.ЗапуститьПроцесс
 - [X] **infobase create file** и **infobase create server** CreateInfoBase
 - [ ] DeleteInfoBase
 - [ ] BuildDistrib
