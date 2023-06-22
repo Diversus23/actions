@@ -10,7 +10,7 @@
   - [checksum](#checksum) Выводит в консоль контрольную сумма файла или директории в формате md5
   - [edt](#edt) Команды для работы с 1C:Enterprise Development Tools (EDT)
     - [export](#edt-export) Экспорт проекта EDT в другой формат
-      - [xml1c](#edt-export-xml1c) Экспорт проекта EDT в формат XML-выгрузки 1С
+      - [xml1c](#edt-export-xml1c) Экспорт проекта EDT в формат XML-выгрузки 1С (используя ring)
   - [fs](#fs) Команды для работы с файловой системой
     - [delete](#fs-delete) Удаление каталога или файлов в каталоге по маске
     - [newtempfile](#fs-newtempfile) Возвращает в консоль имя временного файл для дальнейшей работы
@@ -89,7 +89,6 @@ oscript ftp put --file c:\temp\arc.zip --server 192.168.1.10 --login admin --pas
 
 - *file*: Путь к файлу, куда сохранить документацию (обязательный).
 Синонимы: [--file, -f].
-Значение по умолчанию: "C:\Projects\actions\tests\..\docs\COMMAND.md".
 
 ---
 
@@ -513,7 +512,7 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 
 ##### edt export xml1c
 
-Экспорт проекта EDT в формат XML-выгрузки 1С.
+Экспорт проекта EDT в формат XML-выгрузки 1С (используя ring).
 
 ###### Опции команды
 
@@ -523,8 +522,11 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 Синонимы: [--path, -p].
 - *workspace*: Каталог рабочего простанства для запуска 1C:Enterprise Development Tools (обязательный).
 Синонимы: [--workspace, -w].
-- *edtversion*: Версия EDT для экспорта. Если не задано, будет использована последняя (необязательный).
+- *edtversion*: Версия EDT для экспорта. Пример: "2021.1.5:x86_64" Список установленных версий можно узнать набрав "ring help modules" (необязательный).
 Синонимы: [--edtversion, -e].
+
+Чтобы экспорт был возможен, необходимо наличие установленного приложения "ring". [Подробнее о ring](https://its.1c.ru/db/edtdoc#content:10003:hdoc:t000003__список-версий-едт).
+
 
 ---
 
