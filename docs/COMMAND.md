@@ -89,6 +89,7 @@ oscript ftp put --file c:\temp\arc.zip --server 192.168.1.10 --login admin --pas
 
 - *file*: Путь к файлу, куда сохранить документацию (обязательный).
 Синонимы: [--file, -f].
+Значение по умолчанию: "C:\Projects\actions\tests\..\docs\COMMAND.md".
 
 ---
 
