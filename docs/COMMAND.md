@@ -89,6 +89,7 @@ oscript ftp put --file c:\temp\arc.zip --server 192.168.1.10 --login admin --pas
 
 - *file*: Путь к файлу, куда сохранить документацию (обязательный).
 Синонимы: [--file, -f].
+Значение по умолчанию: "C:\Projects\actions\tests\..\docs\COMMAND.md".
 
 ---
 
@@ -520,7 +521,7 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 Синонимы: [--project, -j].
 - *path*: Каталог куда необходимо сохранить файлы конфигурации платформы 1С:Предприятия в формате XML (обязательный).
 Синонимы: [--path, -p].
-- *workspace*: Каталог рабочего простанства для запуска 1C:Enterprise Development Tools (обязательный).
+- *workspace*: Каталог рабочего пространства для запуска 1C:Enterprise Development Tools (обязательный).
 Синонимы: [--workspace, -w].
 - *edtversion*: Версия EDT для экспорта. Пример: "2021.1.5:x86_64" Список установленных версий можно узнать набрав "ring help modules" (необязательный).
 Синонимы: [--edtversion, -e].
