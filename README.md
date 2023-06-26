@@ -70,7 +70,7 @@ before_script:
 - [ ] Lock
 - [ ] Unlock
 - [ ] Terminate
-- [ ] ClearOldFiles
+- [X] **fs deleteold** ClearOldFiles
 - [ ] TestUpdate
 - [X] **ftp put** CopyFTP
 - [X] **ftp get** + **ftp delete** DownloadFTP
