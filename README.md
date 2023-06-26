@@ -63,7 +63,7 @@ before_script:
 Сделать все по статье [Создаем свою библиотеку для OneScript](https://infostart.ru/1c/articles/791568/)
 
 - [ ] DumpConfigToFiles
-- [X] **infobase dump** DumpIB
+- [X] **infobase dump** + **infobase dumpformat** DumpIB
 - [ ] DumpIBWithoutLock
 - [X] **infobase restore** RestoreIB
 - [ ] RestoreIBWithoutLock
