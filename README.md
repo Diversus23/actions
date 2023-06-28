@@ -92,7 +92,7 @@ before_script:
 - [ ] SendNews
 - [X] **obfuscation** Obfuscate
   - [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк в обфусированном файле.
-- [X] **checkconfig** CheckConfig
+- [X] **infobase check** CheckConfig
 - [ ] FindFilesAndCopy
 - [ ] WriteFileAsErrorInConsole
 - [ ] UpdateIB
