@@ -23,8 +23,8 @@
   - [infobase](#infobase) Команды для работы с информационными базами 1C
     - [config](#infobase-config) Работа с конфигурацией 1С
       - [check](#infobase-config-check) Синтаксический контроль конфигурации 1С
-      - [load](#infobase-config-load) Загрузить конфигуарцию из CF-файла
-      - [save](#infobase-config-save) Сохранить конфигуарцию в CF-файл
+      - [load](#infobase-config-load) Загрузить конфигурацию из cf-файла
+      - [save](#infobase-config-save) Сохранить конфигурацию в cf-файл
     - [create](#infobase-create) Создание информационной базы 1С
       - [file](#infobase-create-file) Создание файловой информационной базы 1C в каталоге
       - [server](#infobase-create-server) Создание серверной информационной базы на сервере 1С
@@ -756,7 +756,7 @@ oscript actions.os fs deleteold --path d:\backup\ --mask *.dt --count 7
 
 ##### infobase config load
 
-Загрузить конфигуарцию из CF-файла.
+Загрузить конфигурацию из cf-файла.
 
 ###### Опции команды
 
@@ -779,7 +779,7 @@ oscript actions.os fs deleteold --path d:\backup\ --mask *.dt --count 7
 
 ##### infobase config save
 
-Сохранить конфигуарцию в CF-файл.
+Сохранить конфигурацию в cf-файл.
 
 ###### Опции команды
 
