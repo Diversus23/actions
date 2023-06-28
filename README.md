@@ -94,14 +94,14 @@ before_script:
   - [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк в обфусированном файле.
 - [X] **infobase check** CheckConfig
 - [ ] FindFilesAndCopy
-- [ ] WriteFileAsErrorInConsole
+- [X] **fs errorsfromfile** WriteFileAsErrorInConsole
 - [ ] UpdateIB
 - [ ] GetImageForMailing
 - [ ] MakeMailing
 - [ ] MakeUpdatesXmlZip
 - [X] **zip add** и **zip extract** CreateZip
 - [ ] BuildDistribEpfErf
-- [ ] ConvertChangeLog
+- [X] **changelog convert** и **changelog init** ConvertChangeLog
 - [ ] GetVideoPreviewFromMarkDown
 - [ ] MakeMailingFiles
 - [ ] CheckVanessaErrors
