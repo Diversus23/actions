@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mdclass:Configuration xmlns:mdclass="http://g5.1c.ru/v8/dt/metadata/mdclass" uuid="3138022b-f6b8-4e9c-b9e0-8d7f73a7cd78">
+  <name>Telegram</name>
+  <synonym>
+    <key>ru</key>
+    <value>Универсальная подсистема Telegram-ботов для 1С</value>
+  </synonym>
+  <comment>АПК:1202, АПК:1203, АПК:251, АПК:71, АПК:72, АПК:76, АПК:62, АПК:63, АПК:64, АПК:1046, АПК:1145, АПК:82</comment>
+  <containedObjects classId="9cd510cd-abfc-11d4-9434-004095e12fc7" objectId="0e09df73-af30-4a2f-8bd3-499e48175cdc"/>
+  <containedObjects classId="9fcd25a0-4822-11d4-9414-008048da11f9" objectId="982a9665-9b90-4e70-8ad8-cb3733e5c3a9"/>
+  <containedObjects classId="e3687481-0a87-462c-a166-9f34594f9bba" objectId="6d38a31c-0f43-4c8e-b6a2-fb7d556c3602"/>
+  <containedObjects classId="9de14907-ec23-4a07-96f0-85521cb6b53b" objectId="2930dca2-fd27-426f-af9b-21f6a4b1cde4"/>
+  <containedObjects classId="51f2d5d8-ea4d-4064-8892-82951750031e" objectId="6ab66fb1-ef65-4c6c-a321-5763310ec1f2"/>
+  <containedObjects classId="e68182ea-4237-4383-967f-90c1e3370bc7" objectId="b84764b9-e0c8-49c6-b2bb-f71edf47cdec"/>
+  <configurationExtensionCompatibilityMode>8.3.16</configurationExtensionCompatibilityMode>
+  <defaultRunMode>ManagedApplication</defaultRunMode>
+  <usePurposes>PersonalComputer</usePurposes>
+  <scriptVariant>Russian</scriptVariant>
+  <defaultRoles>Role.ПолныеПрава</defaultRoles>
+  <vendor>ООО &quot;Софтонит&quot;</vendor>
+  <version>1.0.0.13</version>
+  <requiredMobileApplicationPermissions>
+    <permission>AllowOSBackup</permission>
+    <use>true</use>
+  </requiredMobileApplicationPermissions>
+  <defaultLanguage>Language.Русский</defaultLanguage>
+  <briefInformation>
+    <key>ru</key>
+    <value>Универсальная подсистема Telegram-ботов для 1С</value>
+  </briefInformation>
+  <copyright>
+    <key>ru</key>
+    <value>ООО &quot;Софтонит&quot;</value>
+  </copyright>
+  <vendorInformationAddress>
+    <key>ru</key>
+    <value>https://softonit.ru</value>
+  </vendorInformationAddress>
+  <configurationInformationAddress>
+    <key>ru</key>
+    <value>https://softonit.ru</value>
+  </configurationInformationAddress>
+  <dataLockControlMode>Managed</dataLockControlMode>
+  <objectAutonumerationMode>NotAutoFree</objectAutonumerationMode>
+  <modalityUseMode>DontUse</modalityUseMode>
+  <synchronousPlatformExtensionAndAddInCallUseMode>DontUse</synchronousPlatformExtensionAndAddInCallUseMode>
+  <compatibilityMode>8.3.11</compatibilityMode>
+  <languages uuid="f113c476-e25d-4bb7-a59e-0c8d7c3ad43b">
+    <name>Русский</name>
+    <synonym>
+      <key>ru</key>
+      <value>Русский</value>
+    </synonym>
+    <languageCode>ru</languageCode>
+  </languages>
+  <subsystems>Subsystem.Telegram</subsystems>
+  <styleItems>StyleItem.TelegramВыполненноеЗадание</styleItems>
+  <styleItems>StyleItem.TelegramЖирныйШрифт</styleItems>
+  <styleItems>StyleItem.TelegramМоноширинныйШрифт</styleItems>
+  <styleItems>StyleItem.TelegramПоясняющийТекст</styleItems>
+  <styleItems>StyleItem.TelegramЦветВерсииОбновления</styleItems>
+  <styleItems>StyleItem.TelegramЦветВыполняется</styleItems>
+  <styleItems>StyleItem.TelegramЦветНеАктивности</styleItems>
+  <styleItems>StyleItem.TelegramЦветНеуспешно</styleItems>
+  <styleItems>StyleItem.TelegramЦветНовогоОбновления</styleItems>
+  <styleItems>StyleItem.TelegramЦветОстановлено</styleItems>
+  <styleItems>StyleItem.TelegramЦветПодписи</styleItems>
+  <styleItems>StyleItem.TelegramЦветПульсКрасный</styleItems>
+  <styleItems>StyleItem.TelegramЦветУспешно</styleItems>
+  <styleItems>StyleItem.TelegramЦветФонаАнтикБелый</styleItems>
+  <styleItems>StyleItem.TelegramШрифтМикротекста</styleItems>
+  <styleItems>StyleItem.TelegramШрифтОбновления</styleItems>
+  <commonPictures>CommonPicture.Telegram</commonPictures>
+  <commonPictures>CommonPicture.Telegram48</commonPictures>
+  <commonPictures>CommonPicture.TelegramBotFather</commonPictures>
+  <commonPictures>CommonPicture.TelegramАктивноНеАктивно</commonPictures>
+  <commonPictures>CommonPicture.TelegramВнимание</commonPictures>
+  <commonPictures>CommonPicture.TelegramВставитьСуществующуюГиперссылку</commonPictures>
+  <commonPictures>CommonPicture.TelegramВставитьТекст</commonPictures>
+  <commonPictures>CommonPicture.TelegramДобавитьТабличныйВопрос</commonPictures>
+  <commonPictures>CommonPicture.TelegramЗагрузитьДанныеИзФайла</commonPictures>
+  <commonPictures>CommonPicture.TelegramЗеленыйФлаг</commonPictures>
+  <commonPictures>CommonPicture.TelegramИзменитьСтатус</commonPictures>
+  <commonPictures>CommonPicture.TelegramКод</commonPictures>
+  <commonPictures>CommonPicture.TelegramПроверка</commonPictures>
+  <commonPictures>CommonPicture.TelegramУдалитьТег</commonPictures>
+  <roles>Role.TelegramБазовыеПрава</roles>
+  <roles>Role.TelegramУправление</roles>
+  <roles>Role.ПолныеПрава</roles>
+  <commonTemplates>CommonTemplate.MonacoEditor</commonTemplates>
+  <commonTemplates>CommonTemplate.TelegramEmoji</commonTemplates>
+  <commonTemplates>CommonTemplate.TelegramДанныеЗаполнения</commonTemplates>
+  <commonTemplates>CommonTemplate.TelegramДанныеЗаполненияУИТ</commonTemplates>
+  <commonTemplates>CommonTemplate.TelegramДанныеЗаполненияУТ</commonTemplates>
+  <commonTemplates>CommonTemplate.TelegramОписаниеИзменений</commonTemplates>
+  <commonModules>CommonModule.MonacoEditorВызовСервера</commonModules>
+  <commonModules>CommonModule.MonacoEditorКлиент</commonModules>
+  <commonModules>CommonModule.TelegramВызовСервера</commonModules>
+  <commonModules>CommonModule.TelegramКлиент</commonModules>
+  <commonModules>CommonModule.TelegramКлиентСервер</commonModules>
+  <commonModules>CommonModule.TelegramСервер</commonModules>
+  <commonModules>CommonModule.TelegramСерверПереопределяемый</commonModules>
+  <commonModules>CommonModule.TelegramСерверПовтИсп</commonModules>
+  <httpServices>HTTPService.Telegram</httpServices>
+  <scheduledJobs>ScheduledJob.TelegramОбновлениеСеанса</scheduledJobs>
+  <scheduledJobs>ScheduledJob.TelegramОбработкаВходящихСообщенийПриИспользованииПериодическихЗапросов</scheduledJobs>
+  <scheduledJobs>ScheduledJob.TelegramОтправкаИсходящихСообщений</scheduledJobs>
+  <scheduledJobs>ScheduledJob.TelegramУдалениеУстаревшихСообщений</scheduledJobs>
+  <commonCommands>CommonCommand.TelegramНастройки</commonCommands>
+  <constants>Constant.TelegramДействиеКомандаНеНайдена</constants>
+  <constants>Constant.TelegramИспользоватьСписокПроксиСерверов</constants>
+  <constants>Constant.TelegramНайденаНоваяВерсия</constants>
+  <constants>Constant.TelegramСрокХраненияСообщений</constants>
+  <constants>Constant.TelegramТаймаутПодключений</constants>
+  <constants>Constant.TelegramТекущаяВерсия</constants>
+  <constants>Constant.TelegramТекущийУровеньЖурнала</constants>
+  <commonForms>CommonForm.TelegramМониторПоддержки</commonForms>
+  <commonForms>CommonForm.TelegramНастройки</commonForms>
+  <commonForms>CommonForm.TelegramОбновления</commonForms>
+  <catalogs>Catalog.TelegramEmoji</catalogs>
+  <catalogs>Catalog.TelegramБоты</catalogs>
+  <catalogs>Catalog.TelegramДействия</catalogs>
+  <catalogs>Catalog.TelegramКлавиатуры</catalogs>
+  <catalogs>Catalog.TelegramКоманды</catalogs>
+  <catalogs>Catalog.TelegramПользователи</catalogs>
+  <catalogs>Catalog.TelegramПрокси</catalogs>
+  <catalogs>Catalog.TelegramУсловия</catalogs>
+  <documents>Document.TelegramСообщениеВходящее</documents>
+  <documents>Document.TelegramСообщениеИсходящее</documents>
+  <enums>Enum.TelegramВидКлавиатуры</enums>
+  <enums>Enum.TelegramВидыСобытий</enums>
+  <enums>Enum.TelegramВидыСообщений</enums>
+  <enums>Enum.TelegramВидыСравнения</enums>
+  <enums>Enum.TelegramДействияСПараметром</enums>
+  <enums>Enum.TelegramПроксиПротоколы</enums>
+  <enums>Enum.TelegramСостояниеИсходящегоСообщения</enums>
+  <enums>Enum.TelegramСпособВзаимодействияСБотом</enums>
+  <enums>Enum.TelegramТипСообщения</enums>
+  <dataProcessors>DataProcessor.ПериодическоеОбновлениеТелеграмДляФайловыхБаз</dataProcessors>
+  <informationRegisters>InformationRegister.TelegramЖурналВыполнения</informationRegisters>
+  <informationRegisters>InformationRegister.TelegramПараметрыДействий</informationRegisters>
+  <informationRegisters>InformationRegister.TelegramПрисоединенныеФайлы</informationRegisters>
+  <informationRegisters>InformationRegister.TelegramПроизвольныеПараметры</informationRegisters>
+  <informationRegisters>InformationRegister.TelegramСтатистикаОтправкиСообщений</informationRegisters>
+  <informationRegisters>InformationRegister.TelegramЧаты</informationRegisters>
+  <chartsOfCharacteristicTypes>ChartOfCharacteristicTypes.TelegramПараметрыДействий</chartsOfCharacteristicTypes>
+</mdclass:Configuration>
