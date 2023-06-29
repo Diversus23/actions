@@ -4,9 +4,9 @@
 
 ## Что это такое и где будет полезно?
 
-**Actions1c** - это программная среда своеобразный аналог Github Actions для DevOps задач, в том числе CI/CD для платформы 1С. Так же прекрасно подойдет для использования в Gitlab Pipelines. Собственно и родилась эта разработка именно благодаря необходимости выполнять самые разные команды для сборки/тестирования/доставки конфигурации Управление IT-отделом 8.
+**Actions 1С** - это программная среда своеобразный аналог Github Actions для DevOps задач, в том числе CI/CD для платформы 1С. Так же прекрасно подойдет для использования в Gitlab Pipelines. Собственно и родилась эта разработка именно благодаря необходимости выполнять самые разные команды для сборки / тестирования / доставки конфигурации [Управление IT-отделом 8](https://softonit.ru/catalog/products/it/).
 
-Система построена на базе [oscript](https://oscript.io).
+Система построена на базе [oscript](https://oscript.io) и представляет из себя пакет для oscript.
 
 ## Как работает?
 
@@ -39,9 +39,9 @@ before_script:
     script:
     # Копирование библиотеки CI/CD для работы
     - git config --local core.quotepath false
-    - git clone https://github.com/Diversus23/cicd.git
+    - git clone https://github.com/Diversus23/actions.git
     # Добавление настроек в файл env.json
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/cicd/src/actions.os" set -name "defailt.ibconnection" -value "/F /opt/1c/base"
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/actions/src/actions.os" json write --key "defailt.connection" --string "/F /opt/1c/base"
     only:
         refs:
         - develop
@@ -50,8 +50,9 @@ before_script:
 
 Проверка конфигурации на ошибки:
     stage: test
+    needs: [Подготовка]
     script:
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/actions/src/actions.os" checkconfig
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR/actions/src/actions.os" infobase config check
     only:
         refs:
         - develop
@@ -83,6 +84,7 @@ before_script:
 - [ ] GitLoad
 - [X] **edt export xml1c** EdtProjectExportToConfigFiles
   - [ ] Заменить ЗапуститьПриложение на ОбщегоНазначения.ЗапуститьПроцесс
+  - [ ] Добавить команды для режима 1C:EDT https://its.1c.ru/db/edtdoc#content:10608:hdoc
 - [X] **infobase create file** и **infobase create server** CreateInfoBase
 - [ ] DeleteInfoBase
 - [ ] BuildDistrib
