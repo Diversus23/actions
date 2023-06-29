@@ -25,6 +25,7 @@
     - [put](#ftp-put) Отправка файлов на FTP-сервер
     - [delete](#ftp-delete) Удаление файлов на FTP-сервере
   - [infobase](#infobase) Команды для работы с информационными базами 1C
+    - [clearcache](#infobase-clearcache) Очистить локальный кэш базы 1С
     - [config](#infobase-config) Работа с конфигурацией 1С
       - [check](#infobase-config-check) Синтаксический контроль конфигурации 1С
       - [load](#infobase-config-load) Загрузить конфигурацию из cf-файла
@@ -764,6 +765,17 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 ### infobase
 
 Команды для работы с информационными базами 1C.
+
+---
+
+#### infobase clearcache
+
+Очистить локальный кэш базы 1С.
+
+##### Опции команды
+
+- *connection*: Строка соединения с информационной базой 1С. Для файловой "/FC:\Base1C", а серверной "/Sserver\base". Если будет указано, то очистка кэша будет у этой базы, иначе у всех локальных баз (необязательный).
+Синонимы: [--connection, -с].
 
 ---
 

@@ -34,6 +34,7 @@ jobs:
           opm install 1connector
           opm install ftp
           opm install v8storage
+          opm install ParserFileV8i
 
       # Сохраняем файл env.json с настройками среды
       - name: 'Create settings.json file'
