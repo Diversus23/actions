@@ -64,53 +64,53 @@ before_script:
 Сделать все по статье [Создаем свою библиотеку для OneScript](https://infostart.ru/1c/articles/791568/)
 
 - [ ] DumpConfigToFiles
-- [X] **infobase dump** + **infobase dumpformat** DumpIB
+- [x] **infobase dump** + **infobase dumpformat** DumpIB
 - [ ] DumpIBWithoutLock
-- [X] **infobase restore** RestoreIB
+- [x] **infobase restore** RestoreIB
 - [ ] RestoreIBWithoutLock
 - [ ] Lock
 - [ ] Unlock
 - [ ] Terminate
-- [X] **fs deleteold** ClearOldFiles
+- [x] **fs deleteold** ClearOldFiles
 - [ ] TestUpdate
-- [X] **ftp put** CopyFTP
-- [X] **ftp get** + **ftp delete** DownloadFTP
+- [x] **ftp put** CopyFTP
+- [x] **ftp get** + **ftp delete** DownloadFTP
 - [ ] BuildDistribRepo
 - [ ] SaveLastConfigUpdateText
 - [ ] ConfigurationRepositoryUpdateCfg
-- [ ] LoadConfigFromFiles
+- [x] LoadConfigFromFiles
 - [ ] LoadExtensionFromFiles
 - [ ] SaveExtensionInFile
 - [ ] GitLoad
 - [X] **edt export xml1c** EdtProjectExportToConfigFiles
   - [ ] Заменить ЗапуститьПриложение на ОбщегоНазначения.ЗапуститьПроцесс
   - [ ] Добавить команды для режима 1C:EDT https://its.1c.ru/db/edtdoc#content:10608:hdoc
-- [X] **infobase create file** и **infobase create server** CreateInfoBase
+- [x] **infobase create file** и **infobase create server** CreateInfoBase
 - [ ] DeleteInfoBase
 - [ ] BuildDistrib
 - [ ] Save1cv8_mft
 - [ ] SaveInstall_edf
 - [ ] SetURLS
 - [ ] SendNews
-- [X] **obfuscation** Obfuscate
+- [x] **obfuscation** Obfuscate
   - [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк в обфусированном файле.
-- [X] **infobase check** CheckConfig
+- [x] **infobase check** CheckConfig
 - [ ] FindFilesAndCopy
-- [X] **fs errorsfromfile** WriteFileAsErrorInConsole
+- [x] **fs errorsfromfile** WriteFileAsErrorInConsole
 - [ ] UpdateIB
 - [ ] GetImageForMailing
 - [ ] MakeMailing
 - [ ] MakeUpdatesXmlZip
-- [X] **zip add** и **zip extract** CreateZip
+- [x] **zip add** и **zip extract** CreateZip
 - [ ] BuildDistribEpfErf
-- [X] **changelog convert** и **changelog init** ConvertChangeLog
+- [x] **changelog convert** и **changelog init** ConvertChangeLog
 - [ ] GetVideoPreviewFromMarkDown
 - [ ] MakeMailingFiles
 - [ ] CheckVanessaErrors
 - [ ] TaskKill
 - [ ] RunVanessaAutomation
-- [X] **checksum** FileCheckSum
-- [X] **checksum** FolderCheckSum
+- [x] **checksum** FileCheckSum
+- [x] **checksum** FolderCheckSum
 - [ ] ConfigVersionFromEdtSrc
 - [ ] StartDebugFile
 - [ ] StartCoverage41C
