@@ -95,7 +95,7 @@ before_script:
 - [x] **obfuscation** Obfuscate
   - [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк в обфусированном файле.
 - [x] **infobase check** CheckConfig
-- [ ] FindFilesAndCopy
+- [x] **fs copy** FindFilesAndCopy
 - [x] **fs errorsfromfile** WriteFileAsErrorInConsole
 - [ ] UpdateIB
 - [ ] GetImageForMailing
