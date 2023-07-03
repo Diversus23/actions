@@ -79,8 +79,8 @@ before_script:
 - [ ] SaveLastConfigUpdateText
 - [ ] ConfigurationRepositoryUpdateCfg
 - [x] LoadConfigFromFiles
-- [ ] LoadExtensionFromFiles
-- [ ] SaveExtensionInFile
+- [x] **infobase extension load + infobase extension loadfromsource** LoadExtensionFromFiles
+- [x] **infobase extension save + infobase extension savetosource** SaveExtensionInFile
 - [ ] GitLoad
 - [X] **edt export xml1c** EdtProjectExportToConfigFiles
   - [ ] Заменить ЗапуститьПриложение на ОбщегоНазначения.ЗапуститьПроцесс
@@ -111,7 +111,7 @@ before_script:
 - [ ] RunVanessaAutomation
 - [x] **checksum** FileCheckSum
 - [x] **checksum** FolderCheckSum
-- [ ] ConfigVersionFromEdtSrc
+- [x] **edt versionconfig** ConfigVersionFromEdtSrc
 - [ ] StartDebugFile
 - [ ] StartCoverage41C
 - [ ] StopCoverage41C

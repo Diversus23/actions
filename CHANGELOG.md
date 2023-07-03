@@ -12,6 +12,7 @@
 * Добавление команд для работы с файловой системой: fs delete, fs newtempfile, fs newtemppath, fs copy, fs errorsfromfile
 * Добавление команды для экспорта проекта EDT в XML 1C: edt export xml1c
 * Добавление в тесты возможности исполнения тестов по регулярному выражению
+* Добавление команд для работы с расширениями 1С: infobase extension load, infobase extension loadfromsource, infobase extension save, infobase extension savetosource, infobase extension update
 
 ## Изменено
 
