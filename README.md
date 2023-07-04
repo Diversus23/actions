@@ -73,8 +73,9 @@ before_script:
 - [ ] Terminate
 - [x] **fs deleteold** ClearOldFiles
 - [ ] TestUpdate
-- [x] **ftp put** CopyFTP
+- [x] **ftp put** + **ftp fileexists** CopyFTP  
 - [x] **ftp get** + **ftp delete** DownloadFTP
+  - [ ] Переделать модуль РаботаFTP на класс МенеджерFTP
 - [ ] BuildDistribRepo
 - [ ] SaveLastConfigUpdateText
 - [ ] ConfigurationRepositoryUpdateCfg
@@ -82,7 +83,7 @@ before_script:
 - [x] **infobase extension load + infobase extension loadfromsource** LoadExtensionFromFiles
 - [x] **infobase extension save + infobase extension savetosource** SaveExtensionInFile
 - [ ] GitLoad
-- [X] **edt export xml1c** EdtProjectExportToConfigFiles
+- [x] **edt export xml1c** EdtProjectExportToConfigFiles
   - [ ] Заменить ЗапуститьПриложение на ОбщегоНазначения.ЗапуститьПроцесс
   - [ ] Добавить команды для режима 1C:EDT https://its.1c.ru/db/edtdoc#content:10608:hdoc
 - [x] **infobase create file** и **infobase create server** CreateInfoBase
@@ -104,6 +105,7 @@ before_script:
 - [x] **zip add** и **zip extract** CreateZip
 - [ ] BuildDistribEpfErf
 - [x] **changelog convert** и **changelog init** ConvertChangeLog
+  - [ ] Добавить поддержку произвольных областей в файлах changelog (их вставляем простыми абзацами \<h2\> и \<p\>)
 - [ ] GetVideoPreviewFromMarkDown
 - [ ] MakeMailingFiles
 - [ ] CheckVanessaErrors

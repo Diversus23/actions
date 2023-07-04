@@ -1,0 +1,71 @@
+# Основной yml-файл для сборки конфигураций на платформе 1С.
+# План сборки:
+# 1. 
+
+
+stages:
+  - Подготовка
+  - Сборка
+  - Проверки
+  - Тестирование
+  - Деплой
+
+# Переменные для работы
+variables:
+  # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
+  GIT_DEPTH: 10
+  # Использовать быстрое сжатие.
+  FF_USE_FASTZIP: "true"
+  # Сжатие артефактов выше среднего.
+  ARTIFACT_COMPRESSION_LEVEL: "fast" 
+  # Сжатие кэша быстрое.
+  CACHE_COMPRESSION_LEVEL: "fast"
+  ACTIONS: "oscript -encoding=utf-8 $CI_PROJECT_DIR\actions\src\actions.os"
+
+# Настройки по умолчанию для всех job-ов.
+default:
+  # Все jobs прерываемые, если будут изменения в текущей ветке, то текущее задание будет прервано и начнется новое.
+  interruptible: true
+
+# Всегда выполняется перед стартом по умолчанию для всех job-ов.
+before_script:
+  - chcp 65001
+  - echo $ACTIONS
+  - echo "$CI_PROJECT_DIR"
+  - git config --local core.quotepath false;  
+  - if (Test-Path "$CI_PROJECT_DIR\actions") { Remove-item "$CI_PROJECT_DIR\actions" -recurse -force }
+  - git clone https://github.com/Diversus23/actions.git
+
+Обфускация модуля СЛС:
+  stage: Подготовка
+  artifacts:
+    name: "СЛС"
+    paths: ['$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl']
+    expire_in: 1 day
+  script:
+    # Проверим необходимо ли обфусцировать защищенный модуль (файл существует и ветка мастер).
+    - $SLS_EXISTS = oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs fileexists --file "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl"
+    - $NEED_OBFUSCATE = (($SLS_EXISTS -eq '1') && (($CI_COMMIT_BRANCH -eq 'master') -or ($CI_COMMIT_REF_NAME -eq 'master') -or ($CI_MERGE_REQUEST_TARGET_BRANCH_NAME -eq 'master')))
+    - echo "Модуль СЛС обфусцирован = $NEED_OBFUSCATE"
+    - if ($NEED_OBFUSCATE -eq $true) 
+        { 
+          $ACTIONS obfuscation --in "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl" --apikey $NETLENKA_APIKEY
+        }
+  only:
+    refs:
+      - master
+
+Сборка базы:
+  stage: Сборка
+  script:
+    # Создадим пустую базу
+    # Создание папки и очистка если она существует
+    - $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build" --clear
+    - $ACTIONS infobase create file --path "$CI_PROJECT_DIR\build"
+  only:
+    refs:
+      - develop
+      - master
+      - merge_requests  
+
+
