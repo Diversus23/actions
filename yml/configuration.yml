@@ -6,9 +6,6 @@
 stages:
   - Подготовка
   - Сборка
-  - Проверки
-  - Тестирование
-  - Деплой
 
 # Переменные для работы
 variables:
@@ -20,7 +17,7 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
-  ACTIONS: "oscript -encoding=utf-8 $CI_PROJECT_DIR\actions\src\actions.os"
+  ACTIONS: 'oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os"'
 
 # Настройки по умолчанию для всех job-ов.
 default:
