@@ -54,9 +54,12 @@ before_script:
   stage: Сборка
   script:
     # Создадим пустую базу
-    # Создание папки и очистка если она существует
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\build" --clear
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase create file --path "$CI_PROJECT_DIR\build"
+    # Конвертация проекта EDT в XML 1C
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\build\config" --clear
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" edt sourcetoxml1c --project $CI_PROJECT_DIR\$PROJECT_NAME --path $CI_PROJECT_DIR\build\config --workspace $CI_PROJECT_DIR\workspace
   only:
     refs:
       - develop
