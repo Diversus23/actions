@@ -17,7 +17,6 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
-  ACTIONS: 'oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os"'
 
 # Настройки по умолчанию для всех job-ов.
 default:
@@ -27,7 +26,6 @@ default:
 # Всегда выполняется перед стартом по умолчанию для всех job-ов.
 before_script:
   - chcp 65001
-  - echo $ACTIONS
   - echo "$CI_PROJECT_DIR"
   - git config --local core.quotepath false;  
   - if (Test-Path "$CI_PROJECT_DIR\actions") { Remove-item "$CI_PROJECT_DIR\actions" -recurse -force }
@@ -46,7 +44,7 @@ before_script:
     - echo "Модуль СЛС обфусцирован = $NEED_OBFUSCATE"
     - if ($NEED_OBFUSCATE -eq $true) 
         { 
-          $ACTIONS obfuscation --in "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl" --apikey $NETLENKA_APIKEY
+          oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" obfuscation --in "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl" --apikey $NETLENKA_APIKEY
         }
   only:
     refs:
@@ -57,8 +55,8 @@ before_script:
   script:
     # Создадим пустую базу
     # Создание папки и очистка если она существует
-    - $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build" --clear
-    - $ACTIONS infobase create file --path "$CI_PROJECT_DIR\build"
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\build" --clear
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase create file --path "$CI_PROJECT_DIR\build"
   only:
     refs:
       - develop
