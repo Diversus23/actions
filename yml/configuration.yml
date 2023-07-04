@@ -10,7 +10,7 @@ stages:
 # Переменные для работы
 variables:
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
-  GIT_DEPTH: 10
+  #GIT_DEPTH: 10
   # Использовать быстрое сжатие.
   FF_USE_FASTZIP: "true"
   # Сжатие артефактов выше среднего.
