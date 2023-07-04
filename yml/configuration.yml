@@ -3,6 +3,8 @@
 stages:
   - Подготовка
   - Сборка
+  - Тестирование
+  - Развертывание
 
 # Переменные для работы
 variables:
@@ -46,20 +48,50 @@ before_script:
   only:
     refs:
       - master
+      - main
 
 Сборка базы:
   stage: Сборка
   script:
-    # Создадим пустую базу
+    # Создадим пустую базу / возьмем эталонную
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\build" --clear
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase create file --path "$CI_PROJECT_DIR\build\base"
     # Конвертация проекта EDT в XML 1C
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" edt sourcetoxml1c --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
+    # Загрузка исходников XML 1C в информационную базу
+    # Загрузим базу в отдельную папку для этого конвейера
   only:
     refs:
       - develop
       - master
-      - merge_requests  
+      - main
+      - merge_requests
 
+Дымове тесты:
+  stage: Тестирование
+  script:
+    - echo "Дымовые тесты"
+  only:
+    refs:
+      - develop
+      - merge_requests
 
+Основные тесты:
+  stage: Тестирование
+  script:
+    - echo "Основные тесты"
+  only:
+    refs:
+      - develop
+      - merge_requests
+
+Развертывание:
+  stage: Развертывание
+  script:
+    - echo "Развертывание"
+  only:
+    refs:
+      - master
+      - main
+      - merge_requests    
