@@ -1,9 +1,14 @@
 # Основной yml-файл для сборки конфигураций на платформе 1С.
+# В основной сборке использовать вот этот код:
+# =============
+# include:
+#   - remote: 'https://raw.githubusercontent.com/Diversus23/actions/master/yml/configuration.yml'
+# =============
 
 stages:
   - Подготовка
   # + Скачивание actions
-  # - Защита конфигурации (только для УИТ, возможно еще для чего-нибудь) (релиз)
+  # + Защита конфигурации (только для УИТ, возможно еще для чего-нибудь) (релиз)
   - Сборка
   # - Создание пустой базы
   # - Выгрузка из EDT исходников в XML 1C
@@ -88,7 +93,7 @@ before_script:
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
     - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
     # Загрузка исходников XML 1C в информационную базу
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase configloadfromxml --path "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --connection /S$CI_PROJECT_DIR\build\base
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase configloadfromxml --path "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --connection "/S $CI_PROJECT_DIR\build\base"
     # Создадим серверную базу для этой сборки
   only:
     refs:
