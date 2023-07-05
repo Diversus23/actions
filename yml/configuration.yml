@@ -2,9 +2,33 @@
 
 stages:
   - Подготовка
+  # + Скачивание actions
+  # - Защита конфигурации (только для УИТ, возможно еще для чего-нибудь) (релиз)
   - Сборка
+  # - Создание пустой базы
+  # - Выгрузка из EDT исходников в XML 1C
+  # - Загрузка исходников XML в пустую базу
+  # - Выгрузка из EDT исходников расширений в XML 1C
+  # - Загрузка расширений в базу
+  # - Копирование базы в каталог конвеера
   - Тестирование
+  # - Проверка конфигурации средствами платформы
+  # - В базе тестов проставляем теги для тестов для выполнения конвеера
+  # - Выполняем тесты для ветки
+  # - Выполняем дымовые тесты
+  # - Выполняем основные тесты
+  - Сонар
+  # - Анализ работы в сонаре
+  # - Отчет Allure
+  # - Полнота дымовых тестов для вливаемых веток
   - Развертывание
+  # - Отправка новостей об обновлении на сайт
+  # - Обновление на сайте спецификаций API
+  # - Сборка дистрибутива
+  # - Отправление дистрибутива в облако S3
+  # - Обновление эталонной базы
+  - Завершение
+  # - Удаление старых баз в конвеере
 
 # Переменные для работы
 variables:
@@ -16,6 +40,11 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
+  # Сколько нодов использовать для распаралеливаемых работ
+  # Внутри джобов с инструкцией parallels можно использовать CI_NODE_INDEX и CI_NODE_TOTAL
+  # См. https://habr.com/ru/companies/tinkoff/articles/662069/
+  USE_NODES: 3
+  # Для сокращения описания переменная
   ACTIONS: '-encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os"'
 
 # Настройки по умолчанию для всех job-ов.
@@ -32,7 +61,7 @@ before_script:
   - git clone https://github.com/Diversus23/actions.git
 
 # Только для проекта Управление IT-отделом 8
-Обфускация модуля СЛС:
+Защита конфигурации:
   stage: Подготовка
   artifacts:
     name: "СЛС"
@@ -47,10 +76,9 @@ before_script:
         { 
           oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" obfuscation --in "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl" --apikey $NETLENKA_APIKEY
         }
-  only:
-    refs:
-      - master
-      - main
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" && $CI_PROJECT_NAME == "it"'
+    - if: '$CI_COMMIT_REF_NAME == "master" && $CI_PROJECT_NAME == "it"'
 
 Сборка базы:
   stage: Сборка
@@ -60,9 +88,10 @@ before_script:
     - oscript $ACTIONS infobase create file --path "$CI_PROJECT_DIR\build\base"
     # Конвертация проекта EDT в XML 1C
     - oscript $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
-    - oscript $ACTIONS edt sourcetoxml1c --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
+    - oscript $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
     # Загрузка исходников XML 1C в информационную базу
-    # Загрузим базу в отдельную папку для этого конвейера
+    - oscript $ACTIONS infobase configloadfromxml --path "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --connection /S$CI_PROJECT_DIR\build\base
+    # Создадим серверную базу для этой сборки
   only:
     refs:
       - develop
@@ -70,10 +99,23 @@ before_script:
       - main
       - merge_requests
 
-Дымове тесты:
+Тесты ветки:
   stage: Тестирование
+  parallel: 3
   script:
-    - echo "Дымовые тесты"
+    - echo "Основные тесты"
+    - echo $CI_NODE_INDEX
+  only:
+    refs:
+      - develop
+      - merge_requests      
+
+Дымовые тесты:
+  stage: Тестирование
+  parallel: 3
+  script:
+    - echo "Дымовые тесты "
+    - echo $CI_NODE_INDEX
   only:
     refs:
       - develop
@@ -81,17 +123,46 @@ before_script:
 
 Основные тесты:
   stage: Тестирование
+  parallel: 3
   script:
     - echo "Основные тесты"
+    - echo $CI_NODE_INDEX
   only:
     refs:
       - develop
       - merge_requests
 
+SonarQube:
+  stage: Сонар
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+    GIT_DEPTH: "0"  
+  cache:
+    key: "$CI_PROJECT_NAME-SONAR_CACHE"
+    paths:
+      - .sonar/cache
+  script:
+    - echo "Основные тесты"
+    - echo $CI_NODE_INDEX
+  only:
+    refs:
+      - develop
+      - merge_requests      
+
 Развертывание:
   stage: Развертывание
   script:
     - echo "Развертывание"
+  only:
+    refs:
+      - master
+      - main
+      - merge_requests    
+
+Удаление старых баз конвеера:
+  stage: Завершение
+  script:
+    - echo "Завершение"
   only:
     refs:
       - master
