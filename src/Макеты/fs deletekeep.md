@@ -8,7 +8,7 @@
 # Создаем бэкап
 oscript actions.os infobase dumpformat --path d:\backup\ --format yyyyMMddHHmmss --connection /Sserver1c\base1c
 # Удаляем старые файлы, оставляем последние 7 копий
-oscript actions.os fs deleteold --path d:\backup\ --mask *.dt --count 7
+oscript actions.os fs deletekeep --path d:\backup\ --mask *.dt --count 7
 ```
 
 Первая команда создаст бэкап, вторая посмотрит на все бэкапы в папке `d:\backup` и оставит последние 7 dt-файлов. Достаточно удобно.

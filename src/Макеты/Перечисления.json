@@ -19,5 +19,10 @@
     "PostgreSQL": "PostgreSQL",
     "IBMDB2": "IBMDB2",
     "OracleDatabase": "OracleDatabase"
+  },
+  "ТипУстареванияФайлов": {
+    "День": "day",
+    "Час": "hour",
+    "Минута": "min"
   }
 }

@@ -14,6 +14,7 @@
 Перем ДействияСFTP Экспорт;
 Перем ФорматChangeLog Экспорт;
 Перем ТипыСУБД Экспорт;
+Перем ТипУстареванияФайлов Экспорт;
 
 // BSLLS:MissingVariablesDescription-on
 // BSLLS:ExportVariables-on
