@@ -44,8 +44,6 @@ variables:
   # Внутри джобов с инструкцией parallels можно использовать CI_NODE_INDEX и CI_NODE_TOTAL
   # См. https://habr.com/ru/companies/tinkoff/articles/662069/
   USE_NODES: 3
-  # Для сокращения описания переменная
-  ACTIONS: '-encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os"'
 
 # Настройки по умолчанию для всех job-ов.
 default:
@@ -84,13 +82,13 @@ before_script:
   stage: Сборка
   script:
     # Создадим пустую базу / возьмем эталонную
-    - oscript $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build" --clear
-    - oscript $ACTIONS infobase create file --path "$CI_PROJECT_DIR\build\base"
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\build" --clear
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase create file --path "$CI_PROJECT_DIR\build\base"
     # Конвертация проекта EDT в XML 1C
-    - oscript $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
-    - oscript $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
     # Загрузка исходников XML 1C в информационную базу
-    - oscript $ACTIONS infobase configloadfromxml --path "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --connection /S$CI_PROJECT_DIR\build\base
+    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase configloadfromxml --path "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --connection /S$CI_PROJECT_DIR\build\base
     # Создадим серверную базу для этой сборки
   only:
     refs:
