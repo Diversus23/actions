@@ -16,6 +16,7 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
+  ACTIONS: '-encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os"'
 
 # Настройки по умолчанию для всех job-ов.
 default:
@@ -30,6 +31,7 @@ before_script:
   - if (Test-Path "$CI_PROJECT_DIR\actions") { Remove-item "$CI_PROJECT_DIR\actions" -recurse -force }
   - git clone https://github.com/Diversus23/actions.git
 
+# Только для проекта Управление IT-отделом 8
 Обфускация модуля СЛС:
   stage: Подготовка
   artifacts:
@@ -54,11 +56,11 @@ before_script:
   stage: Сборка
   script:
     # Создадим пустую базу / возьмем эталонную
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\build" --clear
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase create file --path "$CI_PROJECT_DIR\build\base"
+    - oscript $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build" --clear
+    - oscript $ACTIONS infobase create file --path "$CI_PROJECT_DIR\build\base"
     # Конвертация проекта EDT в XML 1C
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" edt sourcetoxml1c --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
+    - oscript $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
+    - oscript $ACTIONS edt sourcetoxml1c --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
     # Загрузка исходников XML 1C в информационную базу
     # Загрузим базу в отдельную папку для этого конвейера
   only:
