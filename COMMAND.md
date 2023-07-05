@@ -9,7 +9,7 @@
     - [convert](#changelog-convert) Конвертировать ChangeLog.md в другой формат
   - [checksum](#checksum) Выводит в консоль контрольную сумма файла или директории в формате md5
   - [edt](#edt) Команды для работы с 1C:Enterprise Development Tools (EDT)
-    - [sourcetoxml1c](#edt-sourcetoxml1c) Экспорт проекта EDT в формат XML-выгрузки 1С (используя ring)
+    - [srctoxml](#edt-srctoxml) Экспорт проекта EDT в XML формат 1С (используя ring)
     - [versionconfig](#edt-versionconfig) Возвращает в консоль версию конфигурацию из проекта EDT получаемую из исходного кода
   - [fs](#fs) Команды для работы с файловой системой
     - [addcontent](#fs-addcontent) Добавление строки в текстовый файл
@@ -28,22 +28,23 @@
     - [delete](#ftp-delete) Удаление файлов на FTP-сервере
   - [infobase](#infobase) Команды для работы с информационными базами 1C
     - [clearcache](#infobase-clearcache) Очистить локальный кэш базы 1С
-    - [config](#infobase-config) Работа с конфигурациями 1С
-      - [check](#infobase-config-check) Синтаксический контроль конфигурации 1С
-      - [load](#infobase-config-load) Загрузить конфигурацию из cf-файла
-      - [save](#infobase-config-save) Сохранить конфигурацию в cf-файл
+    - [configcheck](#infobase-configcheck) Синтаксический контроль конфигурации 1С
+    - [configload](#infobase-configload) Загрузить конфигурацию из cf-файла
+    - [configloadfromxml](#infobase-configloadfromxml) Загрузить конфигурацию из исходников XML (формат 1C)
+    - [configsave](#infobase-configsave) Сохранить конфигурацию в cf-файл
+    - [configsavetoxml](#infobase-configsavetoxml) Сохранить конфигурацию в исходники XML (формат 1C)
     - [create](#infobase-create) Создание информационной базы 1С
       - [file](#infobase-create-file) Создание файловой информационной базы 1C в каталоге
       - [server](#infobase-create-server) Создание серверной информационной базы на сервере 1С
-    - [dump](#infobase-dump) Выгрузка информационной базы 1С в DT-файл
-    - [dumpformat](#infobase-dumpformat) Выгрузка информационной базы 1С в DT-файл в файл, с форматом имени, которое можно задать
+    - [dump](#infobase-dump) Выгрузка информационной базы 1С в dt-файл
+    - [dumpformat](#infobase-dumpformat) Выгрузка информационной базы 1С в dt-файл в файл, с форматом имени, которое можно задать
     - [extension](#infobase-extension) Работа с расширениями 1С
       - [load](#infobase-extension-load) Загрузить расширение из cfe-файла в конфигурацию 1С
-      - [loadfromsource](#infobase-extension-loadfromsource) Загрузить расширение в конфигурацию 1C из каталога с исходниками XML
+      - [loadfromsrc](#infobase-extension-loadfromsrc) Загрузить расширение в конфигурацию 1C из каталога с исходниками XML
       - [save](#infobase-extension-save) Сохранить расширение из конфигурации 1С в cfe-файл
-      - [savetosource](#infobase-extension-savetosource) Сохранить расширение из конфигурации 1С в исходники XML
+      - [savetosrc](#infobase-extension-savetosrc) Сохранить расширение из конфигурации 1С в исходники XML
       - [update](#infobase-extension-update) Обновление расширения в информационной базе 1С
-    - [restore](#infobase-restore) Загрузка информационной базы 1С из DT-файла
+    - [restore](#infobase-restore) Загрузка информационной базы 1С из dt-файла
   - [json](#json) Команды для работы с json-файлами
     - [write](#json-write) Запись значения по ключу в файл json
   - [newsletter](#newsletter) Создание новостных рассылок через сторонние сервисы рассылок
@@ -526,9 +527,9 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 
 ---
 
-#### edt sourcetoxml1c
+#### edt srctoxml
 
-Экспорт проекта EDT в формат XML-выгрузки 1С (используя ring).
+Экспорт проекта EDT в XML формат 1С (используя ring).
 
 ##### Опции команды
 
@@ -540,6 +541,9 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 Синонимы: [--workspace, -w].
 - *edtversion*: Версия EDT для экспорта. Пример: "2021.1.5:x86_64" Список установленных версий можно узнать набрав "ring help modules" (необязательный).
 Синонимы: [--edtversion, -e].
+
+Чтобы экспорт был возможен, необходимо наличие установленного приложения "ring". [Подробнее о ring](https://its.1c.ru/db/edtdoc#content:10003:hdoc:t000003__список-версий-едт).
+
 
 ---
 
@@ -846,17 +850,11 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 ---
 
-#### infobase config
-
-Работа с конфигурациями 1С.
-
----
-
-##### infobase config check
+#### infobase configcheck
 
 Синтаксический контроль конфигурации 1С.
 
-###### Опции команды
+##### Опции команды
 
 - *connection*: Строка соединения с информационной базой 1С. Для файловой "/FC:\Base1C", а серверной "/Sserver\base" (обязательный).
 Синонимы: [--connection, -с].
@@ -904,11 +902,11 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 ---
 
-##### infobase config load
+#### infobase configload
 
 Загрузить конфигурацию из cf-файла.
 
-###### Опции команды
+##### Опции команды
 
 - *connection*: Строка соединения с информационной базой 1С. Для файловой "/FC:\Base1C", а серверной "/Sserver\base" (обязательный).
 Синонимы: [--connection, -с].
@@ -927,11 +925,32 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 ---
 
-##### infobase config save
+#### infobase configloadfromxml
+
+Загрузить конфигурацию из исходников XML (формат 1C).
+
+##### Опции команды
+
+- *connection*: Строка соединения с информационной базой 1С. Для файловой "/FC:\Base1C", а серверной "/Sserver\base" (обязательный).
+Синонимы: [--connection, -с].
+- *user*: Имя пользователя (необязательный).
+Синонимы: [--user, -u, -n].
+- *password*: Пароль пользователя (необязательный).
+Синонимы: [--password, --pwd, -p].
+- *v8version*: Версия платформы 1С (необязательный).
+Синонимы: [--v8version, -v].
+- *uccode*: Ключ разрешения запуска (необязательный).
+Синонимы: [--uccode, --uc].
+- *path*: Путь к исходникам конфигурации откуда надо загрузить XML в формате 1С (обязательный).
+Синонимы: [--path, --from, -p].
+
+---
+
+#### infobase configsave
 
 Сохранить конфигурацию в cf-файл.
 
-###### Опции команды
+##### Опции команды
 
 - *connection*: Строка соединения с информационной базой 1С. Для файловой "/FC:\Base1C", а серверной "/Sserver\base" (обязательный).
 Синонимы: [--connection, -с].
@@ -945,6 +964,27 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 Синонимы: [--uccode, --uc].
 - *file*: Путь к cf-файлу для выгрузки конфигурации 1С (обязательный).
 Синонимы: [--file, -f].
+
+---
+
+#### infobase configsavetoxml
+
+Сохранить конфигурацию в исходники XML (формат 1C).
+
+##### Опции команды
+
+- *connection*: Строка соединения с информационной базой 1С. Для файловой "/FC:\Base1C", а серверной "/Sserver\base" (обязательный).
+Синонимы: [--connection, -с].
+- *user*: Имя пользователя (необязательный).
+Синонимы: [--user, -u, -n].
+- *password*: Пароль пользователя (необязательный).
+Синонимы: [--password, --pwd, -p].
+- *v8version*: Версия платформы 1С (необязательный).
+Синонимы: [--v8version, -v].
+- *uccode*: Ключ разрешения запуска (необязательный).
+Синонимы: [--uccode, --uc].
+- *path*: Путь к каталогу, куда надо выгрузить конфигурацию в формат XML 1С (обязательный).
+Синонимы: [--path, --to, -p].
 
 ---
 
@@ -1005,7 +1045,7 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 #### infobase dump
 
-Выгрузка информационной базы 1С в DT-файл.
+Выгрузка информационной базы 1С в dt-файл.
 
 ##### Опции команды
 
@@ -1026,7 +1066,7 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 #### infobase dumpformat
 
-Выгрузка информационной базы 1С в DT-файл в файл, с форматом имени, которое можно задать.
+Выгрузка информационной базы 1С в dt-файл в файл, с форматом имени, которое можно задать.
 
 ##### Опции команды
 
@@ -1080,7 +1120,7 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 ---
 
-##### infobase extension loadfromsource
+##### infobase extension loadfromsrc
 
 Загрузить расширение в конфигурацию 1C из каталога с исходниками XML.
 
@@ -1128,7 +1168,7 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 ---
 
-##### infobase extension savetosource
+##### infobase extension savetosrc
 
 Сохранить расширение из конфигурации 1С в исходники XML.
 
@@ -1174,7 +1214,7 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 #### infobase restore
 
-Загрузка информационной базы 1С из DT-файла.
+Загрузка информационной базы 1С из dt-файла.
 
 ##### Опции команды
 

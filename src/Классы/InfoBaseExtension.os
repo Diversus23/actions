@@ -9,17 +9,17 @@
 		"Загрузить расширение из cfe-файла в конфигурацию 1С",
 		Новый InfoBaseExtensionLoad());
 
-	Команда.ДобавитьКоманду("loadfromsource",
+	Команда.ДобавитьКоманду("loadfromsrc",
 		"Загрузить расширение в конфигурацию 1C из каталога с исходниками XML",
-		Новый InfoBaseExtensionLoadFromSource());
+		Новый InfoBaseExtensionLoadFromSrc());
 
 	Команда.ДобавитьКоманду("save",
 		"Сохранить расширение из конфигурации 1С в cfe-файл",
 		Новый InfoBaseExtensionSave());
 
-	Команда.ДобавитьКоманду("savetosource",
+	Команда.ДобавитьКоманду("savetosrc",
 		"Сохранить расширение из конфигурации 1С в исходники XML",
-		Новый InfoBaseExtensionSaveToSource());
+		Новый InfoBaseExtensionSaveToSrc());
 
 	Команда.ДобавитьКоманду("update",
 		"Обновление расширения в информационной базе 1С",
