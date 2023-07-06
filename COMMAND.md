@@ -47,6 +47,8 @@
       - [update](#infobase-extension-update) Обновление расширения в информационной базе 1С
     - [restore](#infobase-restore) Загрузка информационной базы 1С из dt-файла
     - [vanessaautomation](#infobase-vanessaautomation) Работа с тестированием и запуск тестов для информационной базы 1С с помощью Vanessa Automation
+      - [dbgson](#infobase-vanessaautomation-dbgson) Включение отладчика 1C dbgs.exe. Возвращает в консоль порт, который будет использоваться отладчиком
+      - [dbgsoff](#infobase-vanessaautomation-dbgsoff) Отключение отладчика 1C dbgs.exe
       - [run](#infobase-vanessaautomation-run) Запуск тестов Vanessa Automation
   - [json](#json) Команды для работы с json-файлами
     - [write](#json-write) Запись значения по ключу в файл json
@@ -1265,6 +1267,36 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 #### infobase vanessaautomation
 
 Работа с тестированием и запуск тестов для информационной базы 1С с помощью Vanessa Automation.
+
+---
+
+##### infobase vanessaautomation dbgson
+
+Включение отладчика 1C dbgs.exe. Возвращает в консоль порт, который будет использоваться отладчиком.
+
+###### Опции команды
+
+- *v8version*: Версия платформы 1С (необязательный).
+Синонимы: [--v8version, -v].
+- *addr*: Адрес сервера отладки. По умолчанию "127.0.0.1" (не обязательный).
+Синонимы: [--addr, -a].
+- *port*: Порт сервера отладки. По умолчанию 1550. Если порт будет занят, то будет попытка найти свободный порт (не обязательный).
+Синонимы: [--port, -p].
+- *file*: Файл-флаг с результатом запуска dbgs. По умолчанию "dbgs.json". Нужен для последующей остановки сервера отладки (не обязательный).
+Синонимы: [--file, -f].
+
+---
+
+##### infobase vanessaautomation dbgsoff
+
+Отключение отладчика 1C dbgs.exe.
+
+###### Опции команды
+
+- *v8version*: Версия платформы 1С (необязательный).
+Синонимы: [--v8version, -v].
+- *file*: Файл-флаг для запущенного сервера отладки dbgs. По умолчанию "dbgs.json". После остановки сервера отладки файл будет удален (не обязательный).
+Синонимы: [--file, -f].
 
 ---
 
