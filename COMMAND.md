@@ -51,6 +51,7 @@
       - [dbgsoff](#infobase-vanessaautomation-dbgsoff) Отключение отладчика 1C dbgs.exe
       - [run](#infobase-vanessaautomation-run) Запуск тестов Vanessa Automation
   - [json](#json) Команды для работы с json-файлами
+    - [read](#json-read) Чтение по ключу из файла json
     - [write](#json-write) Запись значения по ключу в файл json
   - [newsletter](#newsletter) Создание новостных рассылок через сторонние сервисы рассылок
     - [sendsay](#newsletter-sendsay) Работа с сервисом рассылок https://sendsay.ru
@@ -1342,6 +1343,43 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 ---
 
+#### json read
+
+Чтение по ключу из файла json.
+
+##### Опции команды
+
+- *file*: Имя файла json. Если не задано, то будет чтение из файла settings.json (не обязательный).
+Синонимы: [--file, -f].
+- *key*: Имя ключа в точечной нотации. Пример "zip.add" - из json {"zip": {"add": "value"}} вернет в консоль "value" (обязательный).
+Синонимы: [--key, -k].
+- *errors*: Выдавать ошибки в консоль, если при чтении из файла json будут ошибки (не обязательный).
+Синонимы: [--errors, -e].
+
+Пример файла находятся в папке `tests\fixtures\test.json`
+
+```json
+{
+    "default": {
+        "test": {
+            "string": "Hello world",
+            "number": 555,
+            "boolean": true
+        }
+    }
+}
+```
+Выполним команду:
+
+```bash
+# Читаем строку
+oscript actions.os json read "..\tests\fixtures\test.json" --key "default.test.string"
+# В консоль будет выведено "Hello world"
+```
+
+
+---
+
 #### json write
 
 Запись значения по ключу в файл json.
@@ -1366,29 +1404,49 @@ oscript actions.os fs erorrsfromfile --file "/opt/build/errors.log"
 
 1. Записываем строку. Приоритет 1:
     ```bash
-    oscript actions.os json write --key "add.zip" --string "Привет мир"
+    oscript actions.os json write --file example.json --key "add.zip.string" --string "Привет мир"
     ```
 2. Записываем число. Приоритет 2:
     ```bash
-    oscript actions.os json write --key "add.zip" --number 555
+    oscript actions.os json write --file example.json --key "add.zip.number" --number 555
     ```
 3. Записываем булево. Приоритет 3:
     ```bash
     # Присваиваем Истина
-    oscript actions.os json write --key "add.zip" --boolean true
-    oscript actions.os json write --key "add.zip" --boolean 1    
-    oscript actions.os json write --key "add.zip" --boolean Истина
+    oscript actions.os json write --file example.json --file example.json --key "add.zip.boolean1" --boolean true
+    oscript actions.os json write --file example.json --key "add.zip.boolean2" --boolean 1    
+    oscript actions.os json write --file example.json --key "add.zip.boolean3" --boolean Истина
     # Присваиваем Ложь
-    oscript actions.os json write --key "add.zip" --boolean false
-    oscript actions.os json write --key "add.zip" --boolean 0
-    oscript actions.os json write --key "add.zip" --boolean Ложь
+    oscript actions.os json write --file example.json --key "add.zip.boolean4" --boolean false
+    oscript actions.os json write --file example.json --key "add.zip.boolean5" --boolean 0
+    oscript actions.os json write --file example.json --key "add.zip.boolean6" --boolean Ложь
     ```
 4. Записываем дату. Приоритет 4:
     ```bash
-    oscript actions.os json write --key "add.zip" --date 2023-06-05_23:59:59
+    oscript actions.os json write --key "add.zip.date" --date 2023-06-05_23:59:59
     ```
     
 > **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-4).
+
+После выполнения всех команд получим файл `example.json` с таким содержимым:
+
+```json
+{
+    "add": {
+        "zip": {
+            "string": "Привет мир",
+            "number": 555,
+            "boolean1": true,
+            "boolean2": true,
+            "boolean3": true,
+            "boolean4": false,
+            "boolean5": false,
+            "boolean6": false,
+            "date": "2023-06-05T23:59:59Z"            
+        }
+    }
+}
+```
 
 
 ---
