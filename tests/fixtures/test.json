@@ -3,7 +3,10 @@
         "test": {
             "number": 555,
             "boolean": true,
-            "array": []
+            "array": [
+                "Hello world",
+                "Hello world"
+            ]
         }
     }
 }
