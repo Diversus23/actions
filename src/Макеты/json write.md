@@ -1,8 +1,8 @@
 ﻿Записываемое значение может быть различных типов.
 
-1. Записываем строку. Приоритет 1:
+1. Записываем строку. Приоритет 1 `--action set` можно не писать:
     ```bash
-    oscript actions.os json write --file example.json --key "add.zip.string" --string "Привет мир"
+    oscript actions.os json write --action set --file example.json --key "add.zip.string" --string "Привет мир"
     ```
 2. Записываем число. Приоритет 2:
     ```bash
@@ -24,7 +24,23 @@
     oscript actions.os json write --key "add.zip.date" --date 2023-06-05_23:59:59
     ```
     
-> **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-4).
+    > **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-4).
+
+5. Удалим ключ из json:
+    ```bash
+    oscript actions.os json write --action del --key "add.zip.boolean6"
+    ```
+
+6. Далее поработаем с массивами и добавим элементы в массив:
+    ```bash
+    oscript actions.os json write --action addinarray --key "add.zip.array" --str "Элемент 1"
+    oscript actions.os json write --action addinarray --key "add.zip.array" --str "Элемент 2"
+    ```
+
+7. Затем очистим массив:
+    ```bash
+    oscript actions.os json write --action cleararray --key "add.zip.array"
+    ```
 
 После выполнения всех команд получим файл `example.json` с таким содержимым:
 
@@ -39,8 +55,8 @@
             "boolean3": true,
             "boolean4": false,
             "boolean5": false,
-            "boolean6": false,
-            "date": "2023-06-05T23:59:59Z"            
+            "date": "2023-06-05T23:59:59Z",
+            "array": []
         }
     }
 }

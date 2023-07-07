@@ -1,9 +1,9 @@
 ﻿{
     "default": {
         "test": {
-            "string": "Hello world",
             "number": 555,
-            "boolean": true
+            "boolean": true,
+            "array": []
         }
     }
 }
