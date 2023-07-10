@@ -924,6 +924,7 @@
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_savetosource"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_update"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_create_server"
+		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_distrib"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase vanessaautomation dbgson"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase vanessaautomation dbgsoff"
 		// Написать тест "Тест_Должен_Выполнить_Команду_edt_sourcetoxml1c"
