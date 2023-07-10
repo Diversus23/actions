@@ -16,6 +16,7 @@
 Перем ТипыСУБД Экспорт;
 Перем ТипУстареванияФайлов Экспорт;
 Перем ДействияJSON Экспорт;
+Перем ФорматОтветаGet Экспорт;
 
 // BSLLS:MissingVariablesDescription-on
 // BSLLS:ExportVariables-on
