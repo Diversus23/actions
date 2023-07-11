@@ -1180,24 +1180,27 @@ oscript actions.os http get --url "http://192.168.1.20:32772/api/qualitygates/pr
 Синонимы: [--v8version, -v].
 - *uccode*: Ключ разрешения запуска (необязательный).
 Синонимы: [--uccode, --uc].
+- *prefix*: Префикс продукта для дистрибутива (краткое имя продукта на английском). Пример: "it" (обязательный).
 - *path*: Каталог сборки дистрибутива (где будет создан дистрибутив) (обязательный).
 - *versions_path*: Каталог версий где будут браться версии конфигураций для создания обновлений (обязательный).
 Синонимы: [--versions_path, --vp].
-- *versions_updates*: На какие версии будет устанавливаться текущая версия. Версии перечисляются через запятую (обязательный).
+- *versions_updates*: На какие версии будет устанавливаться текущая версия. Пример: "1.0.0.12, 1.0.0.13" (обязательный).
 Синонимы: [--versions_updates, --vu].
 - *minimal_platform_version*: Минимальная версия платформы 1С для работы. Например, "8.3.21.1644" (обязательный).
 Синонимы: [--minimal_platform_version, --mpv].
 - *revoked_versions*: Какие версии были с отозваны. Версии перечисляются через запятую (не обязательный).
 Синонимы: [--revoked_versions, --rv].
-- *shared_path*: Каталог общих файлов (не обязательный).
+- *shared_path*: Каталог общих файлов, которые будут включены в дистриубтив (не обязательный).
 Синонимы: [--shared_path, --sp].
-- *destination*: Назначение установки чистой базы 1С. Например: "SoftOnIT\IT" (обязательный).
-- *destination_demo*: Назначение установки демо базы 1С. Например: "SoftOnIT\DemoIT" (обязательный).
+- *vendor*: Постащик дистриубтива. Если не будет задан, информация о постащвике будет получена из информационной базы 1С (не обязательный).
+- *path_to_install*: Корневой каталог поставщика куда будет установлен дистрибутив или демо при установке. Пример: "SoftOnIT". Новая база будет по умолчанию создаваться в "C:\Users\admin\Documents\SoftOnIT\IT". Где SoftOnIT="--path_to_install", а IT="--destination". По умолчанию "Vendor" (не обязательный).
+- *destination*: Каталог установки чистой базы 1С в каталоге поставщика. Дочерний каталог в "--path_to_install". По умолчанию "Base" (не обязательный).
+- *destination_demo*: Каталог установки демо базы 1С в каталоге поставщика. Дочерний каталог в "--path_to_install". По умолчанию: "BaseDemo" (не обязательный).
 
 Пример:
 
 ```bash
-oscript actions.os -v infobase distrib --connection "/FC:\Projects\_Конфигурации\Телеграмм" --path "C:\temp\123" --versions_path "C:\work\telegram" --versions_updates "1.0.0.10, 1.0.0.12" --minimal_platform_version "8.3.21.1644" --destination "SoftOnIT\IT" --destination_demo "SoftOnIT\DemoIT"
+oscript actions.os -v infobase distrib --connection "/FC:\Projects\_Конфигурации\Телеграмм" --prefix "telegram" --path "C:\temp\123" --versions_path "C:\work\telegram" --versions_updates "1.0.0.10, 1.0.0.12" --minimal_platform_version "8.3.21.1644" --path_to_install "SoftOnIT" --destination "IT" --destination_demo "DemoIT"
 ```
 
 
