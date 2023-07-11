@@ -88,9 +88,9 @@ before_script:
   - [ ] Добавить команды для режима 1C:EDT https://its.1c.ru/db/edtdoc#content:10608:hdoc
 - [x] **infobase create file** и **infobase create server** CreateInfoBase
 - [ ] DeleteInfoBase
-- [ ] BuildDistrib
-- [ ] Save1cv8_mft
-- [ ] SaveInstall_edf
+- [x] **infobase distrib** BuildDistrib
+- [x] (устарело и не нужно) Save1cv8_mft
+- [x] (устарело и не нужно) SaveInstall_edf
 - [ ] SetURLS
 - [ ] SendNews
 - [x] **obfuscation** Obfuscate
