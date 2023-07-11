@@ -9,10 +9,14 @@
 
 * Добавление команд для работы с FTP: ftp get, ftp put, ftp delete
 * Добавление команд для работы с ИБ 1С: infobase create file, infobase create server, infobase dump, infobase restore
-* Добавление команд для работы с файловой системой: fs delete, fs newtempfile, fs newtemppath, fs copy, fs errorsfromfile
+* Добавление команд для работы с файловой системой: fs delete, fs newtempfile, fs newtemppath, fs copy, fs errorsfromfile, fs addcontent
 * Добавление команды для экспорта проекта EDT в XML 1C: edt export xml1c
 * Добавление в тесты возможности исполнения тестов по регулярному выражению
 * Добавление команд для работы с расширениями 1С: infobase extension load, infobase extension loadfromsource, infobase extension save, infobase extension savetosource, infobase extension update
+* Добавлены команды для создания дистриубтивов: infobase distrib
+* Добавлены команды для HTTP-запросов: http get
+* Добавлены команды для работы c json-файлами: json read, json write
+* Добавлены команды для работы с EDT: srctoxml, versionconfig
 
 ## Изменено
 
