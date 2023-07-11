@@ -122,7 +122,6 @@ oscript ftp put --file c:\temp\arc.zip --server 192.168.1.10 --login admin --pas
 
 - *file*: Путь к файлу, куда сохранить документацию. По умолчанию сохраняется в COMMAND.md (не обязательный).
 Синонимы: [--file, -f].
-Значение по умолчанию: "C:\Projects\actions\tests\..\COMMAND.md".
 
 ---
 
@@ -535,6 +534,16 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 ### doctor
 
 Проверка среды actions и зависимостей. Информирует, что не установлено для работы..
+
+Выполняемые проверки:
+- [x] Проверка установленного приложения **1С**. *Проблема: Приложение 1С не установлено. Нельзя работать с 1С => Установите 1С:Предприятие 8.3*. Ссылки для установки: [https://releases.1c.ru/project/Platform83]
+- [x] Проверка установленного приложения **ring**. *Проблема: Нельзя конвертировать исходный код EDT в 1С => Установите EDT*. Ссылки для установки: [https://releases.1c.ru/project/DevelopmentTools10]
+- [x] Проверка установленного приложения **java**. *Проблема: Нельзя конвертировать исходный код EDT в 1С => Установите LibericaJDK*. Ссылки для установки: [https://releases.1c.ru/project/Liberica11FullJDK]
+- [x] Проверка установленного приложения **sonar-scanner**. *Проблема: Не сможете проверять качество кода => Установите sonar и sonar-scanner*. Ссылки для установки: [https://github.com/Daabramov/Sonarqube-for-1c-docker/], [https://github.com/SonarSource/sonar-scanner-cli]
+- [x] Проверка установленного приложения **aws-cli**. *Проблема: Пайплайны содержащий копирование в S3 не смогут работать => Установите aws-cli*. Ссылки для установки: [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html]
+- [x] Проверка установленного приложения **allure**. *Проблема: Если используете тестирование не сможете смотреть красивые тесты => Установите allure*. Ссылки для установки: [https://qameta.io/allure-report/]
+- [x] Проверка установленного приложения **Coverage41C**. *Проблема: Если используете тестирование не сможете посчитать покрытие кода => Установите Coverage41C*. Ссылки для установки: [https://github.com/1c-syntax/Coverage41C/releases]
+
 
 ---
 
