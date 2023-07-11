@@ -35,6 +35,7 @@ jobs:
           opm install ftp
           opm install v8storage
           opm install ParserFileV8i
+          opm install coloratos
 
       # Сохраняем файл env.json с настройками среды
       - name: 'Create settings.json file'
