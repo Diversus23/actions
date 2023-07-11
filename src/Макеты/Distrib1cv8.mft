@@ -1,0 +1,12 @@
+﻿Vendor={{Поставщик}}
+Name={{Имя}}
+Version={{Версия}}
+AppVersion=8.3
+[Config1]
+Catalog={{Синоним}}
+Destination={{КаталогШаблоновПоставщика}}\{{Назначение}}
+Source=1Cv8.cf
+[Config2]
+Catalog={{Синоним}} (демо)
+Destination={{КаталогШаблоновПоставщика}}\{{НазначениеДемо}}
+Source=1Cv8.dt
