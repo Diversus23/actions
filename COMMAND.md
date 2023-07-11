@@ -8,6 +8,7 @@
     - [init](#changelog-init) Инициализировать ChangeLog.md
     - [convert](#changelog-convert) Конвертировать ChangeLog.md в другой формат
   - [checksum](#checksum) Выводит в консоль контрольную сумма файла или директории в формате md5
+  - [doctor](#doctor) Проверка среды actions и зависимостей. Информирует, что не установлено для работы.
   - [edt](#edt) Команды для работы с 1C:Enterprise Development Tools (EDT)
     - [srctoxml](#edt-srctoxml) Экспорт проекта EDT в XML формат 1С (используя ring)
     - [versionconfig](#edt-versionconfig) Возвращает в консоль версию конфигурацию из проекта EDT получаемую из исходного кода
@@ -528,6 +529,12 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 
 > **Внимание!** Следует с осторожностью относится к директориям где находится очень много больших файлов. В таких каталогах контрольная сумма будет рассчитываться не быстро. Имейте это ввиду.
 
+
+---
+
+### doctor
+
+Проверка среды actions и зависимостей. Информирует, что не установлено для работы..
 
 ---
 

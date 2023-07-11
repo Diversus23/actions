@@ -35,6 +35,7 @@
 	.ЗависитОт("v8find")
 	.ЗависитОт("1connector")	
 	.ЗависитОт("1commands")
+	.ЗависитОт("coloratos")
 	.ЗависитОт("ParserFileV8i")
 
 	.РазработкаЗависитОт("1testrunner")
