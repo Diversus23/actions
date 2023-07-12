@@ -14,9 +14,10 @@
 * Добавление в тесты возможности исполнения тестов по регулярному выражению
 * Добавление команд для работы с расширениями 1С: infobase extension load, infobase extension loadfromsource, infobase extension save, infobase extension savetosource, infobase extension update
 * Добавлены команды для создания дистриубтивов: infobase distrib
-* Добавлены команды для HTTP-запросов: http get
+* Добавлены команды для HTTP-запросов: http get, http post
 * Добавлены команды для работы c json-файлами: json read, json write
 * Добавлены команды для работы с EDT: srctoxml, versionconfig
+* Добавлены команды для создания новостей из конфигурации: infobase news
 
 ## Изменено
 

@@ -91,8 +91,8 @@ before_script:
 - [x] **infobase distrib** BuildDistrib
 - [x] (устарело и не нужно) Save1cv8_mft
 - [x] (устарело и не нужно) SaveInstall_edf
-- [ ] SetURLS
-- [ ] SendNews
+- [x] (устарело и не нужно) SetURLS
+- [x] **http post** SendNews
 - [x] **obfuscation** Obfuscate
   - [ ] Для команды obfuscation изменить сохранение обфусцированного файла. В нем есть лишние переводы строк в обфусированном файле.
 - [x] **infobase check** CheckConfig
