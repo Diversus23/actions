@@ -1301,8 +1301,8 @@ binary: Двоичные данные
 - *path*: Каталог сборки дистрибутива (где будет создан дистрибутив) (обязательный).
 - *versions_path*: Каталог версий где будут браться версии конфигураций для создания обновлений (обязательный).
 Синонимы: [--versions_path, --vp].
-- *versions_updates*: На какие версии будет устанавливаться текущая версия. Пример: "1.0.0.12, 1.0.0.13" (обязательный).
-Синонимы: [--versions_updates, --vu].
+- *versions_update*: На какие версии будет устанавливаться текущая версия. Пример: "1.0.0.12, 1.0.0.13" (обязательный).
+Синонимы: [--versions_update, --vu].
 - *minimal_platform_version*: Минимальная версия платформы 1С для работы. Например, "8.3.21.1644" (обязательный).
 Синонимы: [--minimal_platform_version, --mpv].
 - *revoked_versions*: Какие версии были с отозваны. Версии перечисляются через запятую (не обязательный).
@@ -1317,13 +1317,13 @@ binary: Двоичные данные
 Синонимы: [--maket, -m].
 - *version*: Версия для создания обновления. Если не задана, то будет определена последняя версия из конфигурации (не обязательный).
 Синонимы: [--version, -v].
-- *date*: Дата выхода обновления в формате "dd.MM.yyyy". Может быть датой в будущем (когда планируется релиз). Если не задана, то будет использована текущая дата (не обязательный).
-Синонимы: [--date, -d].
+- *date_update*: Дата выхода обновления в формате "dd.MM.yyyy". Может быть датой в будущем (когда планируется релиз). Если не задана, то будет использована текущая дата (не обязательный).
+Синонимы: [--date_update, --du].
 
 Пример:
 
 ```bash
-oscript actions.os -v infobase distrib --connection "/FC:\Projects\_Конфигурации\Телеграмм" --prefix "telegram" --path "C:\temp\123" --versions_path "C:\work\telegram" --versions_updates "1.0.0.10, 1.0.0.12" --minimal_platform_version "8.3.21.1644" --path_to_install "SoftOnIT" --destination "IT" --destination_demo "DemoIT"
+oscript actions.os -v infobase distrib --connection "/FC:\Projects\_Конфигурации\Телеграмм" --prefix "telegram" --path "C:\temp\123" --versions_path "C:\work\telegram" --versions_update "1.0.0.10, 1.0.0.12" --minimal_platform_version "8.3.21.1644" --path_to_install "SoftOnIT" --destination "IT" --destination_demo "DemoIT"
 ```
 
 
@@ -1522,8 +1522,8 @@ oscript actions.os -v infobase distrib --connection "/FC:\Projects\_Конфиг
 Синонимы: [--maket, -m].
 - *version*: Версия для создания новости. Если не задана, то будет определена последняя версия из конфигурации (не обязательный).
 Синонимы: [--version, -v].
-- *date*: Дата выхода обновления в формате "dd.MM.yyyy". Может быть датой в будущем (когда планируется релиз). Если не задана, то будет использована текущая дата (не обязательный).
-Синонимы: [--date, -d].
+- *date_update*: Дата выхода обновления в формате "dd.MM.yyyy". Может быть датой в будущем (когда планируется релиз). Если не задана, то будет использована текущая дата (не обязательный).
+Синонимы: [--date_update, --du].
 - *withstyle*: Сохранить HTML-файл в полном оформлении, теги html, body и стили. Если не задана, то будет сохранено все содержимое тега body без стилей (не обязательный).
 
 ---
@@ -1695,7 +1695,6 @@ cleararray: Очистить массив
 - *date*: Значение-дата в формате yyyy-MM-dd_HH:mm:ss.
 Синонимы: [--date, -d].
 - *filevalue*: Значение файла будет прочитано и записано в ключ.
-Синонимы: [--filevalue, --in].
 
 Записываемое значение может быть различных типов.
 
@@ -1718,14 +1717,14 @@ cleararray: Очистить массив
     oscript actions.os json write --file example.json --key "add.zip.boolean5" --boolean 0
     oscript actions.os json write --file example.json --key "add.zip.boolean6" --boolean Ложь
     ```
-4. Записываем дату. Приоритет 4:
+4. Записываем считанный файл. Приоритет 4:
+    ```bash
+    oscript actions.os json write --key "add.zip.file" --filevalue "C:\Folder\file.txt"
+    ```        
+5. Записываем дату. Приоритет 5:
     ```bash
     oscript actions.os json write --key "add.zip.date" --date 2023-06-05_23:59:59
     ```
-5. Записываем считанный файл. Приоритет 5:
-    ```bash
-    oscript actions.os json write --key "add.zip.file" --filevalue "C:\Folder\file.txt"
-    ```    
 
     > **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-5).
 
