@@ -19,14 +19,14 @@
     oscript actions.os json write --file example.json --key "add.zip.boolean5" --boolean 0
     oscript actions.os json write --file example.json --key "add.zip.boolean6" --boolean Ложь
     ```
-4. Записываем дату. Приоритет 4:
+4. Записываем считанный файл. Приоритет 4:
+    ```bash
+    oscript actions.os json write --key "add.zip.file" --filevalue "C:\Folder\file.txt"
+    ```        
+5. Записываем дату. Приоритет 5:
     ```bash
     oscript actions.os json write --key "add.zip.date" --date 2023-06-05_23:59:59
     ```
-5. Записываем считанный файл. Приоритет 5:
-    ```bash
-    oscript actions.os json write --key "add.zip.file" --filevalue "C:\Folder\file.txt"
-    ```    
 
     > **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-5).
 
