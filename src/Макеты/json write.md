@@ -23,21 +23,26 @@
     ```bash
     oscript actions.os json write --key "add.zip.date" --date 2023-06-05_23:59:59
     ```
-    
-    > **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-4).
+5. Записываем считанный файл. Приоритет 5:
+    ```bash
+    oscript actions.os json write --key "add.zip.file" --filevalue "C:\Folder\file.txt"
+    ```    
 
-5. Удалим ключ из json:
+    > **Важно!** Если указать несколько значений у одного ключа одновременно (пример: *"--key "add.zip" --boolean 1 --number 555"*), то значение установится по приоритету указанному выше, в примерах (1-5).
+
+6. Удалим ключи из json:
     ```bash
     oscript actions.os json write --action del --key "add.zip.boolean6"
+    oscript actions.os json write --action del --key "add.zip.file"
     ```
 
-6. Далее поработаем с массивами и добавим элементы в массив:
+7. Далее поработаем с массивами и добавим элементы в массив:
     ```bash
     oscript actions.os json write --action addinarray --key "add.zip.array" --str "Элемент 1"
     oscript actions.os json write --action addinarray --key "add.zip.array" --str "Элемент 2"
     ```
 
-7. Затем очистим массив:
+8. Затем очистим массив:
     ```bash
     oscript actions.os json write --action cleararray --key "add.zip.array"
     ```
