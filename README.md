@@ -125,6 +125,9 @@ before_script:
 - [ ] DumpExternalDataProcessorOrReportToFiles
 - [ ] VanessaAutomationTest
 
+ToDo:
+- [ ] Добавить в команду doctor проверку включенной защиты от опасных действий.
+
 ## Описание команд
 
 С полным перечнем команд и их аргументами можно ознакомиться в файле [COMMAND.md](docs/COMMAND.md)
