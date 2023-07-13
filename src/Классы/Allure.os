@@ -9,9 +9,9 @@
 		"Отправка результатов отчетов Allure на сервер Allure",
 		Новый AllureSendToServer());
 
-	Команда.ДобавитьКоманду("generatereport",
+	Команда.ДобавитьКоманду("generatereportserver",
 		"Генерация нового результат на сервере Allure",
-		Новый AllureGenerateReport());
+		Новый AllureGenerateReportServer());
 		
 КонецПроцедуры // ОписаниеКоманды()
 
