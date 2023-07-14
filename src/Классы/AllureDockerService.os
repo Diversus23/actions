@@ -5,6 +5,13 @@
 //
 Процедура ОписаниеКоманды(Команда) Экспорт
 	
+	Команда.ДобавитьКоманду("send-results",
+		"Отправка результатов отчетов Allure на сервер Allure Docker Service",
+		Новый AllureDockerServiceSendResults());
+
+	Команда.ДобавитьКоманду("generate-report",
+		"Генерация нового результат на сервере Allure Docker Service",
+		Новый AllureDockerServiceGenerateReport());
 		
 КонецПроцедуры // ОписаниеКоманды()
 

@@ -3,6 +3,10 @@
 <!-- TOC -->
 
 - [actions](#) Программная среда CI/CD для платформы 1С и не только. Позволяет выполнять сборку, доставку, тестирование ПО и многое из того, что может понадобиться в DevOps
+  - [allure](#allure) Команды для работы с Allure
+  - [allure-docker-service](#allure-docker-service) Команды для работы с Allure Docker Service
+    - [send-results](#allure-docker-service-send-results) Отправка результатов отчетов Allure на сервер Allure Docker Service
+    - [generate-report](#allure-docker-service-generate-report) Генерация нового результат на сервере Allure Docker Service
   - [autodoc](#autodoc) Автоформирование документации по этому проекту Actions. Системная команда
   - [changelog](#changelog) Команды работы с ChangeLog.md
     - [init](#changelog-init) Инициализировать ChangeLog.md
@@ -114,6 +118,55 @@ oscript ftp put --file c:\temp\arc.zip --server 192.168.1.10 --login admin --pas
 
 Более того, с помощью этой библиотеки мы построили CI/CD систему на gitlab и полностью собираем из исходников EDT, тестируем, контролируем качество кода, готовим письма нашим клиентам, копируем релиз в облако S3 наше решение - конфигурацию на платформе 1С [Управление IT-отделом 8](https://softonit.ru/catalog/products/it/). Круто да?
 
+
+---
+
+### allure
+
+Команды для работы с Allure.
+
+---
+
+### allure-docker-service
+
+Команды для работы с Allure Docker Service.
+
+**Allure Docker Service** представляет собой сервис для хранения результатов работы программы `allure` и отображениее ее в красивом виде.
+Установить этот сервис можно по ссылке https://github.com/fescobar/allure-docker-service
+Подробнее смотри в `INSTALL.md`
+
+
+---
+
+#### allure-docker-service send-results
+
+Отправка результатов отчетов Allure на сервер Allure Docker Service.
+
+##### Опции команды
+
+- *url*: URL сервера Allure (обязательный).
+Синонимы: [--url, -u].
+- *path*: Каталог с результатами Allure (обязательный).
+Синонимы: [--path, -p].
+- *project*: Имя проекта на сервере Allure (обязательный).
+
+---
+
+#### allure-docker-service generate-report
+
+Генерация нового результат на сервере Allure Docker Service.
+
+##### Опции команды
+
+- *url*: URL сервера Allure (обязательный).
+Синонимы: [--url, -u].
+- *project*: Имя проекта на сервере Allure (обязательный).
+- *execution_type*: Тип запуска. Пример: "jenkins" или "gitlab" (не обязательный).
+Синонимы: [--execution_type, --et].
+- *execution_from*: Запуск из ветки. Пример http://my-gitlab-url/job/my-job/7/ (не обязательный).
+Синонимы: [--execution_from, --ef].
+- *execution_name*: Если вам не подходит "execution_type", можете заменить. Пример my-execution-name (не обязательный).
+Синонимы: [--execution_name, --en].
 
 ---
 
@@ -540,10 +593,11 @@ oscript src\actions.os changelog -file tests\fixtures\changelog.md -outfile test
 Проверка среды actions и зависимостей. Информирует, что не установлено для работы..
 
 Выполняемые проверки:
+- [x] Проверка установленного приложения **git**. *Проблема: Приложение git не установлено. Нельзя работать с репозиториями => Не будет работать pipeline*. Ссылки для установки: [https://git-scm.com/downloads]
 - [x] Проверка установленного приложения **1С**. *Проблема: Приложение 1С не установлено. Нельзя работать с 1С => Установите 1С:Предприятие 8.3*. Ссылки для установки: [https://releases.1c.ru/project/Platform83]
 - [x] Проверка установленного приложения **ring**. *Проблема: Нельзя конвертировать исходный код EDT в 1С => Установите EDT*. Ссылки для установки: [https://releases.1c.ru/project/DevelopmentTools10]
 - [x] Проверка установленного приложения **java**. *Проблема: Нельзя конвертировать исходный код EDT в 1С => Установите LibericaJDK*. Ссылки для установки: [https://releases.1c.ru/project/Liberica11FullJDK]
-- [x] Проверка установленного приложения **sonar-scanner**. *Проблема: Не сможете проверять качество кода => Установите sonar и sonar-scanner*. Ссылки для установки: [https://github.com/Daabramov/Sonarqube-for-1c-docker/], [https://github.com/SonarSource/sonar-scanner-cli]
+- [x] Проверка установленного приложения **sonar-scanner**. *Проблема: Не сможете проверять качество кода => Установите sonar и sonar-scanner*. Ссылки для установки: [https://github.com/Daabramov/Sonarqube-for-1c-docker/], [https://github.com/SonarSource/sonar-scanner-cli/releases]
 - [x] Проверка установленного приложения **aws-cli**. *Проблема: Pipeline содержащий копирование в S3 не смогут работать => Установите aws-cli*. Ссылки для установки: [https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html]
 - [x] Проверка установленного приложения **allure**. *Проблема: Если используете тестирование не сможете смотреть красивые тесты => Установите allure*. Ссылки для установки: [https://qameta.io/allure-report/]
 - [x] Проверка установленного приложения **Coverage41C**. *Проблема: Если используете тестирование не сможете посчитать покрытие кода => Установите Coverage41C*. Ссылки для установки: [https://github.com/1c-syntax/Coverage41C/releases]
@@ -1068,6 +1122,7 @@ binary: Двоичные данные
 - *value10*: Значение параметра 10 HTTP-запроса (необязательный).
 Синонимы: [--value10, --val10, --v10].
 - *fileparams*: JSON-файл с параметрами для отправки вида: {"param1":"value1", "param2":"value2"}" (не обязательный).
+- *jsonbody*: Тело отправляемое в качестве json: {"param1":"value1", "param2":"value2"}" (не обязательный).
 
 ---
 
