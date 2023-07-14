@@ -5,6 +5,7 @@
 - [actions](#) Программная среда CI/CD для платформы 1С и не только. Позволяет выполнять сборку, доставку, тестирование ПО и многое из того, что может понадобиться в DevOps
   - [allure](#allure) Команды для работы с Allure
   - [allure-docker-service](#allure-docker-service) Команды для работы с Allure Docker Service
+    - [emailable-report](#allure-docker-service-emailable-report) Получение краткого отчета с сервера Allure Docker Service состоящего из одного файла (возможно для отправки по почте или для сохранения в артифакты)
     - [send-results](#allure-docker-service-send-results) Отправка результатов отчетов Allure на сервер Allure Docker Service
     - [generate-report](#allure-docker-service-generate-report) Генерация нового результат на сервере Allure Docker Service
   - [autodoc](#autodoc) Автоформирование документации по этому проекту Actions. Системная команда
@@ -138,17 +139,31 @@ oscript ftp put --file c:\temp\arc.zip --server 192.168.1.10 --login admin --pas
 
 ---
 
+#### allure-docker-service emailable-report
+
+Получение краткого отчета с сервера Allure Docker Service состоящего из одного файла (возможно для отправки по почте или для сохранения в артифакты).
+
+##### Опции команды
+
+- *url*: URL сервера Allure Docker Service (обязательный).
+Синонимы: [--url, -u].
+- *project*: Имя проекта на сервере Allure (обязательный).
+- *file*: Имя файла, куда сохранить краткий отчет с сервера (обязательный).
+Синонимы: [--file, -f].
+
+---
+
 #### allure-docker-service send-results
 
 Отправка результатов отчетов Allure на сервер Allure Docker Service.
 
 ##### Опции команды
 
-- *url*: URL сервера Allure (обязательный).
+- *url*: URL сервера Allure Docker Service (обязательный).
 Синонимы: [--url, -u].
-- *path*: Каталог с результатами Allure (обязательный).
+- *path*: Каталог с результатами Allure Docker Service (обязательный).
 Синонимы: [--path, -p].
-- *project*: Имя проекта на сервере Allure (обязательный).
+- *project*: Имя проекта на сервере Allure Docker Service (обязательный).
 
 ---
 
@@ -158,9 +173,9 @@ oscript ftp put --file c:\temp\arc.zip --server 192.168.1.10 --login admin --pas
 
 ##### Опции команды
 
-- *url*: URL сервера Allure (обязательный).
+- *url*: URL сервера Allure Docker Service (обязательный).
 Синонимы: [--url, -u].
-- *project*: Имя проекта на сервере Allure (обязательный).
+- *project*: Имя проекта на сервере Allure Docker Service (обязательный).
 - *execution_type*: Тип запуска. Пример: "jenkins" или "gitlab" (не обязательный).
 Синонимы: [--execution_type, --et].
 - *execution_from*: Запуск из ветки. Пример http://my-gitlab-url/job/my-job/7/ (не обязательный).

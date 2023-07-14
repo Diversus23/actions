@@ -995,6 +995,7 @@
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_vanessaautomation_run"
 		// Написать тест "Тест_Должен_Выполнить_Команду_allure_docker_service_send_result"
 		// Написать тест "Тест_Должен_Выполнить_Команду_allure_docker_service_generate_report"
+		// Написать тест "Тест_Должен_Выполнить_Команду_allure_docker_service_emailable-report"
 		//ДобавитьТест(СписокТестов, "Тест_Должен_Выполнить_Команду_infobase_create_file");
 	КонецЕсли;	
 	// BSLLS:CommentedCode-on
