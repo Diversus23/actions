@@ -5,17 +5,21 @@
 //
 Процедура ОписаниеКоманды(Команда) Экспорт
 
-	Команда.ДобавитьКоманду("dbgson",
-		"Включение отладчика 1C dbgs.exe. Возвращает в консоль порт, который будет использоваться отладчиком",
-		Новый InfoBaseVanessaAutomationDbgsOn());		
+	Команда.ДобавитьКоманду("change-tag",
+		"Замена тега в папке с feature-файлами с одного на другой",
+		Новый VanessaAutomationChangeTag());
 
-	Команда.ДобавитьКоманду("dbgsoff",
+	Команда.ДобавитьКоманду("dbgs-on",
+		"Включение отладчика 1C dbgs.exe. Возвращает в консоль порт, который будет использоваться отладчиком",
+		Новый VanessaAutomationDbgsOn());		
+
+	Команда.ДобавитьКоманду("dbgs-off",
 		"Отключение отладчика 1C dbgs.exe",
-		Новый InfoBaseVanessaAutomationDbgsOff());
+		Новый VanessaAutomationDbgsOff());
 
 	Команда.ДобавитьКоманду("run",
 		"Запуск тестов Vanessa Automation",
-		Новый InfoBaseVanessaAutomationRun());		
+		Новый VanessaAutomationRun());		
 
 КонецПроцедуры // ОписаниеКоманды()
 
