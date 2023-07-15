@@ -209,7 +209,7 @@ before_script:
   allow_failure: true
   only:
     refs:
-      - develop
+      #- develop
       - merge_requests
 
 Дымовые тесты:
@@ -221,6 +221,8 @@ before_script:
     - $TAG = "SmokeTest$CI_NODE_INDEX"
     # Установка нового тега для всех тестов, где установлен тег "SmokeTest" конкретного этого job
     - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation tag-partition --path "$CI_PROJECT_DIR\tests\features" --max $CI_NODE_TOTAL --prefix SmokeTest --filtertags SmokeTest
+    - $TEST_COUNT = oscript -encoding=utf-8 "$ACTIONS" vanessa-automation tag-count --path "$CI_PROJECT_DIR\tests\features" --tag SmokeTest
+    - if ($TEST_COUNT == 0) {echo "Не найдены тесты"; exit 0;} else {echo "Найдено тестов - $TEST_COUNT";}
     # Запускаем сервер отладки dbgs.exe на случайном порту. Если порт будет занят, actions берет следующий и пробует его, пока не найдет свободный
     - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation dbgs-on --port $PORT --file "$CI_PROJECT_DIR\dbgs.json"
     - $PORT = oscript -encoding=utf-8 "$ACTIONS" json read --file $CI_PROJECT_DIR\dbgs.json --key port
@@ -272,6 +274,8 @@ before_script:
     - $TAG = "MainTest$CI_NODE_INDEX"
     # Установка нового тега для всех тестов, где установлен тег "SmokeTest" конкретного этого job
     - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation tag-partition --path "$CI_PROJECT_DIR\tests\features" --max $CI_NODE_TOTAL --prefix MainTest
+    - $TEST_COUNT = oscript -encoding=utf-8 "$ACTIONS" vanessa-automation tag-count --path "$CI_PROJECT_DIR\tests\features" --tag MainTest
+    - if ($TEST_COUNT == 0) {echo "Не найдены тесты"; exit 0;} else {echo "Найдено тестов - $TEST_COUNT";}
     # Запускаем сервер отладки dbgs.exe на случайном порту. Если порт будет занят, actions берет следующий и пробует его, пока не найдет свободный
     - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation dbgs-on --port $PORT --file "$CI_PROJECT_DIR\dbgs.json"
     - $PORT = oscript -encoding=utf-8 "$ACTIONS" json read --file $CI_PROJECT_DIR\dbgs.json --key port
