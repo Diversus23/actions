@@ -471,6 +471,8 @@ Allure:
 
 Удаление старых баз конвеера:
   stage: Завершение
+  variables:
+    GIT_STRATEGY: none
   script:
     # Удаление в папке конвеера устаревших папок за последние 3 дня
     - oscript -encoding=utf-8 "$ACTIONS" fs deleteold --path "$PIPELINE_PATH" --type day --value 3
