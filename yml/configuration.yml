@@ -4,36 +4,47 @@
 # include:
 #   - remote: 'https://raw.githubusercontent.com/Diversus23/actions/master/yml/configuration.yml'
 # =============
+# Требования:
+# 1. Название проекта и папка в которой лежат исходники конфигурации EDT должны совпадать
+# 2. Надо подготовить папку MASTER_BASE (папка с эталонными базами проектов) в которой должны быть подготовленные и заполненные базы с пользователем "Администратор" (для тестов)
+# 3. Надо подготовить папку MASTER_BASE (временная папка для сборки) Туда копируем MASTER_BASE и загружаем изменения. Для каждого пайпалайна создается своя подпапка. Старые базы в ней очищаются (старше 5 дней).
 
 stages:
   - Подготовка
   # + Скачивание actions
   # + Защита конфигурации (только для УИТ, возможно еще для чего-нибудь) (релиз)
   - Сборка
-  # - Создание пустой базы
-  # - Выгрузка из EDT исходников в XML 1C
-  # - Загрузка исходников XML в пустую базу
-  # - Выгрузка из EDT исходников расширений в XML 1C
-  # - Загрузка расширений в базу
-  # - Копирование базы в каталог конвеера
+  # + Создание базы из эталанной
+  # + Выгрузка из EDT исходников в XML 1C
+  # + Загрузка исходников XML в базу конвейера
+  # + Выгрузка из EDT исходников расширений в XML 1C
+  # + Загрузка расширений в базу конвейера
   - Тестирование
-  # - Проверка конфигурации средствами платформы
-  # - В базе тестов проставляем теги для тестов для выполнения конвеера
-  # - Выполняем тесты для ветки
-  # - Выполняем дымовые тесты
-  # - Выполняем основные тесты
+  # + Создание двух типов агентов, одни с тегом test - для тестирования (на один сеанс только одна копия), второй без тегов - для не интерактивных работ (много копий)
+  # + Добавление параллельности тестов
+  # + Проверка конфигурации средствами платформы  
+  # + В базе тестов проставляем теги для тестов для выполнения конвеера
+  # - Выполняем тесты для ветки (не падаем, если есть проблемы)
+  # + Выполняем дымовые тесты (не падаем, если есть проблемы)
+  # + Выполняем основные тесты (не падаем, если есть проблемы) См. https://habr.com/ru/companies/tinkoff/articles/662069/
+  # - При завершении тестирования, закрываем все сеансы 1С
   - Сонар
-  # - Анализ работы в сонаре
-  # - Отчет Allure
+  # + Анализ работы в сонаре
+  # + Создание отчета Allure 
+  # + Отправка отчета Allure на сервер Allure 
+  # + Проверка файлов тестирования и всех тестов и падаем, если были проблемы с тестами
   # - Полнота дымовых тестов для вливаемых веток
   - Развертывание
-  # - Отправка новостей об обновлении на сайт
+  # + Отправка новостей об обновлении на сайт
+  # - Скачивание необходимых версий из облака S3 для сборки
+  # + Сборка дистрибутива
+  # + Отправление дистрибутива в облако S3
+  - Выход релиза
   # - Обновление на сайте спецификаций API
-  # - Сборка дистрибутива
-  # - Отправление дистрибутива в облако S3
-  # - Обновление эталонной базы
+  # + Обновление эталонной базы ()
+  # - Подготовка новости для рассылки клиентам в сервисе SendSay (вручную при выходе релиза)
   - Завершение
-  # - Удаление старых баз в конвеере
+  # + Удаление старых баз в конвейере
 
 # Переменные для работы
 variables:
@@ -45,10 +56,22 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
-  # Сколько нодов использовать для распаралеливаемых работ
-  # Внутри джобов с инструкцией parallels можно использовать CI_NODE_INDEX и CI_NODE_TOTAL
-  # См. https://habr.com/ru/companies/tinkoff/articles/662069/
-  USE_NODES: 3
+  # Путь к actions.os
+  ACTIONS: "$CI_PROJECT_DIR/actions/src/actions.os"
+  # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
+  MASTER_BASE: "f:/gitlab/master_base/$CI_PROJECT_NAME"
+  # Список баз конвейера
+  PIPELINE_PATH: "f:/gitlab/pipeline_base"
+  # Где хранится рабочая база, с которой будем работать в
+  PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
+  # Полный путь к обработке Vanessa Automation
+  VANESSA_AUTOMATION: "c:/tools/vanessa-automation-single/vanessa-automation-single.epf"
+  # Команда запуска SonarSсanner (или полный путь к ней)
+  SONAR_SCANNER: "sonar-scanner"
+  # Команда запуска Coverage41C (или полный путь к ней)
+  COVERAGE41C: "Coverage41C"
+  # Сервер Allure Docker Service
+  ALLURE_SERVER: "http://192.168.1.20:5050"
 
 # Настройки по умолчанию для всех job-ов.
 default:
@@ -57,11 +80,25 @@ default:
 
 # Всегда выполняется перед стартом по умолчанию для всех job-ов.
 before_script:
-  - chcp 65001
-  - echo "$CI_PROJECT_DIR"
+  - $LINE = '[Console]::OutputEncoding = [Text.Encoding]::Utf8'
+  - Invoke-Expression $LINE
+  - $LINE = '[Console]::InputEncoding = [Text.Encoding]::Utf8'
+  - Invoke-Expression $LINE
+  - chcp
+  - Write-Host "CI_PROJECT_TITLE - $CI_PROJECT_TITLE"
+  - Write-Host "CI_PROJECT_NAME - $CI_PROJECT_NAME"
+  - Write-Host "CI_COMMIT_REF_NAME - $CI_COMMIT_REF_NAME"
+  - Write-Host "CI_PIPELINE_SOURCE - $CI_PIPELINE_SOURCE"  
+  - Write-Host "CI_PIPELINE_ID - $CI_PIPELINE_ID"
+  - Write-Host "CI_PROJECT_DIR - $CI_PROJECT_DIR"
+  - Write-Host "PIPELINE_BASE - $PIPELINE_BASE"
   - git config --local core.quotepath false;  
   - if (Test-Path "$CI_PROJECT_DIR\actions") { Remove-item "$CI_PROJECT_DIR\actions" -recurse -force }
-  - git clone https://github.com/Diversus23/actions.git
+  - git clone https://github.com/Diversus23/actions.git --depth 5
+
+#=========================================================
+# ===================== Подготовка =======================
+#=========================================================
 
 # Только для проекта Управление IT-отделом 8
 Защита конфигурации:
@@ -83,18 +120,27 @@ before_script:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" && $CI_PROJECT_NAME == "it"'
     - if: '$CI_COMMIT_REF_NAME == "master" && $CI_PROJECT_NAME == "it"'
 
+#=========================================================
+#======================== Сборка =========================
+#=========================================================
+
 Сборка базы:
   stage: Сборка
   script:
-    # Создадим пустую базу / возьмем эталонную
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\build" --clear
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase create file --path "$CI_PROJECT_DIR\build\base"
+    # Возьмем эталонную базу и подготовим ее в конвейере
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$PIPELINE_BASE" --clear
+    - oscript -encoding=utf-8 "$ACTIONS" fs copy --from "$MASTER_BASE" --to "$PIPELINE_BASE" --recursive
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$CI_PROJECT_DIR\build" --clear
     # Конвертация проекта EDT в XML 1C
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
+    - oscript -encoding=utf-8 "$ACTIONS" edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --workspace "$CI_PROJECT_DIR\workspace"    
     # Загрузка исходников XML 1C в информационную базу
-    - oscript -encoding=utf-8 "$CI_PROJECT_DIR\actions\src\actions.os" infobase configloadfromxml --path "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\config" --connection "/S $CI_PROJECT_DIR\build\base"
-    # Создадим серверную базу для этой сборки
+    - oscript -encoding=utf-8 "$ACTIONS" infobase configloadfromxml --path "$CI_PROJECT_DIR\build\config" --connection "/F$PIPELINE_BASE" --user "Администратор"
+    # Архивирование полученной базы
+    - oscript -encoding=utf-8 "$ACTIONS" zip add --file "$PIPELINE_BASE\base.zip" --mask "$PIPELINE_BASE\*.1cd"
+    # Очистка job
+    - oscript -encoding=utf-8 "$ACTIONS" fs delete --path "$CI_PROJECT_DIR\workspace"
+    - oscript -encoding=utf-8 "$ACTIONS" fs delete --path "$CI_PROJECT_DIR\build\config"
   only:
     refs:
       - develop
@@ -102,23 +148,113 @@ before_script:
       - main
       - merge_requests
 
+# Только для УИТ
+Сборка расширения МИКО:
+  stage: Сборка
+  needs: [Сборка базы]
+  script:
+    # Конвертация проекта EDT в XML 1C
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$CI_PROJECT_DIR\build\extension-miko" --clear
+    - oscript -encoding=utf-8 "$ACTIONS" edt srctoxml --project "$CI_PROJECT_DIR\it.miko" --path "$CI_PROJECT_DIR\build\extension-miko" --workspace "$CI_PROJECT_DIR\workspace"
+    # Загрузка расширения МИКО в базу конвейера из XML 1C
+    - oscript -encoding=utf-8 "$ACTIONS" infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "Администратор" --path "$CI_PROJECT_DIR\build\extension-miko" --name "ПодсистемаТелефонии40_УИТ8" --update
+    # Очистка job
+    - oscript -encoding=utf-8 "$ACTIONS" fs delete --path "$CI_PROJECT_DIR\workspace"
+    - oscript -encoding=utf-8 "$ACTIONS" fs delete --path "$CI_PROJECT_DIR\build\extension-miko"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "master" && $CI_PROJECT_NAME == "it"'
+    - if: '$CI_COMMIT_REF_NAME == "master" && $CI_PROJECT_NAME == "it"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" && $CI_PROJECT_NAME == "it"'
+    - if: '$CI_COMMIT_REF_NAME == "develop" && $CI_PROJECT_NAME == "it"'
+
+#=========================================================
+#===================== Тестирование ======================
+#=========================================================     
+
+Проверка средствами платформы:
+  stage: Тестирование
+  variables:
+    GIT_STRATEGY: none  
+  script:
+    # Разворачиваем базу из архива в каталог с текущим CI
+    - oscript -encoding=utf-8 "$ACTIONS" zip extract --file "$PIPELINE_BASE\base.zip" --path "$CI_PROJECT_DIR\build\base"
+    # Выполняем проверку средствами платформы
+    - oscript -encoding=utf-8 "$ACTIONS" infobase configcheck --connection "/F$CI_PROJECT_DIR\build\base" --user "Администратор" --AllExtensions --ThinClient --WebClient --Server --ExternalConnection --ExternalConnectionServer --ThickClientManagedApplication --ThickClientServerManagedApplication --UnreferenceProcedures --CheckUseModality --CheckUseSynchronousCalls
+    # Очистка job
+    - oscript -encoding=utf-8 "$ACTIONS" fs delete --path "$CI_PROJECT_DIR\build"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
+    - if: '$CI_COMMIT_REF_NAME == "develop"'
+
 Тесты ветки:
   stage: Тестирование
-  parallel: 3
   script:
-    - echo "Основные тесты"
-    - echo $CI_NODE_INDEX
+    - echo "Тест для ветки"
+  tags:
+    - test    
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
+    paths:
+    # Результаты прохождения тестов передадим дальше по конвейеру для формирования отчета Аллюр и для учета покрытия сонаром
+      - genericCoverageBranch*.xml
+      - allurereport/branch_report/
+      - branch_test_status*.log
+      - branch_test_log*.log
+    expire_in: 1 day
+    when: always
+  allow_failure: true
   only:
     refs:
       - develop
-      - merge_requests      
+      - merge_requests
 
 Дымовые тесты:
   stage: Тестирование
   parallel: 3
   script:
-    - echo "Дымовые тесты "
-    - echo $CI_NODE_INDEX
+    # Запустим инструмент подсчета покрытия кода тестами
+    - $PORT = Get-Random -Minimum 1570 -Maximum 1600
+    - $TAG = "SmokeTest$CI_NODE_INDEX"
+    # Установка нового тега для всех тестов, где установлен тег "SmokeTest" конкретного этого job
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation tag-partition --path "$CI_PROJECT_DIR\tests\features" --max $CI_NODE_TOTAL --prefix SmokeTest --filtertags SmokeTest
+    # Запускаем сервер отладки dbgs.exe на случайном порту. Если порт будет занят, actions берет следующий и пробует его, пока не найдет свободный
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation dbgs-on --port $PORT --file "$CI_PROJECT_DIR\dbgs.json"
+    - $PORT = oscript -encoding=utf-8 "$ACTIONS" json read --file $CI_PROJECT_DIR\dbgs.json --key port
+    # Запустим инструмент подсчета покрытия кода тестами
+    - oscript -encoding=utf-8 "$ACTIONS" fs delete --path "$CI_PROJECT_DIR" --mask "genericCoverageSmoke*.xml"
+    - Start-Process -FilePath $COVERAGE41C -ArgumentList "start -i DefAlias -u http://127.0.0.1:$PORT -P $CI_PROJECT_DIR\$CI_PROJECT_NAME -o $CI_PROJECT_DIR\genericCoverageSmoke$PORT.xml"
+    - oscript -encoding=utf-8 "$ACTIONS" pause --timeout 10
+    # Создадим папки и файлы для сохранения результатов тестов
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$CI_PROJECT_DIR\allurereport\smoke_report" --clear
+    - oscript -encoding=utf-8 "$ACTIONS" fs addcontent --file "$CI_PROJECT_DIR\smoke_test_status$CI_NODE_INDEX.log"
+    # Дополним параметры запуска ванессы
+    - $VAPARAMS = "$CI_PROJECT_DIR\tests\VAParams.json"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --action cleararray --file "$VAPARAMS" --key "СписокТеговОтбор"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --action addinarray --file "$VAPARAMS" --key "СписокТеговОтбор" --str "$TAG"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "КлиентТестирования.ДиапазонПортовTestclient" --str "48000-48100"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "КлиентТестирования.АдресОтладчика" --str "http://127.0.0.1:$PORT"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "КаталогOutputAllureБазовый" --str "./allurereport/smoke_report"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "ИмяФайлаЛогВыполненияСценариев" --str "./smoke_test_log$CI_NODE_INDEX.log"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "ПутьКФайлуДляВыгрузкиСтатусаВыполненияСценариев" --str "./smoke_test_status$CI_NODE_INDEX.log"
+    # Прогоним тесты в базе для конвейера с помощью ванессы
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation run --connection "/F$PIPELINE_BASE" --user "Администратор" -w "$CI_PROJECT_DIR" --vs "$CI_PROJECT_DIR\tests\VAParams.json" --pathvanessa "$VANESSA_AUTOMATION" --path "$CI_PROJECT_DIR\tests\features"
+    # Остановим инструмент подсчета покрытия кода тестами
+    - Start-Process -FilePath $Coverage41C -ArgumentList "stop -i DefAlias -u http://127.0.0.1:$PORT"
+    - oscript -encoding=utf-8 "$ACTIONS" pause --timeout 10
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation dbgs-off --file "$CI_PROJECT_DIR\dbgs.json"
+  tags:
+    - test
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
+    paths:    
+      - genericCoverageSmoke*.xml
+      - allurereport/smoke_report/
+      - smoke_test_status*.log
+      - smoke_test_log*.log
+    expire_in: 1 day
+    when: always
+  allow_failure: true    
   only:
     refs:
       - develop
@@ -128,46 +264,219 @@ before_script:
   stage: Тестирование
   parallel: 3
   script:
-    - echo "Основные тесты"
-    - echo $CI_NODE_INDEX
+    # Запустим инструмент подсчета покрытия кода тестами
+    - $PORT = Get-Random -Minimum 1600 -Maximum 1650
+    - $TAG = "MainTest$CI_NODE_INDEX"
+    # Установка нового тега для всех тестов, где установлен тег "SmokeTest" конкретного этого job
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation tag-partition --path "$CI_PROJECT_DIR\tests\features" --max $CI_NODE_TOTAL --prefix MainTest
+    # Запускаем сервер отладки dbgs.exe на случайном порту. Если порт будет занят, actions берет следующий и пробует его, пока не найдет свободный
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation dbgs-on --port $PORT --file "$CI_PROJECT_DIR\dbgs.json"
+    - $PORT = oscript -encoding=utf-8 "$ACTIONS" json read --file $CI_PROJECT_DIR\dbgs.json --key port
+    # Запустим инструмент подсчета покрытия кода тестами
+    - oscript -encoding=utf-8 "$ACTIONS" fs delete --path "$CI_PROJECT_DIR" --mask "genericCoverageMain*.xml"
+    - Start-Process -FilePath $COVERAGE41C -ArgumentList "start -i DefAlias -u http://127.0.0.1:$PORT -P $CI_PROJECT_DIR\$CI_PROJECT_NAME -o $CI_PROJECT_DIR\genericCoverageMain$PORT.xml"
+    - oscript -encoding=utf-8 "$ACTIONS" pause --timeout 10
+    # Создадим папки и файлы для сохранения результатов тестов
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$CI_PROJECT_DIR\allurereport\main_report" --clear
+    - oscript -encoding=utf-8 "$ACTIONS" fs addcontent --file "$CI_PROJECT_DIR\main_test_status$CI_NODE_INDEX.log"
+    # Дополним параметры запуска ванессы
+    - $VAPARAMS = "$CI_PROJECT_DIR\tests\VAParams.json"
+    # Добавляем тесты этой ветки
+    - oscript -encoding=utf-8 "$ACTIONS" json write --action cleararray --file "$VAPARAMS" --key "СписокТеговОтбор"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --action addinarray --file "$VAPARAMS" --key "СписокТеговОтбор" --str "$TAG"
+    # Исключаем SmokeTest    
+    - oscript -encoding=utf-8 "$ACTIONS" json write --action addinarray --file "$VAPARAMS" --key "СписокТеговИсключение" --str "SmokeTest"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "КлиентТестирования.ДиапазонПортовTestclient" --str "49000-49100"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "КлиентТестирования.АдресОтладчика" --str "http://127.0.0.1:$PORT"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "КаталогOutputAllureБазовый" --str "./allurereport/main_report"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "ИмяФайлаЛогВыполненияСценариев" --str "./main_test_log$CI_NODE_INDEX.log"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$VAPARAMS" --key "ПутьКФайлуДляВыгрузкиСтатусаВыполненияСценариев" --str "./main_test_status$CI_NODE_INDEX.log"
+    # Прогоним тесты в базе для конвейера с помощью ванессы
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation run --connection "/F$PIPELINE_BASE" --user "Администратор" -w "$CI_PROJECT_DIR" --vs "$CI_PROJECT_DIR\tests\VAParams.json" --pathvanessa "$VANESSA_AUTOMATION" --path "$CI_PROJECT_DIR\tests\features"
+    # Остановим инструмент подсчета покрытия кода тестами
+    - Start-Process -FilePath $Coverage41C -ArgumentList "stop -i DefAlias -u http://127.0.0.1:$PORT"
+    - oscript -encoding=utf-8 "$ACTIONS" pause --timeout 10
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation dbgs-off --file "$CI_PROJECT_DIR\dbgs.json"
+  tags:
+    - test    
+  artifacts:
+    name: "$CI_PROJECT_NAME-$CI_JOB_STAGE-$CI_COMMIT_REF_NAME"
+    paths:    
+      - genericCoverageMain*.xml
+      - allurereport/main_report/
+      - main_test_status*.log
+      - main_test_log*.log
+    expire_in: 1 day
+    when: always    
+  allow_failure: true
   only:
     refs:
       - develop
       - merge_requests
 
+#=========================================================
+#======================== Сонар ==========================
+#=========================================================
+
 SonarQube:
   stage: Сонар
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
-    GIT_DEPTH: "0"  
   cache:
     key: "$CI_PROJECT_NAME-SONAR_CACHE"
     paths:
       - .sonar/cache
   script:
-    - echo "Основные тесты"
-    - echo $CI_NODE_INDEX
+    # Определяем версию конфигурации из исходников
+    - $CONFIG_VERSION = oscript -encoding=utf-8 "$ACTIONS" edt versionconfig --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME"
+    # Формируем параметры запуска сонар-сканера с учетом замеров
+    - $FILES_COVERAGE = Get-Childitem -Path "$CI_PROJECT_DIR" -Name "genericCoverage*.xml"
+    - $COVERAGE_REPORTS = "";
+    - For ($i = 0; $i -le $FILES_COVERAGE.count - 1; $i++) 
+        {          
+          $comma = ",";
+          if ($if -eq $FILES_COVERAGE.count - 1) { $comma = "" };
+          $COVERAGE_REPORTS = $COVERAGE_REPORTS + "$CI_PROJECT_DIR\" + $FILES_COVERAGE[$i] + $comma;
+        }
+    - $SONAR_ARGUMENT_ARRAY =
+        "-Dsonar.host.url=$SONAR_HOST_URL",
+        "-Dsonar.login=$SONAR_LOGIN",
+        "-Dsonar.projectName=$CI_PROJECT_NAME",
+        "-Dsonar.projectKey=$CI_PROJECT_NAME",
+        "-Dsonar.projectBaseDir=$CI_PROJECT_DIR\$CI_PROJECT_NAME",
+        "-Dsonar.sourceEncoding=UTF-8",
+        "-Dsonar.inclusions=**/*.bsl,**/*.os,**/*.xml,**/*.form,**/*.dcs",
+        "-Dsonar.scm.exclusions.disabled=true",        
+        "-Dsonar.cpd.exclusions=src/Reports/**/*.bsl",
+        "-Dsonar.qualitygate.wait=true",
+        "-Dsonar.qualitygate.timeout=1800",
+        "-Dsonar.bsl.calculateLineCover=true",
+        "-Dsonar.coverageReportPaths=$COVERAGE_REPORTS",
+        "-Dsonar.bsl.languageserver.diagnosticLanguage=ru",
+        "-Dsonar.scm.provider=git",
+        "-Dsonar.scm.enabled=true",
+        "-Dsonar.projectVersion=$CONFIG_VERSION";        
+    # Запускаем сканер
+    - Start-Process -FilePath $SONAR_SCANNER -ArgumentList $SONAR_ARGUMENT_ARRAY -NoNewWindow -Wait    
+    # Запрашиваем у API сонара результат проверки
+    - $BRANCH_NAME = "branch=$CI_COMMIT_REF_NAME"
+    - if ($CI_MERGE_REQUEST_IID -ne $null -and $CI_MERGE_REQUEST_IID -ne "") {$BRANCH_NAME = "pullRequest=$CI_MERGE_REQUEST_IID"}
+    - $SONAR_BRANCH_URL = "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$CI_PROJECT_NAME&$BRANCH_NAME"
+    - oscript -encoding=utf-8 "$ACTIONS" http get --url "$SONAR_BRANCH_URL" --login "$SONAR_LOGIN" --out "$CI_PROJECT_DIR\sonar_status.json"
+    - $SONAR_PROJECT_STATUS = oscript -encoding=utf-8 "$ACTIONS" json read --file "$CI_PROJECT_DIR\sonar_status.json" --key "projectStatus.status"
+    # Роняем задание если порог качества не пройден (раскомментировать, если у вас порог качества в норме)
+    #- if ($SONAR_PROJECT_STATUS -ne "OK") {echo "Порог качества сонара не пройден"; exit 1}    
+  allow_failure: false
   only:
     refs:
       - develop
-      - merge_requests      
+      - merge_requests
+    # changes:
+    #   - $CI_PROJECT_DIR/$CI_PROJECT_NAME/**/*
+    #   - $CI_PROJECT_DIR/tests/**/*
+    #   - "**/*.bsl"
+    #   - "**/*.mdo" 
+    #   - "**/*.feature"
 
-Развертывание:
+Allure:
+  stage: Сонар
+  variables:
+    GIT_STRATEGY: none
+  script:
+    # Отправляем данные на сервер Allure
+    - oscript -encoding=utf-8 "$ACTIONS" allure-docker-service send-results --path ".\allurereport" --url "$ALLURE_SERVER" --project "$CI_PROJECT_NAME"
+    - oscript -encoding=utf-8 "$ACTIONS" allure-docker-service generate-report --url "$ALLURE_SERVER" --project "$CI_PROJECT_NAME" --execution_type "gitlab" --execution_from "$CI_PIPELINE_URL"
+    - oscript -encoding=utf-8 "$ACTIONS" allure-docker-service emailable-report --url "$ALLURE_SERVER" --project "$CI_PROJECT_NAME" --file "$CI_PROJECT_DIR\allure_report.html"
+    # Останавливаем конвейер, если любые тесты упали    
+    - oscript -encoding=utf-8 "$ACTIONS" vanessa-automation check-errors --path "." --mask "*test_log*.log"
+  allow_failure: false
+  artifacts:
+    paths:
+      - allure_report.html
+    expire_in: 3 day
+    when: always       
+  only:
+    refs:
+      - develop
+      - merge_requests
+
+#=========================================================
+#==================== Развертывание ======================
+#=========================================================
+
+Запись новостей на сайт:
   stage: Развертывание
   script:
-    - echo "Развертывание"
+    # Создаем новости из общего макета
+    - oscript -encoding=utf-8 "$ACTIONS" fs newpath --path "$CI_PROJECT_DIR\build\news" --clear
+    - oscript -encoding=utf-8 "$ACTIONS" infobase news --connection "/F$PIPELINE_BASE" --user "Администратор" --html "$CI_PROJECT_DIR\build\news\news.html" --txt "$CI_PROJECT_DIR\build\news\news.txt"
+    # Отправка новостей на сайт
+    - echo "Отправка новостей на сайт"
+    - oscript -encoding=utf-8 "$ACTIONS" json read --file "$CI_PROJECT_DIR\settings.json" --key "default" --out "$CI_PROJECT_DIR\news.json"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$CI_PROJECT_DIR\news.json" --key "html" --filevalue "$CI_PROJECT_DIR\build\news\news.html"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$CI_PROJECT_DIR\news.json" --key "txt" --filevalue "$CI_PROJECT_DIR\build\news\news.txt"
+    - oscript -encoding=utf-8 "$ACTIONS" json write --file "$CI_PROJECT_DIR\news.json" --key "is_future_version" --str "1"
+    - oscript -encoding=utf-8 "$ACTIONS" http post --url "$NEWS_SCRIPT_UPDATE" --fileparams "$CI_PROJECT_DIR\news.json" --p1 "action" --v1 "setnews"
+  allow_failure: false
+  artifacts:
+    paths:
+      - build/news
+    expire_in: 1 day
+    when: always       
+  only:
+    refs:
+      - develop
+      - merge_requests  
+
+Сборка дистрибутива:
+  stage: Развертывание
+  script:
+    # Заменить базу по умолчанию серверной базой
+    # Создание дистрибутива
+    - oscript -encoding=utf-8 "$ACTIONS" infobase distrib --connection "/F$PIPELINE_BASE" --user "Администратор" --path "$CI_PROJECT_DIR\build\distrib" --versions_path "C:\Work\$CI_PROJECT_NAME"
+    # Копируем их в каталог сборки и каталог отправки в облако
+    - oscript -encoding=utf-8 "$ACTIONS" fs copy --from "$CI_PROJECT_DIR\build\distrib\*.*" --to "C:\Work\$CI_PROJECT_NAME" --recursive
+    - oscript -encoding=utf-8 "$ACTIONS" fs findcopy --from "$CI_PROJECT_DIR\build\distrib" --mask "*.zip" --to "$CI_PROJECT_DIR\build\artifacts" --recursive
+    # Загрузка в облако S3
+    - aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "*.zip"
+    # Замена базы по умолчанию, на базу после сборки
+    - oscript -encoding=utf-8 "$ACTIONS" fs copy --from "$PIPELINE_BASE" --to "$MASTER_BASE" --recursive
+  allow_failure: false
   only:
     refs:
       - master
       - main
-      - merge_requests    
+      - merge_requests
+
+#=========================================================
+#==================== Выход релиза =======================
+#=========================================================
+
+Выход релиза:
+  stage: Выход релиза
+  script:
+    # Опубликовать новость на сайте
+    # Подготовить письмо для отправки
+    # Открыть обновление на сайте
+    # Обновление API
+    - echo "Выход релиза"
+  allow_failure: false
+  rules:
+    - if: '$CI_COMMIT_REF_NAME == "master" || $CI_COMMIT_REF_NAME == "main"'
+      when: manual
+
+#=========================================================
+#===================== Завершение ========================
+#=========================================================
 
 Удаление старых баз конвеера:
   stage: Завершение
   script:
-    - echo "Завершение"
+    # Удаление в папке конвеера устаревших папок за последние 3 дня
+    - oscript -encoding=utf-8 "$ACTIONS" fs deleteold --path "$PIPELINE_PATH" --type day --value 3
   only:
     refs:
       - master
       - main
-      - merge_requests    
+      - merge_requests
+      - develop
