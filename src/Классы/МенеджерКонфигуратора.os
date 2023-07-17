@@ -805,7 +805,7 @@
 		ДопКлючи = ";" + ДопКлючи;
 	КонецЕсли;
 
-	КлючЗапуска = """StartFeaturePlayer;ClearStepsCache;QuietInstallVanessaExt;"
+	КлючЗапуска = """StartFeaturePlayer;QuietInstallVanessaExt;"
 					+ "VAParams=" + ПутьКНастройкам + ";"
 					+ "WorkspaceRoot=" + РабочийКаталогПроекта
 					+ ДопКлючи + """";
