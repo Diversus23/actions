@@ -989,6 +989,13 @@
 		ДобавитьТест(СписокТестов, "Тест_Должен_Выполнить_Команду_infobase_configsave");
 		ДобавитьТест(СписокТестов, "Тест_Должен_Выполнить_Команду_infobase_configload");
 		ДобавитьТест(СписокТестов, "Тест_Должен_Выполнить_Команду_infobase_clearcache");
+		// close-all-clients
+		// coverage41c start/stop
+		// setlegal
+		// vanessa-automation check-errors
+		// tag-count
+		// tag-change
+		// tag-partition
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_save"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_load"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_loadfromsource"
