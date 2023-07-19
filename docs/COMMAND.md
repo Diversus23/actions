@@ -74,7 +74,7 @@
     - [module](#obfuscation-module) Обфускация общего модуля 1С:Предприятие 8
   - [pause](#pause) Пауза в результате которой приложение ожидает некоторое время
   - [vanessa-automation](#vanessa-automation) Работа с тестированием и запуск тестов для информационной базы 1С с помощью Vanessa Automation
-    - [check-errors](#vanessa-automation-check-errors) Проверка log-файлов после выполнения тестов Vanessa-Automation. Если найдется ошибка в файлах, программа завешится с ошибкой
+    - [check-errors](#vanessa-automation-check-errors) Проверка log-файлов после выполнения тестов Vanessa-Automation. Если найдется ошибка в файлах, программа завершится с ошибкой
     - [dbgs-on](#vanessa-automation-dbgs-on) Включение отладчика 1C dbgs.exe. Возвращает в консоль порт, который будет использоваться отладчиком
     - [dbgs-off](#vanessa-automation-dbgs-off) Отключение отладчика 1C dbgs.exe
     - [run](#vanessa-automation-run) Запуск тестов Vanessa Automation
@@ -1979,7 +1979,7 @@ goto ~44; ~IL_13:; goto ~43; ~43:; goto ~46; ~44:; ~45:; goto ~47; ~46:; _0=a_; 
 
 #### vanessa-automation check-errors
 
-Проверка log-файлов после выполнения тестов Vanessa-Automation. Если найдется ошибка в файлах, программа завешится с ошибкой.
+Проверка log-файлов после выполнения тестов Vanessa-Automation. Если найдется ошибка в файлах, программа завершится с ошибкой.
 
 ##### Опции команды
 
