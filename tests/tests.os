@@ -1017,7 +1017,11 @@
 		// vanessa-automation check-errors
 		// tag-count
 		// tag-change
-		// tag-partition		
+		// tag-partition
+		// process
+		// process kill
+		// process run
+		// process killpath
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_save"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_load"
 		// Написать тест "Тест_Должен_Выполнить_Команду_infobase_extension_loadfromsource"
