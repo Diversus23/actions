@@ -1,7 +1,6 @@
 ﻿#Использовать v8runner
 #Использовать asserts
 #Использовать v8storage
-#Использовать 1commands
 
 // BSLLS:NumberOfOptionalParams-off
 
