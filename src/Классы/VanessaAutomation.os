@@ -10,14 +10,6 @@
 	Команда.ДобавитьКоманду("check-errors", Текст,
 		Новый VanessaAutomationCheckErrors());		
 
-	Команда.ДобавитьКоманду("dbgs-on",
-		"Включение отладчика 1C dbgs.exe. Возвращает в консоль порт, который будет использоваться отладчиком",
-		Новый VanessaAutomationDbgsOn());
-
-	Команда.ДобавитьКоманду("dbgs-off",
-		"Отключение отладчика 1C dbgs.exe",
-		Новый VanessaAutomationDbgsOff());
-
 	Команда.ДобавитьКоманду("run",
 		"Запуск тестов Vanessa Automation",
 		Новый VanessaAutomationRun());
