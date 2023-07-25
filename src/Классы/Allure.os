@@ -9,6 +9,10 @@
 		"Формирует файл categories.json для Allure (настройки категории для каталога с отчетами Allure)",
 		Новый AllureCategories());
 
+    Команда.ДобавитьКоманду("environment",
+		"Формирует файл environment.json для Allure (настройки окружения для каталога с отчетами Allure)",
+		Новый AllureEnvironment());        
+
     Команда.ДобавитьКоманду("executors",
 		"Формирует файл executors.json для Allure (настройки CI/CD для каталога с отчетами Allure)",
 		Новый AllureExecutors());        
