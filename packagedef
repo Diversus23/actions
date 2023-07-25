@@ -36,6 +36,7 @@
 	.ЗависитОт("1connector")	
 	.ЗависитОт("coloratos")
 	.ЗависитОт("ParserFileV8i")
+	.ЗависитОт("allurehelper")
 
 	.РазработкаЗависитОт("1testrunner")
 	.РазработкаЗависитОт("asserts")
