@@ -3,6 +3,7 @@
 
 #Использовать tempfiles
 
+// BSLLS:MissingVariablesDescription-off
 Перем ЗаписьТекста;
 Перем ПутьКоманды;
 Перем Команда;
@@ -13,6 +14,7 @@
 Перем Лог;
 Перем НемедленныйВывод;
 Перем КодировкаВывода;
+// BSLLS:MissingVariablesDescription-on
 
 // Получить имя лога продукта
 //
