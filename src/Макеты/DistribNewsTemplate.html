@@ -55,15 +55,48 @@
     .updnws li::before {
         background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: %2308a652; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-2' cx='8' cy='8' r='8'/%3E%3Cg%3E%3Crect class='cls-1' x='7.28' y='3.85' width='1.57' height='5.7' rx='.78' ry='.78'/%3E%3Ccircle class='cls-1' cx='8.06' cy='11.42' r='.78'/%3E%3C/g%3E%3C/svg%3E") no-repeat;
     }
+
+    .red {
+        color: #ff0000;
+    }
+
+    h2 {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: #c10000;
+    }
+
+    h3 {
+        color: #c10000;
+        BORDER-BOTTOM: #c10000 2px solid;
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 5;
+    }
+
+    h4 {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: black;
+    }
+
+    table {
+        BORDER-RIGHT: black 1px solid; 
+        BORDER-TOP: black 1px solid; 
+        BORDER-LEFT: black 1px solid; 
+        BORDER-BOTTOM: black 1px solid
+    }
+
 </style>
 <BODY>
-<TABLE style="BORDER-RIGHT: black 1px solid; BORDER-TOP: black 1px solid; BORDER-LEFT: black 1px solid; BORDER-BOTTOM: black 1px solid" cellSpacing=0 cellPadding=8 width="100%" bgColor=#ffffd6 border=0>
+<TABLE cellSpacing=0 cellPadding=8 width="100%" bgColor=#ffffd6 border=0>
 <TBODY>
 <TR>
 <TD>
-<H2><FONT face=Tahoma color=#c10000>Конфигурация<BR>{{Синоним}}</FONT></FONT></H2></TD></TR></TBODY></TABLE>
-<H3 style="BORDER-BOTTOM: #c10000 2px solid"><FONT face=Arial color=#c10000 size=5><EM>Версия&nbsp;{{Версия}}</EM></FONT></H3>
-<H4><FONT face=Verdana color=#823602>Порядок обновления всех конфигураций</FONT></H4>
+<H2>Конфигурация<BR>{{Синоним}}</H2>
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+<H3><EM>Версия&nbsp;{{Версия}}</EM></H3>
+<H4>Порядок обновления всех конфигураций</H4>
 <OL>
 <LI>Запустите систему 1С:Предприятие в режиме "Конфигуратор".
 <LI><B>Обязательно сделайте архивную копию вашей информационной базы!</B> Для этого надо в меню Администрирование выбрать пункт "Выгрузить информационную базу" и ввести имя файла выгрузки. Этот файл надо сохранить в надёжном месте.
@@ -74,8 +107,10 @@
 <LI>В окне "Обновление конфигураций" нажмите кнопку "OK" для продолжения обновления конфигурации.
 <LI>На вопрос об обновлении конфигурации базы данных ответьте "ДА".
 <LI>После завершения <B>обязательно</B> запустите программу в режиме "Предприятие" - для совершения конвертации. Некоторые пользователи не выходя из конфигуратора последовательно обновляют версии - это недопустимо и повлечет за собой невозможность дальнейшей работы. После каждого обновления надо хотя бы 1 раз запускать 1С в режиме 1С:Предприятие.</LI></OL>
-<H4><FONT face=Verdana color=#823602>Порядок обновления конфигурации версий {{ВерсииОбновления}} на версию {{Версия}}</FONT></H4>
+<H4>Порядок обновления конфигурации версий {{ВерсииОбновления}} на версию {{Версия}}</H4>
 <P>Для обновления версии конфигурации следует использовать режим "Обновление конфигураций". Файл обновлений 1Cv8.cfu находится в каталоге шаблонов (по умолчанию - подкаталог tmplts\ каталога установки 1С:Предприятия 8), в подкаталоге {{КаталогШаблоновПоставщика}}\{{Назначение}}\{{ВерсияСПодчеркиваниями}}\</P>
-</SPAN><hr><font color="#ff0000">Внимание!<br>Текущая версия конфигурации "{{Синоним}}"" предназначена для использования с версией системы 1С:Предприятие 8.3 не ниже {{МинимальнаяВерсияПлатформы}}.</font><hr>
+</SPAN><hr>
+<span class="red">Внимание!<br>Текущая версия конфигурации "{{Синоним}}"" предназначена для использования с версией системы 1С:Предприятие 8.3 не ниже {{МинимальнаяВерсияПлатформы}}.</span>
+<H4>Описание изменений</H4>
 {{ОписаниеИзмененийHTML}}
 </BODY></HTML>
