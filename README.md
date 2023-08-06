@@ -63,7 +63,7 @@ before_script:
 
 Сделать все по статье [Создаем свою библиотеку для OneScript](https://infostart.ru/1c/articles/791568/)
 
-- [ ] DumpConfigToFiles
+- [x] DumpConfigToFiles
 - [x] **infobase dump** + **infobase dumpformat** DumpIB
 - [ ] DumpIBWithoutLock
 - [x] **infobase restore** RestoreIB
@@ -109,14 +109,14 @@ before_script:
 - [ ] GetVideoPreviewFromMarkDown
 - [ ] MakeMailingFiles
 - [ ] CheckVanessaErrors
-- [ ] TaskKill
+- [x] **process kill** TaskKill
 - [ ] RunVanessaAutomation
 - [x] **checksum** FileCheckSum
 - [x] **checksum** FolderCheckSum
 - [x] **edt versionconfig** ConfigVersionFromEdtSrc
-- [ ] StartDebugFile
-- [ ] StartCoverage41C
-- [ ] StopCoverage41C
+- [x] StartDebugFile
+- [x] StartCoverage41C
+- [x] StopCoverage41C
 - [ ] CreateSettingsFileVanessaAutomation
 - [ ] MergeLogsVanessaAutomation
 - [ ] MergeCoverage41CFiles
