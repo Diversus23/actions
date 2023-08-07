@@ -12,7 +12,9 @@
   "ФорматChangeLog": {
     "Текст": "txt",
     "КраткийHTML": "html",
-    "ПолныйHTML": "htmlfull"
+    "ПолныйHTML": "htmlfull",
+    "КраткийHTMLВсе": "htmlall",
+    "ПолныйHTMLВсе": "htmlfullall"
   },
   "ТипыСУБД": {
     "MSSQLServer": "MSSQLServer",
