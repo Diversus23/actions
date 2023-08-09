@@ -9,13 +9,6 @@
     "Удаление": "delete",
     "СуществованиеФайла": "fileexists"
   },
-  "ФорматChangeLog": {
-    "Текст": "txt",
-    "КраткийHTML": "html",
-    "ПолныйHTML": "htmlfull",
-    "КраткийHTMLВсе": "htmlall",
-    "ПолныйHTMLВсе": "htmlfullall"
-  },
   "ТипыСУБД": {
     "MSSQLServer": "MSSQLServer",
     "PostgreSQL": "PostgreSQL",

@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{Title}}</title>
+    <style>      
+/*
+! tailwindcss v3.3.3 | MIT License | https://tailwindcss.com
+*/
+
+/*
+1. Prevent padding and border from affecting element width. (https://github.com/mozdevs/cssremedy/issues/4)
+2. Allow adding a border to an element by just adding a border-width. (https://github.com/tailwindcss/tailwindcss/pull/116)
+*/
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+  /* 1 */
+  border-width: 0;
+  /* 2 */
+  border-style: solid;
+  /* 2 */
+  border-color: #e5e7eb;
+  /* 2 */
+}
+
+::before,
+::after {
+  --tw-content: '';
+}
+
+/*
+1. Use a consistent sensible line-height in all browsers.
+2. Prevent adjustments of font size after orientation changes in iOS.
+3. Use a more readable tab size.
+4. Use the user's configured `sans` font-family by default.
+5. Use the user's configured `sans` font-feature-settings by default.
+6. Use the user's configured `sans` font-variation-settings by default.
+*/
+
+html {
+  line-height: 1.5;
+  /* 1 */
+  -webkit-text-size-adjust: 100%;
+  /* 2 */
+  -moz-tab-size: 4;
+  /* 3 */
+  -o-tab-size: 4;
+     tab-size: 4;
+  /* 3 */
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  /* 4 */
+  font-feature-settings: normal;
+  /* 5 */
+  font-variation-settings: normal;
+  /* 6 */
+}
+
+/*
+1. Remove the margin in all browsers.
+2. Inherit line-height from `html` so users can set them as a class directly on the `html` element.
+*/
+
+body {
+  margin: 0;
+  /* 1 */
+  line-height: inherit;
+  /* 2 */
+}
+
+/*
+1. Add the correct height in Firefox.
+2. Correct the inheritance of border color in Firefox. (https://bugzilla.mozilla.org/show_bug.cgi?id=190655)
+3. Ensure horizontal rules are visible by default.
+*/
+
+hr {
+  height: 0;
+  /* 1 */
+  color: inherit;
+  /* 2 */
+  border-top-width: 1px;
+  /* 3 */
+}
+
+/*
+Add the correct text decoration in Chrome, Edge, and Safari.
+*/
+
+abbr:where([title]) {
+  -webkit-text-decoration: underline dotted;
+          text-decoration: underline dotted;
+}
+
+/*
+Remove the default font size and weight for headings.
+*/
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+/*
+Reset links to optimize for opt-in styling instead of opt-out.
+*/
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/*
+Add the correct font weight in Edge and Safari.
+*/
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/*
+1. Use the user's configured `mono` font family by default.
+2. Correct the odd `em` font sizing in all browsers.
+*/
+
+code,
+kbd,
+samp,
+pre {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  /* 1 */
+  font-size: 1em;
+  /* 2 */
+}
+
+/*
+Add the correct font size in all browsers.
+*/
+
+small {
+  font-size: 80%;
+}
+
+/*
+Prevent `sub` and `sup` elements from affecting the line height in all browsers.
+*/
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/*
+1. Remove text indentation from table contents in Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=999088, https://bugs.webkit.org/show_bug.cgi?id=201297)
+2. Correct table border color inheritance in all Chrome and Safari. (https://bugs.chromium.org/p/chromium/issues/detail?id=935729, https://bugs.webkit.org/show_bug.cgi?id=195016)
+3. Remove gaps between table borders by default.
+*/
+
+table {
+  text-indent: 0;
+  /* 1 */
+  border-color: inherit;
+  /* 2 */
+  border-collapse: collapse;
+  /* 3 */
+}
+
+/*
+1. Change the font styles in all browsers.
+2. Remove the margin in Firefox and Safari.
+3. Remove default padding in all browsers.
+*/
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit;
+  /* 1 */
+  font-feature-settings: inherit;
+  /* 1 */
+  font-variation-settings: inherit;
+  /* 1 */
+  font-size: 100%;
+  /* 1 */
+  font-weight: inherit;
+  /* 1 */
+  line-height: inherit;
+  /* 1 */
+  color: inherit;
+  /* 1 */
+  margin: 0;
+  /* 2 */
+  padding: 0;
+  /* 3 */
+}
+
+/*
+Remove the inheritance of text transform in Edge and Firefox.
+*/
+
+button,
+select {
+  text-transform: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Remove default button styles.
+*/
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  -webkit-appearance: button;
+  /* 1 */
+  background-color: transparent;
+  /* 2 */
+  background-image: none;
+  /* 2 */
+}
+
+/*
+Use the modern Firefox focus style for all focusable elements.
+*/
+
+:-moz-focusring {
+  outline: auto;
+}
+
+/*
+Remove the additional `:invalid` styles in Firefox. (https://github.com/mozilla/gecko-dev/blob/2f9eacd9d3d995c937b4251a5557d95d494c9be1/layout/style/res/forms.css#L728-L737)
+*/
+
+:-moz-ui-invalid {
+  box-shadow: none;
+}
+
+/*
+Add the correct vertical alignment in Chrome and Firefox.
+*/
+
+progress {
+  vertical-align: baseline;
+}
+
+/*
+Correct the cursor style of increment and decrement buttons in Safari.
+*/
+
+::-webkit-inner-spin-button,
+::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/*
+1. Correct the odd appearance in Chrome and Safari.
+2. Correct the outline style in Safari.
+*/
+
+[type='search'] {
+  -webkit-appearance: textfield;
+  /* 1 */
+  outline-offset: -2px;
+  /* 2 */
+}
+
+/*
+Remove the inner padding in Chrome and Safari on macOS.
+*/
+
+::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/*
+1. Correct the inability to style clickable types in iOS and Safari.
+2. Change font properties to `inherit` in Safari.
+*/
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button;
+  /* 1 */
+  font: inherit;
+  /* 2 */
+}
+
+/*
+Add the correct display in Chrome and Safari.
+*/
+
+summary {
+  display: list-item;
+}
+
+/*
+Removes the default spacing and border for appropriate elements.
+*/
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+fieldset {
+  margin: 0;
+  padding: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/*
+Reset default styling for dialogs.
+*/
+
+dialog {
+  padding: 0;
+}
+
+/*
+Prevent resizing textareas horizontally by default.
+*/
+
+textarea {
+  resize: vertical;
+}
+
+/*
+1. Reset the default placeholder opacity in Firefox. (https://github.com/tailwindlabs/tailwindcss/issues/3300)
+2. Set the default placeholder color to the user's configured gray 400 color.
+*/
+
+input::-moz-placeholder, textarea::-moz-placeholder {
+  opacity: 1;
+  /* 1 */
+  color: #9ca3af;
+  /* 2 */
+}
+
+input::placeholder,
+textarea::placeholder {
+  opacity: 1;
+  /* 1 */
+  color: #9ca3af;
+  /* 2 */
+}
+
+/*
+Set the default cursor for buttons.
+*/
+
+button,
+[role="button"] {
+  cursor: pointer;
+}
+
+/*
+Make sure disabled buttons don't get the pointer cursor.
+*/
+
+:disabled {
+  cursor: default;
+}
+
+/*
+1. Make replaced elements `display: block` by default. (https://github.com/mozdevs/cssremedy/issues/14)
+2. Add `vertical-align: middle` to align replaced elements more sensibly by default. (https://github.com/jensimmons/cssremedy/issues/14#issuecomment-634934210)
+   This can trigger a poorly considered lint error in some tools but is included by design.
+*/
+
+img,
+svg,
+video,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  /* 1 */
+  vertical-align: middle;
+  /* 2 */
+}
+
+/*
+Constrain images and videos to the parent width and preserve their intrinsic aspect ratio. (https://github.com/mozdevs/cssremedy/issues/14)
+*/
+
+img,
+video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Make elements with the HTML hidden attribute stay hidden by default */
+
+[hidden] {
+  display: none;
+}
+
+*, ::before, ::after {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+}
+
+::backdrop {
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x:  ;
+  --tw-pan-y:  ;
+  --tw-pinch-zoom:  ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-gradient-from-position:  ;
+  --tw-gradient-via-position:  ;
+  --tw-gradient-to-position:  ;
+  --tw-ordinal:  ;
+  --tw-slashed-zero:  ;
+  --tw-numeric-figure:  ;
+  --tw-numeric-spacing:  ;
+  --tw-numeric-fraction:  ;
+  --tw-ring-inset:  ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur:  ;
+  --tw-brightness:  ;
+  --tw-contrast:  ;
+  --tw-grayscale:  ;
+  --tw-hue-rotate:  ;
+  --tw-invert:  ;
+  --tw-saturate:  ;
+  --tw-sepia:  ;
+  --tw-drop-shadow:  ;
+  --tw-backdrop-blur:  ;
+  --tw-backdrop-brightness:  ;
+  --tw-backdrop-contrast:  ;
+  --tw-backdrop-grayscale:  ;
+  --tw-backdrop-hue-rotate:  ;
+  --tw-backdrop-invert:  ;
+  --tw-backdrop-opacity:  ;
+  --tw-backdrop-saturate:  ;
+  --tw-backdrop-sepia:  ;
+}
+
+.absolute {
+  position: absolute;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+.timeline-intro {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .timeline-intro {
+    align-items: center;
+  }
+}
+
+.timeline-intro {
+  background-color: #232327
+}
+
+.timeline-intro__title {
+  color: white;
+}
+
+.timeline-intro__desc {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+  color: #9ca3af;
+}
+
+.timeline-intro__social {
+  margin-top: 1.25rem;
+  display: flex;
+  justify-content: center;
+  color: #08A652;
+}
+
+.timeline-intro__social a {
+  border: 0
+}
+
+.timeline-wrapper {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.timeline-container {
+  margin-top: 1.25rem;
+  display: flex;
+  max-width: 1200px;
+  flex-direction: column;
+  padding: 1.25rem;
+}
+
+.timeline {
+  display: flex;
+}
+
+.timeline__left-col {
+  position: relative;
+  top: -16px;
+  display: none;
+  min-width: 80px;
+}
+
+@media (min-width: 768px) {
+  .timeline__left-col {
+    display: flex;
+  }
+}
+
+.timeline__date {
+  top: 0.75rem;
+  margin-bottom: 0.75rem;
+  height: -moz-fit-content;
+  height: fit-content;
+  font-weight: 600;
+  position: sticky;
+  position: -webkit-sticky;
+  color: #868e96;
+}
+
+.timeline__main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border-left-width: 1px;
+}
+
+@media (min-width: 768px) {
+  .timeline__main {
+    flex-direction: row;
+  }
+}
+
+.timeline__main {
+  border-color: #d4d4d4
+}
+
+.timeline__main-header {
+  position: relative;
+  top: -8px;
+  display: flex;
+  align-items: center;
+}
+
+.timeline__dot {
+  margin-left: -5px;
+  margin-right: 0.75rem;
+  height: 8px;
+  width: 8px;
+  border-radius: 9999px;
+  background-color: black;
+}
+
+.timeline__date-mobile {
+  display: flex;
+  min-width: 120px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .timeline__date-mobile {
+    display: none;
+  }
+}
+
+.timeline__date-mobile {
+  color: #868e96;
+}
+
+.timeline__content {
+  position: relative;
+  top: -18px;
+  margin-left: 1rem;
+  margin-top: 1.75rem;
+  padding-bottom: 4rem;
+}
+
+@media (min-width: 768px) {
+  .timeline__content {
+    margin-top: 0px;
+  }
+}
+
+h1 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+}
+
+h1:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+}
+
+h2:not(:last-child) {
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-family: var(--chakra-fonts-heading);
+  color: rgb(13, 19, 27);
+}
+
+.timeline__image-wrapper {
+  display: block;
+  height: -moz-fit-content;
+  height: fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.timeline__image-wrapper:first-child {
+  margin-top: 10px;
+}
+
+.timeline__image-wrapper:not(:last-child) {
+  margin-bottom: 1.25rem;
+}
+
+.timeline__image-wrapper img {
+  width: 100%;
+}
+
+.timeline__content img {
+  overflow: hidden;
+  border-radius: 20px;
+}
+
+.timeline__content img:first-child {
+  margin-top: 10px;
+}
+
+.timeline__content img:not(:last-child) {
+  margin-bottom: 1.25rem;
+}
+
+h3 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 700;
+}
+
+h3:not(:first-child) {
+  margin-top: 2.25rem;
+}
+
+h3:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+h3 {
+  font-family: var(--chakra-fonts-heading);
+  color: rgb(13, 19, 27);
+}
+
+p:not(:first-child) {
+  margin-top: 1.5rem;
+}
+
+p:not(:last-child) {
+  margin-bottom: 1.5rem;
+}
+
+ul, ol {
+  list-style-position: inside;
+}
+
+ul:not(:last-child), ol:not(:last-child) {
+  margin-bottom: 0.75rem;
+}
+
+ul > li:not(:first-child), ol > li:not(:first-child) {
+  margin-top: 0.25rem;
+}
+
+ul li {
+  list-style-type: disc;
+}
+
+ol li {
+  list-style-type: decimal;
+}
+
+ol li::marker {
+  font-weight: 700;
+}
+
+p, li {
+  color: #495057;
+}
+
+a {
+  color: #08A652;
+  text-decoration: none;
+  display: inline;
+  border-bottom: 1px solid #08A652;
+}
+
+a:hover {
+  border-bottom: 0;
+}        
+    </style>
+  </head>
+  <body>
+    <svg
+      width="0"
+      height="0"
+      xmlns="http://www.w3.org/2000/svg"
+      style="height: 0; width: 0; position: absolute; visibility: hidden"
+    >
+      <symbol
+        id="y-dzen"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 44 14"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M6.38956 0C6.35639 2.66812 6.17412 4.16776 5.1726 5.16846C4.17108 6.16921 2.67027 6.35134 0 6.38445V6.77895C2.67027 6.8121 4.17108 6.99423 5.1726 7.99494C6.17412 8.99564 6.35639 10.4953 6.38956 13.1634H6.78437C6.81754 10.4953 6.9998 8.99564 8.00132 7.99494C9.00284 6.99423 10.5037 6.8121 13.1739 6.77895V6.38445C10.5037 6.3513 9.00284 6.16921 8.00132 5.16846C6.9998 4.16776 6.81754 2.66812 6.78437 0H6.38956Z"
+        ></path>
+        <path
+          d="M17.7123 13.5857V11.5179H23.0214V13.5857H24.6341V10.1775H23.7065V1.60699H17.6409L17.4697 6.5268C17.4126 8.12395 17.2413 9.42167 16.7847 10.1775H16.0996V13.5857H17.7123ZM18.9825 6.75495L19.1109 2.94747H21.9796V10.1775H18.4116C18.7113 9.50722 18.9254 8.35215 18.9825 6.75495Z"
+        ></path>
+        <path
+          d="M27.5317 10.32C26.6611 10.32 25.8048 10.0063 25.3481 9.66407V11.0473C25.6764 11.3183 26.5042 11.6605 27.7315 11.6605C29.544 11.6605 30.5002 10.8477 30.5002 9.40739C30.5002 8.56602 29.9722 7.99559 29.0303 7.79597C29.9151 7.51076 30.2862 6.88332 30.2862 6.0847C30.2862 4.87257 29.3299 4.20233 27.7886 4.20233C26.6754 4.20233 25.9475 4.5446 25.5337 4.80129V6.18455C25.9904 5.88507 26.6183 5.5428 27.546 5.5428C28.1739 5.5428 28.5735 5.84228 28.5735 6.36991C28.5735 6.92607 28.231 7.22555 27.5317 7.22555H26.4613V8.50896H27.5317C28.4023 8.50896 28.7448 8.76568 28.7448 9.39312C28.7448 9.96355 28.3309 10.32 27.5317 10.32Z"
+        ></path>
+        <path
+          d="M36.9266 11.0331V9.64981C36.3984 10.0063 35.5134 10.32 34.6859 10.32C33.4442 10.32 32.9733 9.73535 32.9019 8.53749H36.998V7.6391C36.998 5.14351 35.8991 4.20233 34.2007 4.20233C32.1312 4.20233 31.1465 5.78526 31.1465 7.95284C31.1465 10.4484 32.3739 11.6605 34.543 11.6605C35.6278 11.6605 36.4269 11.3753 36.9266 11.0331ZM34.1722 5.5428C35.0142 5.5428 35.271 6.24157 35.271 7.14V7.28261H32.9019C32.9447 6.14176 33.3586 5.5428 34.1722 5.5428Z"
+        ></path>
+        <path
+          d="M42.1029 4.34494V7.18275H39.8337V4.34494H38.1353V11.5179H39.8337V8.52322H42.1029V11.5179H43.8014V4.34494H42.1029Z"
+        ></path>
+      </symbol>
+
+      <symbol
+        id="vk"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 16 15"
+      >
+        <path
+          d="M10.0681 0.519226H5.63988C1.59512 0.519226 0.632812 1.48153 0.632812 5.51876V9.94695C0.632812 13.9917 1.58763 14.954 5.63235 14.954H10.0605C14.1053 14.954 15.0676 13.9992 15.0676 9.95444V5.5263C15.0676 1.48153 14.1128 0.519226 10.0681 0.519226ZM12.2859 10.819H11.2334C10.8349 10.819 10.7146 10.4957 10.0004 9.78154C9.37637 9.1801 9.11325 9.10491 8.95537 9.10491C8.73737 9.10491 8.67719 9.16504 8.67719 9.46578V10.4131C8.67719 10.6687 8.5945 10.819 7.92541 10.819C7.27612 10.7754 6.64649 10.5782 6.08836 10.2436C5.53023 9.90894 5.05957 9.44652 4.71515 8.89439C3.8975 7.87667 3.32859 6.68221 3.05366 5.40599C3.05366 5.24811 3.11379 5.10525 3.41453 5.10525H4.46706C4.73771 5.10525 4.83546 5.22555 4.9407 5.50374C5.45191 7.00735 6.32405 8.3155 6.67738 8.3155C6.81271 8.3155 6.87284 8.25537 6.87284 7.91706V6.3683C6.82773 5.66162 6.45184 5.60145 6.45184 5.34586C6.45679 5.27843 6.48782 5.21558 6.53836 5.17065C6.58889 5.12573 6.65494 5.10227 6.72249 5.10525H8.3765C8.60204 5.10525 8.67719 5.21803 8.67719 5.48868V7.57874C8.67719 7.80429 8.77494 7.87944 8.8426 7.87944C8.97793 7.87944 9.08317 7.80429 9.33126 7.55619C9.8644 6.90603 10.3 6.1817 10.6244 5.40599C10.6575 5.31265 10.7203 5.23272 10.8031 5.17841C10.8859 5.12411 10.9842 5.09841 11.083 5.10525H12.1355C12.4513 5.10525 12.519 5.26313 12.4513 5.48868C12.0683 6.34633 11.5945 7.16044 11.0379 7.91706C10.9251 8.08996 10.88 8.18018 11.0379 8.38317C11.1431 8.54105 11.5116 8.84928 11.7597 9.14249C12.1205 9.50245 12.4202 9.91893 12.6468 10.3755C12.737 10.6687 12.5866 10.819 12.2859 10.819Z"
+        ></path>
+      </symbol>
+      <symbol
+        id="youtube"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 14"
+      >
+        <path
+          d="M19.6429 4.79837C19.6849 3.583 19.4191 2.37673 18.8702 1.29156C18.4978 0.846288 17.9809 0.545799 17.4097 0.442455C15.0471 0.228077 12.6747 0.14021 10.3027 0.179232C7.93936 0.138439 5.57551 0.22347 3.22118 0.433964C2.75572 0.518634 2.32497 0.73696 1.98149 1.0623C1.2173 1.76706 1.13238 2.97279 1.04747 3.99172C0.924279 5.82372 0.924279 7.66192 1.04747 9.49392C1.07204 10.0674 1.15743 10.6367 1.30221 11.1921C1.40459 11.621 1.61172 12.0178 1.90507 12.3469C2.25088 12.6895 2.69167 12.9202 3.17024 13.0092C5.00084 13.2352 6.84535 13.3288 8.68942 13.2894C11.6613 13.3319 14.268 13.2894 17.3503 13.0517C17.8406 12.9682 18.2938 12.7371 18.6494 12.3894C18.8871 12.1516 19.0647 11.8605 19.1674 11.5403C19.4711 10.6085 19.6202 9.63327 19.6089 8.65331C19.6429 8.17781 19.6429 5.30783 19.6429 4.79837ZM8.38375 9.16277V3.90681L13.4105 6.54752C12.0009 7.3287 10.1414 8.21177 8.38375 9.16277Z"
+        ></path>
+      </symbol>
+      <symbol
+        id="telegram"
+        fill="currentColor"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 20 16"
+      >
+        <path
+          fill-rule="evenodd"
+          clip-rule="evenodd"
+          d="M1.81884 6.67429C6.83329 4.51737 10.177 3.09541 11.8501 2.40838C16.627 0.446787 17.6196 0.106037 18.2666 0.0947855C18.4089 0.0923108 18.727 0.127126 18.9331 0.292225C19.1071 0.431632 19.155 0.61995 19.1779 0.752122C19.2008 0.884294 19.2294 1.18539 19.2067 1.42065C18.9478 4.10593 17.8277 10.6224 17.2579 13.6299C17.0168 14.9025 16.542 15.3292 16.0824 15.371C15.0835 15.4617 14.3249 14.7193 13.3575 14.0931C11.8436 13.1134 10.9883 12.5035 9.51877 11.5474C7.82049 10.4425 8.92142 9.83523 9.88926 8.84278C10.1426 8.58305 14.5437 4.63081 14.6289 4.27228C14.6395 4.22744 14.6494 4.06029 14.5489 3.97204C14.4483 3.88378 14.2998 3.91396 14.1927 3.93796C14.0409 3.97199 11.6224 5.55018 6.93722 8.67254C6.25074 9.13793 5.62894 9.36469 5.07184 9.35281C4.45767 9.33971 3.27626 9.00997 2.39801 8.72811C1.32079 8.38241 0.464642 8.19963 0.539193 7.61252C0.578024 7.30672 1.00457 6.99397 1.81884 6.67429Z"
+        ></path>
+      </symbol>
+    </svg>
+    <div class="timeline-intro">
+      <h1 class="timeline-intro__title">Описание изменений</h1>
+      <span class="timeline-intro__desc"
+        >Подробная история изменений «{{ProductName}}»</span
+      >
+      <div class="timeline-intro__social">
+        <a
+          href="https://zen.yandex.ru/softonit.ru"
+          target="_blank"
+          class="mr-2"
+        >
+          <svg height="20px" width="50px">
+            <use xlink:href="#y-dzen"></use>
+          </svg>
+        </a>
+        <a href="https://vk.com/softonitru" target="_blank">
+          <svg height="20px" width="50px">
+            <use xlink:href="#vk"></use>
+          </svg>
+        </a>
+        <a
+          href="https://www.youtube.com/c/SoftonitRu?sub_confirmation=1"
+          target="_blank"
+        >
+          <svg height="20px" width="50px">
+            <use xlink:href="#youtube"></use>
+          </svg>
+        </a>
+        <a href="https://t.me/softonitnews" target="_blank">
+          <svg height="20px" width="50px">
+            <use xlink:href="#telegram"></use>
+          </svg>
+        </a>
+      </div>
+    </div>
+    <div class="timeline-wrapper">
+      <div class="timeline-container">
+        {{Text}}
+      </div>
+    </div>
+  </body>
+</html>
