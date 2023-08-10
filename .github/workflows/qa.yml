@@ -67,8 +67,15 @@ jobs:
         run: echo "##[set-output name=version;]`cat ./src/Модули/ПараметрыСистемы.os | grep "Версия = " | sed 's|[^"]*"||' | sed -r 's/".+//'`"
         id: extract_version
 
+      # Setup java 17 to be default (sonar-scanner requirement as of 5.x)
+      - name: Установка Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
+
       - name: Установка Sonar-scanner
-        uses: warchant/setup-sonar-scanner@v3
+        uses: warchant/setup-sonar-scanner@v6
 
       # Анализ проекта в SonarQube (ветка)
       - name: Анализ в SonarQube (branch)
