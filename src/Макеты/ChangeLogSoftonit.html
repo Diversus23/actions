@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{Title}}</title>
-    <style>      
+    <style>
 /*
 ! tailwindcss v3.3.3 | MIT License | https://tailwindcss.com
 */
@@ -587,7 +587,7 @@ video {
 }
 
 .timeline-intro__social {
-  margin-top: 1.25rem;
+  margin-top: 0.5rem;
   display: flex;
   justify-content: center;
   color: #08A652;
@@ -666,8 +666,8 @@ video {
 .timeline__dot {
   margin-left: -5px;
   margin-right: 0.75rem;
-  height: 8px;
-  width: 8px;
+  height: 9px;
+  width: 9px;
   border-radius: 9999px;
   background-color: black;
 }
@@ -693,6 +693,7 @@ video {
   top: -18px;
   margin-left: 1rem;
   margin-top: 1.75rem;
+  max-width: 836px;
   padding-bottom: 4rem;
 }
 
@@ -703,13 +704,12 @@ video {
 }
 
 h1 {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
+  font-size: 32px;
   font-weight: 700;
 }
 
 h1:not(:last-child) {
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 h2 {
@@ -734,7 +734,7 @@ h2 {
   width: -moz-fit-content;
   width: fit-content;
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .timeline__image-wrapper:first-child {
@@ -751,7 +751,7 @@ h2 {
 
 .timeline__content img {
   overflow: hidden;
-  border-radius: 20px;
+  border-radius: 10px;
 }
 
 .timeline__content img:first-child {
@@ -826,7 +826,7 @@ a {
 
 a:hover {
   border-bottom: 0;
-}        
+}      
     </style>
   </head>
   <body>
@@ -896,9 +896,6 @@ a:hover {
     </svg>
     <div class="timeline-intro">
       <h1 class="timeline-intro__title">Описание изменений</h1>
-      <span class="timeline-intro__desc"
-        >Подробная история изменений «{{ProductName}}»</span
-      >
       <div class="timeline-intro__social">
         <a
           href="https://zen.yandex.ru/softonit.ru"
