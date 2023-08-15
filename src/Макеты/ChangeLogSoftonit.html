@@ -553,6 +553,44 @@ video {
   display: none;
 }
 
+code {
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.85em !important;
+  color: #000;
+  background-color: #F0F2F4;
+  border-radius: 3px;
+  padding: 0.2em 0;
+}
+
+blockquote {
+  position: relative;
+  margin: 30px 0;
+  background-color: #fbfdff;
+  border: solid 1px #DEE2E6;
+  border-radius: 10px;
+  padding: 25px;
+  padding-right: 60px;
+}
+
+blockquote::before {
+  display: block;
+  content: "";
+  position: absolute;
+  right: 16px;
+  top: 0;
+  width: 40px;
+  height: 31px;
+  background-position: center;
+  background-size: cover;
+  background-image: url("data:image/svg+xml,%3Csvg width='40' height='31' viewBox='0 0 40 31' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22.5 17.36V0H40V17.608C40 29.512 28.75 31 28.75 31L27.25 27.528C27.25 27.528 32.25 26.784 33.25 22.816C34.25 19.84 32.25 17.36 32.25 17.36H22.5ZM0 17.36V0H17.5V17.608C17.5 29.512 6.25 31 6.25 31L4.75 27.528C4.75 27.528 9.75 26.784 10.75 22.816C11.75 19.84 9.75 17.36 9.75 17.36H0Z' fill='%23DEE2E6'/%3E%3C/svg%3E%0A");
+}
+
+code::before,
+code::after {
+  letter-spacing: -0.2em;
+  content: "\00a0";
+}
+
 .timeline-intro {
   display: flex;
   width: 100%;
@@ -572,7 +610,7 @@ video {
 }
 
 .timeline-intro {
-  background-color: #232327
+  background-color: #232327;
 }
 
 .timeline-intro__title {
@@ -590,11 +628,11 @@ video {
   margin-top: 0.5rem;
   display: flex;
   justify-content: center;
-  color: #08A652;
+  color: #08a652;
 }
 
 .timeline-intro__social a {
-  border: 0
+  border: 0;
 }
 
 .timeline-wrapper {
@@ -653,7 +691,7 @@ video {
 }
 
 .timeline__main {
-  border-color: #d4d4d4
+  border-color: #d4d4d4;
 }
 
 .timeline__main-header {
@@ -789,15 +827,18 @@ p:not(:last-child) {
   margin-bottom: 1.5rem;
 }
 
-ul, ol {
+ul,
+ol {
   list-style-position: inside;
 }
 
-ul:not(:last-child), ol:not(:last-child) {
+ul:not(:last-child),
+ol:not(:last-child) {
   margin-bottom: 0.75rem;
 }
 
-ul > li:not(:first-child), ol > li:not(:first-child) {
+ul > li:not(:first-child),
+ol > li:not(:first-child) {
   margin-top: 0.25rem;
 }
 
@@ -813,20 +854,21 @@ ol li::marker {
   font-weight: 700;
 }
 
-p, li {
+p,
+li {
   color: #495057;
 }
 
 a {
-  color: #08A652;
+  color: #08a652;
   text-decoration: none;
   display: inline;
-  border-bottom: 1px solid #08A652;
+  border-bottom: 1px solid #08a652;
 }
 
 a:hover {
   border-bottom: 0;
-}      
+}
     </style>
   </head>
   <body>
