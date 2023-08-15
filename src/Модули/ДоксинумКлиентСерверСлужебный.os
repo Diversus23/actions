@@ -1963,7 +1963,7 @@
 	extent = 0;
 	remainder = Excerpt["text"];
 	matches = Неопределено;
-	Если preg_match(ПараметрыMD, "/\[((?:[^][]+)*)\]/", remainder, matches) Тогда
+	Если preg_match(ПараметрыMD, "/\[([\S\s]*)\]/", remainder, matches) Тогда
 		argument = matches[1];
 
 		extent = extent + СтрДлина(matches[0]);
@@ -3171,6 +3171,7 @@
 		//			КонецЦикла;
 		//		КонецЕсли;
 		//	КонецЦикла;
+
 
 	КонецЕсли;
 
