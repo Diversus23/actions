@@ -1614,8 +1614,7 @@ binary: Двоичные данные
 - *path_to_install*: Корневой каталог поставщика куда будет установлен дистрибутив или демо при установке. Пример: "SoftOnIT". Новая база будет по умолчанию создаваться в "C:\Users\admin\Documents\SoftOnIT\IT". Где SoftOnIT="--path_to_install", а IT="--destination". По умолчанию "Vendor" (не обязательный).
 - *destination*: Каталог установки чистой базы 1С в каталоге поставщика. Дочерний каталог в "--path_to_install". По умолчанию "Base" (не обязательный).
 - *destination_demo*: Каталог установки демо базы 1С в каталоге поставщика. Дочерний каталог в "--path_to_install". По умолчанию: "BaseDemo" (не обязательный).
-- *maket*: Общий макет в конфигурации где хранится описание изменений. Необходим для создания новостей. По умолчанию "ОписаниеИзмененийСистемы" (не обязательный).
-Синонимы: [--maket, -m].
+- *changelog*: Changelog изменений конфигурации. Необходим для создания новостей (обязательный).
 - *version*: Версия для создания обновления. Если не задана, то будет определена последняя версия из конфигурации (не обязательный).
 Синонимы: [--version, -v].
 - *date_update*: Дата выхода обновления в формате "dd.MM.yyyy". Может быть датой в будущем (когда планируется релиз). Если не задана, то будет использована текущая дата (не обязательный).
@@ -1624,7 +1623,7 @@ binary: Двоичные данные
 Пример:
 
 ```bash
-oscript actions.os -v infobase distrib --connection "/FC:\Projects\_Конфигурации\Телеграмм" --prefix "telegram" --path "C:\temp\123" --versions_path "C:\work\telegram" --versions_update "1.0.0.10, 1.0.0.12" --minimal_platform_version "8.3.21.1644" --path_to_install "SoftOnIT" --destination "IT" --destination_demo "DemoIT"
+oscript actions.os -v infobase distrib --connection "/FC:\Projects\_Конфигурации\Телеграмм" --prefix "telegram" --path "C:\temp\123" --versions_path "C:\work\telegram" --versions_update "1.0.0.10, 1.0.0.12" --minimal_platform_version "8.3.21.1644" --path_to_install "SoftOnIT" --destination "IT" --destination_demo "DemoIT" --changelog "C:\work\telegram\CHANGELOG.md"
 ```
 
 
