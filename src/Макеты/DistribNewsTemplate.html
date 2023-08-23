@@ -6,54 +6,67 @@
 <meta name="theme-color" content="#EBF0F3" />
 <title>{{Синоним}} {{Версия}}</title>
 <style type="text/css">    
-    ul.updsec, ul.upddep, ul.upddel, ul.updedt, ul.upderr, ul.updnew, ul.updnws {
-        list-style: none;
-        padding-left: 0;
-        text-indent: -.3em;
-        margin: 0 0 1rem 0;
-    }
-    
-    ul.updsec li, ul.upddep li, ul.upddel li, ul.updnew li, ul.updedt li, ul.upderr li, ul.updnws li {
-        position: relative;
-        padding: 2px 0 0 30px;
-        margin: 0 5px 5px 0;
+    body {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     }
 
-    ul.updsec li::before, ul.upddep li::before, ul.upddel li::before, ul.updnew li::before, ul.updedt li::before, ul.upderr li::before, ul.updnws li::before {
+    hr {
+        height: 0;
+        /* 1 */
+        color: inherit;
+        /* 2 */
+        border-top-width: 1px;
+        /* 3 */
+    }
+    
+    img,
+    video {
+        max-width: 100%;
+        height: auto;
+    }
+
+    code {
+        font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+        font-size: 0.85em !important;
+        color: #000;
+        background-color: #F0F2F4;
+        border-radius: 3px;
+        padding: 0.2em 0;
+    }
+
+    blockquote {
+        position: relative;
+        margin: 30px 0;
+        background-color: #fbfdff;
+        border: solid 1px #DEE2E6;
+        border-radius: 10px;
+        padding: 25px;
+        padding-right: 60px;
+    }
+
+    blockquote::before {
+        display: block;
         content: "";
         position: absolute;
-        top: 0.2em;
-        left: 0;
-        width: 16px;
-        height: 16px;
+        right: 16px;
+        top: 0;
+        width: 40px;
+        height: 31px;
+        background-position: center;
+        background-size: cover;
+        background-image: url("data:image/svg+xml,%3Csvg width='40' height='31' viewBox='0 0 40 31' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M22.5 17.36V0H40V17.608C40 29.512 28.75 31 28.75 31L27.25 27.528C27.25 27.528 32.25 26.784 33.25 22.816C34.25 19.84 32.25 17.36 32.25 17.36H22.5ZM0 17.36V0H17.5V17.608C17.5 29.512 6.25 31 6.25 31L4.75 27.528C4.75 27.528 9.75 26.784 10.75 22.816C11.75 19.84 9.75 17.36 9.75 17.36H0Z' fill='%23DEE2E6'/%3E%3C/svg%3E%0A");
     }
 
-    .updsec li::before {
-        background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: none; stroke: %23fff; stroke-miterlimit: 10; stroke-width: 1.81px; %7D .cls-3 %7B fill: %2308a652; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-3' cx='8' cy='8' r='8'/%3E%3Cg%3E%3Crect class='cls-1' x='3.48' y='6.38' width='9.03' height='6.62' rx='.87' ry='.87'/%3E%3Cpath class='cls-2' d='m7.98,3h0c1.32,0,2.39,1.07,2.39,2.39v3.32h-4.77v-3.32c0-1.32,1.07-2.39,2.39-2.39Z'/%3E%3Crect class='cls-3' x='7.37' y='7.84' width='1.26' height='3.16' rx='.63' ry='.63'/%3E%3C/g%3E%3C/svg%3E") no-repeat;
+    code::before,
+    code::after {
+        letter-spacing: -0.2em;
+        content: "\00a0";
     }
 
-    .upddep li::before {
-        background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: %23c00; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-2' cx='8' cy='8' r='8'/%3E%3Ccircle class='cls-1' cx='8' cy='8' r='6.46'/%3E%3Cpath class='cls-2' d='m12.34,7.28c-.34-2.09-2.15-3.69-4.34-3.69s-4,1.6-4.34,3.69H.92v1.44h14.15v-1.44h-2.73Z'/%3E%3C/svg%3E") no-repeat;
-    }
-
-    .upddel li::before {
-        background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: none; stroke: %23fff; stroke-miterlimit: 10; stroke-width: 1.8px; %7D .cls-3 %7B fill: %2308a652; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-3' cx='8' cy='8' r='8'/%3E%3Ccircle class='cls-2' cx='8' cy='8' r='5.5'/%3E%3Crect class='cls-1' x='2.59' y='6.99' width='10.83' height='2.03' transform='translate(-3.31 8) rotate(-45)'/%3E%3C/svg%3E") no-repeat;
-    }
-
-    .updnew li::before {
-        background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: %2308a652; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-2' cx='8' cy='8' r='8'/%3E%3Ccircle class='cls-1' cx='8' cy='8' r='3.79'/%3E%3C/svg%3E") no-repeat;
-    }
-    
-    .updedt li::before {
-        background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: %2308a652; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-2' cx='8' cy='8' r='8'/%3E%3Ccircle class='cls-1' cx='8' cy='8' r='6.46'/%3E%3Ccircle class='cls-2' cx='8' cy='8' r='3.59'/%3E%3C/svg%3E") no-repeat;
-    }
-    
-    .upderr li::before {
-        background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: %23c00; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-2' cx='8' cy='8' r='8'/%3E%3Ccircle class='cls-1' cx='8' cy='8' r='3.79'/%3E%3C/svg%3E") no-repeat;
-    }
-    
-    .updnws li::before {
-        background: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg id='_Слой_1' data-name='Слой 1' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cdefs%3E%3Cstyle%3E .cls-1 %7B fill: %23fff; %7D .cls-2 %7B fill: %2308a652; %7D %3C/style%3E%3C/defs%3E%3Ccircle class='cls-2' cx='8' cy='8' r='8'/%3E%3Cg%3E%3Crect class='cls-1' x='7.28' y='3.85' width='1.57' height='5.7' rx='.78' ry='.78'/%3E%3Ccircle class='cls-1' cx='8.06' cy='11.42' r='.78'/%3E%3C/g%3E%3C/svg%3E") no-repeat;
+    blockquote,
+    figure,
+    pre {
+        margin: 0;
     }
 
     .red {
@@ -84,7 +97,6 @@
         BORDER-LEFT: black 1px solid; 
         BORDER-BOTTOM: black 1px solid
     }
-
 </style>
 <BODY>
 <TABLE cellSpacing=0 cellPadding=8 width="100%" bgColor=#ffffd6 border=0>
