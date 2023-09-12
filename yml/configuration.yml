@@ -64,9 +64,9 @@ variables:
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
   # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
-  MASTER_BASE: "f:/gitlab/master_base/$CI_PROJECT_NAME"
+  MASTER_BASE: "g:/gitlab/master_base/$CI_PROJECT_NAME"
   # Список баз конвейера
-  PIPELINE_PATH: "f:/gitlab/pipeline_base"
+  PIPELINE_PATH: "g:/gitlab/pipeline_base"
   # Где хранится рабочая база, с которой будем работать в
   PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
   # Полный путь к обработке Vanessa Automation
@@ -75,16 +75,14 @@ variables:
   SONAR_SCANNER: "c:/tools/sonar-scanner/bin/sonar-scanner.bat"
   # Команда запуска Coverage41C (или полный путь к ней)
   COVERAGE41C: "c:/tools/coverage41C/bin/Coverage41C.bat"
-  # Сервер Allure Docker Service
-  ALLURE_SERVER: "http://192.168.1.20:5050"
   # Путь к actions.os
   ACTIONS: "$PIPELINE_BASE/actions/src/actions.os"
   # Каталог контролируемых процессов (куда сохраняем информацию обо всем, что было запущено)
-  PROCESS_PATH: "f:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
+  PROCESS_PATH: "g:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
   BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
   # Адрес сайта, где можно посмотреть на текущую сборку
-  PAGE_ALLURE: "$ALBA_URL/allure/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME/"
+  PAGE_ALLURE: "$SERVER_URL/allure/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME/"
 
 # Настройки по умолчанию для всех job-ов.
 #default:
@@ -560,3 +558,4 @@ Allure:
   allow_failure: true
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_COMMIT_REF_NAME == "main"'
