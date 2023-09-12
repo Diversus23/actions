@@ -559,3 +559,4 @@ Allure:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_COMMIT_REF_NAME == "main"'
+    
