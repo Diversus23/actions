@@ -67,6 +67,8 @@ stages:
 
 # Переменные для работы
 variables:
+  # Версия файла yml (не забывать изменять при изменении yml-файла)
+  YML_VERSION: "2023-09-22-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -110,6 +112,7 @@ before_script:
   - Invoke-Expression $LINE
   - $LINE = '[Console]::InputEncoding = [System.Text.Encoding]::GetEncoding("UTF-8")'
   - Invoke-Expression $LINE
+  - Write-Host "YML_VERSION - $YML_VERSION"
   - Write-Host "LaunchMode - $LaunchMode"
   - Write-Host "CI_PROJECT_TITLE - $CI_PROJECT_TITLE"
   - Write-Host "CI_PROJECT_NAME - $CI_PROJECT_NAME"
@@ -126,7 +129,7 @@ before_script:
 
 Actions:
   stage: Подготовка
-  script:
+  script:    
     # Возьмем эталонную базу и подготовим ее в конвейере
     - New-Item -Path "$PIPELINE_BASE" -ItemType Directory
     - git clone --depth 5 https://github.com/Diversus23/actions.git $PIPELINE_BASE\actions
