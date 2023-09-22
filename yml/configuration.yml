@@ -6,11 +6,13 @@
 # =============
 # Требования:
 # 1. Название проекта и папка в которой лежат исходники конфигурации EDT должны совпадать
-# 2. Надо подготовить папку MASTER_BASE (папка с эталонными базами проектов) в которой должны быть подготовленные и заполненные базы с пользователем "Администратор" (для тестов)
-# 3. Надо подготовить папку MASTER_BASE (временная папка для сборки) Туда копируем MASTER_BASE и загружаем изменения. Для каждого пайпалайна создается своя подпапка. Старые базы в ней очищаются (старше 5 дней).
-# $LaunchMode == "BUILD"
-# $LaunchMode == "RELEASE"
-# $LaunchMode == "ALLTEST"
+# 2. Надо подготовить папку MASTER_PATH (папка с мастер-базами проектов) в которой должны быть подготовленные и заполненные базы с пользователем "Администратор" (для тестов)
+# 3. Надо подготовить папку PIPELINE_PATH (временная папка для сборки) Туда копируем MASTER_BASE и загружаем изменения. Для каждого пайпалайна создается своя подпапка. Старые базы в ней очищаются (старше 3 дней).
+# 4. Запуск билда релиза осуществляется в ручном режиме на странице https://demo.softonit.ru/softonit/it/-/pipelines/new Необходимо выполнить запуск с переменными LaunchMode = "BUILD" (без кавычек)
+# 5. Выпуск релиза в свет осуществляется в ручном режиме на странице https://demo.softonit.ru/softonit/it/-/pipelines/new Необходимо выполнить запуск с переменными LaunchMode = "RELEASE" и VERSION = "3.1.17.1" нужная версия (без кавычек)
+# $LaunchMode == "BUILD" - создание релиза
+# $LaunchMode == "RELEASE" + $VERSION - выпуск релиза
+# $LaunchMode == "ALLTEST" - выполнение всех тестов
 
 stages:
   - Подготовка
@@ -23,7 +25,8 @@ stages:
   # + Загрузка исходников XML в базу конвейера
   # + Выгрузка из EDT исходников расширений в XML 1C
   # + Загрузка расширений в базу конвейера
-  - Тестирование
+  - Тесты дымовые
+  - Тесты основные
   # + Создание двух типов агентов, одни с тегом test - для тестирования (на один сеанс только одна копия), второй без тегов - для не интерактивных работ (много копий)
   # + Добавление параллельности тестов
   # + Проверка конфигурации средствами платформы  
@@ -47,8 +50,17 @@ stages:
   # + Сборка дистрибутива
   # + Отправление дистрибутива в облако S3
   - Выход релиза
+  # + Если версия не задана вызываем исключение    
+  # - Опубликовать новость на сайте (делается на шаге Запись новостей на сайт) для версии $VERSION
+  # - Открыть обновление на сайте для версии $VERSION
+  # - Обновление API на сайте (только для УИТ)
+  # - Обновление эталонной базы на версию $VERSION
+  # - Выгрузка эталонной базы в dt
+  # - Загрузка эталонной базы в мастер-базу
+  # - Очистка мастер-базы от "чувствительных" данных
+  # - Замена базы по умолчанию, на базу после сборки
   # - Обновление на сайте спецификаций API
-  # + Обновление эталонной базы
+  # - Обновление эталонной базы
   # - Подготовка новости для рассылки клиентам в сервисе SendSay (вручную при выходе релиза)
   - Завершение
   # + Удаление старых баз в конвейере
@@ -63,10 +75,12 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
-  # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
-  MASTER_BASE: "g:/gitlab/master_base/$CI_PROJECT_NAME"
+  # Список мастер-баз
+  MASTER_PATH: "g:/gitlab/master_base"
   # Список баз конвейера
   PIPELINE_PATH: "g:/gitlab/pipeline_base"
+  # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
+  MASTER_BASE: "$MASTER_PATH/$CI_PROJECT_NAME"
   # Где хранится рабочая база, с которой будем работать в
   PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
   # Полный путь к обработке Vanessa Automation
@@ -91,11 +105,11 @@ variables:
 
 # Всегда выполняется перед стартом по умолчанию для всех job-ов.
 before_script:
-  - $LINE = '[Console]::OutputEncoding = [Text.Encoding]::Utf8'
+  - chcp 65001
+  - $LINE = '[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("UTF-8")'
   - Invoke-Expression $LINE
-  - $LINE = '[Console]::InputEncoding = [Text.Encoding]::Utf8'
+  - $LINE = '[Console]::InputEncoding = [System.Text.Encoding]::GetEncoding("UTF-8")'
   - Invoke-Expression $LINE
-  - chcp
   - Write-Host "LaunchMode - $LaunchMode"
   - Write-Host "CI_PROJECT_TITLE - $CI_PROJECT_TITLE"
   - Write-Host "CI_PROJECT_NAME - $CI_PROJECT_NAME"
@@ -196,7 +210,7 @@ Actions:
 #=========================================================     
 
 Проверка средствами платформы:
-  stage: Тестирование
+  stage: Тесты дымовые
   variables:
     GIT_STRATEGY: none
   script:
@@ -219,14 +233,16 @@ Actions:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "ALLTEST"'
 
 Дымовые тесты:
-  stage: Тестирование
-  #parallel: 3
+  stage: Тесты дымовые
+  #parallel: 2
   script:
     - echo "$CI_NODE_INDEX из $CI_NODE_TOTAL"
     # Разворачиваем базу из архива в каталог с текущим CI
     - $BASE_TEST = "$CI_PROJECT_DIR\base$CI_NODE_INDEX"
+    - echo "$BASE_TEST"
     - oscript -encoding=utf-8 $ACTIONS zip extract --file "$PIPELINE_BASE\base.zip" --path "$BASE_TEST"
-    - $TAG = "SmokeTest$CI_NODE_INDEX"
+    - if ($CI_NODE_TOTAL -eq "1") { $TAG = "SmokeTest1" } else { $TAG = "SmokeTest$CI_NODE_INDEX" }
+    - echo $TAG
     # Удаление лишних файлов
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR" --mask "genericCoverage*.xml"
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\allurereport"
@@ -287,14 +303,15 @@ Actions:
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "ALLTEST" && $CI_COMMIT_REF_NAME == "main"'
 
 Основные тесты:
-  stage: Тестирование
-  #parallel: 3
+  stage: Тесты основные
+  #parallel: 2
   script:
     - echo "$CI_NODE_INDEX из $CI_NODE_TOTAL"
     # Завершаем все открытые сеансы клиентов 1С
     - oscript -encoding=utf-8 $ACTIONS infobase close-all-clients
     # Разворачиваем базу из архива в каталог с текущим CI
     - $BASE_TEST = "$CI_PROJECT_DIR\base$CI_NODE_INDEX"
+    - echo "$BASE_TEST"
     - oscript -encoding=utf-8 $ACTIONS zip extract --file "$PIPELINE_BASE\base.zip" --path "$BASE_TEST"
     - if ($CI_NODE_TOTAL -eq "1") { $TAG = "MainTest1" } else { $TAG = "MainTest$CI_NODE_INDEX" }
     - echo $TAG
@@ -408,7 +425,7 @@ SonarQube:
     - oscript -encoding=utf-8 $ACTIONS http get --url "$SONAR_BRANCH_URL" --login "$SONAR_LOGIN" --out "$CI_PROJECT_DIR\sonar_status.json"
     - $SONAR_PROJECT_STATUS = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\sonar_status.json" --key "projectStatus.status"
     # Роняем задание если порог качества не пройден (раскомментировать, если у вас порог качества в норме)
-    #- if ($SONAR_PROJECT_STATUS -ne "OK") {echo "Порог качества сонара не пройден"; exit 1}    
+    #- if ($SONAR_PROJECT_STATUS -ne "OK") {echo "Порог качества сонара не пройден"; exit 1}
     # Останавливаем конвейер, если любые тесты упали    
     - oscript -encoding=utf-8 $ACTIONS vanessa-automation check-errors --path "." --mask "*test_log*.log"
   rules:
@@ -528,17 +545,17 @@ Allure:
 Выход релиза:
   stage: Выход релиза
   script:
-    # Опубликовать новость на сайте (делается на шаге Запись новостей на сайт)
-    # Открыть обновление на сайте
+    # Если версия не задана указываем на это
+    - if ($VERSION -eq "") {echo "Не указана переменная VERSION для публикации релиза"; exit 1}
+    # Опубликовать новость на сайте (делается на шаге Запись новостей на сайт) для версии $VERSION
+    # Открыть обновление на сайте для версии $VERSION
     # Обновление API на сайте (только для УИТ)
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR/docs/api/docs/Исходники_SwaggerUI" --mask "*.json" --remote "/api/docs" }
-    # Замена базы по умолчанию, на базу после сборки
-    #- oscript -encoding=utf-8 $ACTIONS fs copy --from "$PIPELINE_BASE" --to "$MASTER_BASE" --recursive    
-  artifacts:
-    paths:
-      - letter.html
-    expire_in: 1 day
-    when: always
+    # Обновление эталонной базы на версию $VERSION
+    # Выгрузка эталонной базы в dt
+    # Загрузка эталонной базы в мастер-базу
+    # Очистка мастер-базы от "чувствительных" данных (пароль администратора, пароль ящика почты)
+    # Замена базы по умолчанию, на базу после сборки    
   allow_failure: false
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "RELEASE" && $CI_COMMIT_REF_NAME == "main"'
