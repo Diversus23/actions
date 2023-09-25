@@ -9,6 +9,10 @@
 		"Инициализировать ChangeLog.md",
 		Новый ChangeLogInit());
 	
+	Команда.ДобавитьКоманду("check-version",
+		"Проверить наличие версии в ChangeLog.md",
+		Новый ChangeLogCheckVersion());
+
 	Команда.ДобавитьКоманду("convert",
 		"Конвертировать ChangeLog.md в другой формат",
 		Новый ChangeLogConvert());
