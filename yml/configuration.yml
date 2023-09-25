@@ -50,23 +50,21 @@ stages:
   # + Сборка дистрибутива
   # + Отправление дистрибутива в облако S3
   - Выход релиза
-  # + Если версия не задана вызываем исключение    
-  # - Опубликовать новость на сайте (делается на шаге Запись новостей на сайт) для версии $VERSION
-  # - Открыть обновление на сайте для версии $VERSION
-  # - Обновление API на сайте (только для УИТ)
-  # - Обновление эталонной базы на версию $VERSION
-  # - Выгрузка эталонной базы в dt
-  # - Загрузка эталонной базы в мастер-базу
-  # - Очистка мастер-базы от "чувствительных" данных
-  # - Замена базы по умолчанию, на базу после сборки
-  # - Обновление на сайте спецификаций API
+  # + Если версия не задана или такой версии нет, вызываем исключение
+  # + Опубликовать новость на сайте (делается на шаге Запись новостей на сайт) для версии $VERSION
+  # + Открыть обновление на сайте для версии $VERSION
+  # + Обновление API на сайте (только для УИТ)
+  # + Обновление эталонной базы на версию $VERSION
+  # + Выгрузка эталонной базы в dt
+  # + Загрузка эталонной базы в мастер-базу
+  # + Очистка мастер-базы от "чувствительных" данных
   - Завершение
   # + Удаление старых баз в конвейере
 
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2023-09-22-1"
+  YML_VERSION: "2023-09-25-2"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -75,6 +73,9 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
+  # Сервер эталонных баз и эталонная база
+  MODEL_SERVER: "192.168.1.40"
+  MODEL_BASE: "${CI_PROJECT_NAME}demoref"
   # Список мастер-баз
   MASTER_PATH: "g:/gitlab/master_base"
   # Список баз конвейера
@@ -90,13 +91,12 @@ variables:
   # Команда запуска Coverage41C (или полный путь к ней)
   COVERAGE41C: "c:/tools/coverage41C/bin/Coverage41C.bat"
   # Путь к actions.os
-  ACTIONS: "$PIPELINE_BASE/actions/src/actions.os"
+  ACTIONS_PATH: "$PIPELINE_BASE/actions"
+  ACTIONS: "$ACTIONS_PATH/src/actions.os"
   # Каталог контролируемых процессов (куда сохраняем информацию обо всем, что было запущено)
   PROCESS_PATH: "g:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
   BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
-  # Адрес сайта, где можно посмотреть на текущую сборку
-  PAGE_ALLURE: "$SERVER_URL/allure/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME/"
 
 # Настройки по умолчанию для всех job-ов.
 #default:
@@ -127,7 +127,9 @@ before_script:
 
 Actions:
   stage: Подготовка
-  script:    
+  script:
+    # Если версия не задана указываем на это при выпуске релиза
+    - if ($VERSION -eq $null -and $LaunchMode -eq "RELEASE") {echo "Не указана переменная VERSION для публикации релиза"; exit 1;}
     # Возьмем эталонную базу и подготовим ее в конвейере
     - New-Item -Path "$PIPELINE_BASE" -ItemType Directory
     - git clone --depth 5 https://github.com/Diversus23/actions.git $PIPELINE_BASE\actions
@@ -136,6 +138,7 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"    
     # Если старая сборка прерывается, то новая удаляет все запущенные процессы
     - oscript -encoding=utf-8 $ACTIONS process killpath --processpath "$PROCESS_PATH"
+  allow_failure: false
 
 #=========================================================
 #======================== Защита =========================
@@ -205,6 +208,27 @@ Actions:
   allow_failure: false
   rules:
     - if: '$LaunchMode != "RELEASE" && $CI_PROJECT_NAME == "it"'
+
+# Только для УИТ
+Сборка расширения Telegram:
+  stage: Сборка
+  needs: [Сборка базы]
+  script:
+    # Конвертация проекта EDT в XML 1C
+    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
+    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\extension" --clear
+    - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\telegram.РасширениеДляТестов" --path "$CI_PROJECT_DIR\build\extension" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
+    # Загрузка расширения МИКО в базу конвейера из XML 1C
+    - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "Администратор" --path "$CI_PROJECT_DIR\build\extension" --name "РасширениеДляТестов" --update --processpath "$PROCESS_PATH"
+    # Повторное архивирование полученной базы и файла DoNotCopy.txt уже с расширением
+    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$PIPELINE_BASE" --mask "base.zip"
+    - oscript -encoding=utf-8 $ACTIONS zip add --file "$PIPELINE_BASE\base.zip" --mask "$PIPELINE_BASE\1Cv8.1cd;$PIPELINE_BASE\DoNotCopy.txt"
+    # Очистка job
+    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\workspace"
+    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\build\extension"
+  allow_failure: false
+  rules:
+    - if: '$LaunchMode != "RELEASE" && $CI_PROJECT_NAME == "telegram"'
 
 #=========================================================
 #===================== Тестирование ======================
@@ -444,13 +468,6 @@ Allure:
   when: always
   allow_failure: true
   script:
-    # + call allurehelper categories --path ./out/allure-results/tests
-    # - call allurehelper env --path ./out/allure-results/tests --v8version %v8version% --os --oscriptversion --vrunenrVersion --add %addVersion% --sha %CI_COMMIT_SHORT_SHA% --branch %CI_COMMIT_SHORT_SHA% --repoUrl %CI_PROJECT_URL%
-    # + call allurehelper history --allureresults ./out/allure-results --apiurl %CI_API_V4_URL% --token %CI_DEPLOY_TOKEN% --id %CI_PROJECT_ID%  --scope success
-    # + call allurehelper executors --path ./out/allure-results --name Gitlab --type GitlabCI --url %CI_SERVER_URL$ --buildOrder %CI_PIPELINE_ID% --buildName %CI_COMMIT_SHORT_SHA%  --buildUrl %CI_PIPELINE_URL$ --reportUrl %CI_PAGES_URL%
-
-    # Системное заполнение
-    - oscript -encoding=utf-8 $ACTIONS allure executors --path "$CI_PROJECT_DIR\allurereport" --name Gitlab --type GitlabCI --url $CI_SERVER_URL --buildOrder $CI_PIPELINE_ID --buildName $CI_COMMIT_SHORT_SHA --buildUrl $CI_PIPELINE_URL --reportUrl $PAGE_ALLURE
     # Готовим список файлов
     - $ALLURE_REPORTS = New-Object System.Collections.ArrayList;
     - $ALLURE_REPORTS.Add("$CI_PROJECT_DIR\allurereport");
@@ -487,18 +504,25 @@ Allure:
   stage: Развертывание
   when: always
   script:
+    # Для релиза проверим, что такая версия существует в changelog
+    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { oscript -encoding=utf-8 $ACTIONS changelog check-version --file "$CI_PROJECT_DIR\CHANGELOG.md" --version "$VERSION" }
+    # Для какой версии получаем новости
+    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { $future_version = $VERSION } else { $future_version = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version" }
+    - echo "Версия новости - $future_version"
     # Создаем новости из общего макета
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\news" --clear
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE"
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.txt" --template "SimpleTextWithoutVersion.txt" --productname "$CI_PROJECT_TITLE"
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --maximgwidth 540
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.txt" --template "SimpleTextWithoutVersion.txt" --productname "$CI_PROJECT_TITLE" --version "$future_version"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --maximgwidth 540
     # Отправка новостей на сайт
     - echo "Отправка новостей на сайт"
     - oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default" --out "$CI_PROJECT_DIR\news.json"
     - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "html" --filevalue "$CI_PROJECT_DIR\build\news\news.html"
     - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "txt" --filevalue "$CI_PROJECT_DIR\build\news\news.txt"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "version" --str "$future_version"
     # Если публикация обновления, то сразу публикуем новость в блоге
     - if ($LaunchMode -eq "RELEASE") { $is_future_version = "0" } else { $is_future_version = "1" }
+    - echo "Это описание будущей версии - $is_future_version"
     - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "is_future_version" --str "$is_future_version"
     - oscript -encoding=utf-8 $ACTIONS http post --url "$NEWS_SCRIPT_UPDATE" --fileparams "$CI_PROJECT_DIR\news.json" --p1 "action" --v1 "setnews"
   allow_failure: false
@@ -546,17 +570,22 @@ Allure:
 Выход релиза:
   stage: Выход релиза
   script:
-    # Если версия не задана указываем на это
-    - if ($VERSION -eq "") {echo "Не указана переменная VERSION для публикации релиза"; exit 1}
-    # Опубликовать новость на сайте (делается на шаге Запись новостей на сайт) для версии $VERSION
-    # Открыть обновление на сайте для версии $VERSION
+    # + Опубликовать новость на сайте (делается на шаге Запись новостей на сайт) для версии $VERSION
+    # + Открыть обновление на сайте для версии $VERSION (делается на шаге Запись новостей на сайт)
     # Обновление API на сайте (только для УИТ)
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR/docs/api/docs/Исходники_SwaggerUI" --mask "*.json" --remote "/api/docs" }
     # Обновление эталонной базы на версию $VERSION
-    # Выгрузка эталонной базы в dt
-    # Загрузка эталонной базы в мастер-базу
-    # Очистка мастер-базы от "чувствительных" данных (пароль администратора, пароль ящика почты)
-    # Замена базы по умолчанию, на базу после сборки    
+    - echo "/S$MODEL_SERVER\$MODEL_BASE"
+    - oscript -encoding=utf-8 $ACTIONS infobase updatecfg --file "$BUILD_PATH/$VERSION/1Cv8.cf" --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "Администратор" --password "$MODEL_PASSWORD"
+    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase setlegal --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "Администратор" --password "$MODEL_PASSWORD" }
+    # + Выгрузка эталонной базы в dt
+    - oscript -encoding=utf-8 $ACTIONS infobase dump --file "$MASTER_BASE/last.dt" --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "Администратор" --password "$MODEL_PASSWORD"    
+    # + Загрузка эталонной базы в мастер-базу
+    - oscript -encoding=utf-8 $ACTIONS infobase dump --file "$MASTER_BASE/pre.dt" --connection "/F$MASTER_BASE" --user "Администратор"
+    - oscript -encoding=utf-8 $ACTIONS infobase restore --file "$MASTER_BASE/last.dt" --connection "/F$MASTER_BASE" --user "Администратор"
+    # + Очистка мастер-базы от "чувствительных" данных (пароль администратора, пароль ящика почты)
+    - oscript -encoding=utf-8 $ACTIONS infobase runcode --file "$ACTIONS_PATH/tools/ОчисткаЧувствительныхДанных.os" --connection "/F$MASTER_BASE" --user "Администратор" --password "$MODEL_PASSWORD"
+    # Обновление на сайте спецификаций API    
   allow_failure: false
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "RELEASE" && $CI_COMMIT_REF_NAME == "main"'
@@ -577,4 +606,3 @@ Allure:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_COMMIT_REF_NAME == "main"'
-    
