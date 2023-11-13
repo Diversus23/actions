@@ -256,6 +256,7 @@ Actions:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main" && $LaunchMode != "RELEASE" && $LaunchMode != "BUILD"'
     - if: '$CI_COMMIT_REF_NAME == "main" && $LaunchMode != "RELEASE" && $LaunchMode != "BUILD"'
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "ALLTEST"'
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event" && $CI_COMMIT_MESSAGE =~ "/@test/"'
 
 Дымовые тесты:
   stage: Тесты дымовые
@@ -326,6 +327,7 @@ Actions:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "ALLTEST"'
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "ALLTEST" && $CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event" && $CI_COMMIT_MESSAGE =~ "/@test/"'
 
 Основные тесты:
   stage: Тесты основные
@@ -397,6 +399,7 @@ Actions:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "ALLTEST"'
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "ALLTEST" && $CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event" && $CI_COMMIT_MESSAGE =~ "/@test/"'
 
 #=========================================================
 #======================== Сонар ==========================
@@ -499,6 +502,7 @@ Allure:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "ALLTEST"'
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "ALLTEST" && $CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE != "merge_request_event" && $CI_COMMIT_MESSAGE =~ "/@test/"'
 
 Запись новостей на сайт:
   stage: Развертывание
@@ -603,6 +607,8 @@ Allure:
     # Удаление в папке конвеера устаревших папок за последние 3 дня
     - oscript -encoding=utf-8 $ACTIONS fs deleteold --path "$PIPELINE_PATH/$CI_PROJECT_NAME" --type day --value 3
   allow_failure: true
+  tags:
+    - test
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule"'
     - if: '$CI_COMMIT_REF_NAME == "main"'
