@@ -64,7 +64,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2023-09-25-2"
+  YML_VERSION: "2023-11-13-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -152,15 +152,18 @@ Actions:
     # Обфускация
     - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\ИсходныйСЛС.zip" --mask "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\*.*"
     - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl" --apikey $NETLENKA_APIKEY
+    - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\it\src\CommonModules\ДоксинумШаблоны\Module.bsl" --apikey $NETLENKA_APIKEY
   artifacts:
     name: "СЛС"
     paths:
       - ИсходныйСЛС.zip
       - $CI_PROJECT_DIR/it/src/CommonModules/СЛС/Module.bsl
+      - $CI_PROJECT_DIR/it/src/CommonModules/ДоксинумШаблоны/Module.bsl
     expire_in: 1 day
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD" && $CI_PROJECT_NAME == "it"'
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "main" && $CI_PROJECT_NAME == "it"'
+
 
 #=========================================================
 #======================== Сборка =========================
