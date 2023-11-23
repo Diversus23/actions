@@ -162,7 +162,7 @@ Actions:
     expire_in: 1 day
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD" && $CI_PROJECT_NAME == "it"'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "main" && $CI_PROJECT_NAME == "it"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release" && $CI_PROJECT_NAME == "it"'
 
 
 #=========================================================
@@ -423,12 +423,13 @@ SonarQube:
     - $FILES = Get-Childitem -Path "$CI_PROJECT_DIR" -Name "genericCoverage*.xml"
     - $COVERAGE_REPORTS = "";
     - foreach ($FILE in $FILES) { $comma = ""; if ($COVERAGE_REPORTS) { $comma = ","; }; $COVERAGE_REPORTS = $COVERAGE_REPORTS + $comma + "$CI_PROJECT_DIR\" + $FILE; }
-    - Write-Host "$COVERAGE_REPORTS"
+    - $SONAR_PROJECT = $CI_PROJECT_NAME
+    - if ($COVERAGE_REPORTS) { Write-Host "$COVERAGE_REPORTS"; $SONAR_PROJECT = $SONAR_PROJECT + "_coverage"; }
     - $SONAR_ARGUMENT_ARRAY =
         "-Dsonar.host.url=$SONAR_HOST_URL",
         "-Dsonar.login=$SONAR_LOGIN",
-        "-Dsonar.projectName=$CI_PROJECT_NAME",
-        "-Dsonar.projectKey=$CI_PROJECT_NAME",
+        "-Dsonar.projectName=$SONAR_PROJECT",
+        "-Dsonar.projectKey=$SONAR_PROJECT",
         "-Dsonar.projectBaseDir=$CI_PROJECT_DIR\$CI_PROJECT_NAME",
         "-Dsonar.sourceEncoding=UTF-8",
         "-Dsonar.qualitygate.wait=true",
@@ -541,8 +542,9 @@ Allure:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
     - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "release"'
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
 
 Сборка дистрибутива:
   stage: Развертывание
@@ -568,7 +570,7 @@ Allure:
   allow_failure: false
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
 
 #=========================================================
 #==================== Выход релиза =======================
@@ -595,7 +597,7 @@ Allure:
     # Обновление на сайте спецификаций API    
   allow_failure: false
   rules:
-    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "RELEASE" && $CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "RELEASE" && $CI_COMMIT_REF_NAME == "release"'
 
 #=========================================================
 #===================== Завершение ========================
