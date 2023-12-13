@@ -58,7 +58,7 @@ stages:
   # + Выгрузка эталонной базы в dt
   # + Загрузка эталонной базы в мастер-базу
   # + Очистка мастер-базы от "чувствительных" данных
-  - Завершение
+  #- Завершение
   # + Удаление старых баз в конвейере
 
 # Переменные для работы
@@ -603,17 +603,17 @@ Allure:
 #===================== Завершение ========================
 #=========================================================
 
-Удаление старых баз конвеера:  
-  stage: Завершение
-  when: always
-  variables:
-    GIT_STRATEGY: none
-  script:
-    # Удаление в папке конвеера устаревших папок за последние 3 дня
-    - oscript -encoding=utf-8 $ACTIONS fs deleteold --path "$PIPELINE_PATH/$CI_PROJECT_NAME" --type day --value 3
-  allow_failure: true
-  tags:
-    - test
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule"'
-    - if: '$CI_COMMIT_REF_NAME == "main"'
+# Удаление старых баз конвеера:  
+#   stage: Завершение
+#   when: always
+#   variables:
+#     GIT_STRATEGY: none
+#   script:
+#     # Удаление в папке конвеера устаревших папок за последние 3 дня
+#     - oscript -encoding=utf-8 $ACTIONS fs deleteold --path "$PIPELINE_PATH/$CI_PROJECT_NAME" --type day --value 3
+#   allow_failure: true
+#   tags:
+#     - test
+#   rules:
+#     - if: '$CI_PIPELINE_SOURCE == "schedule"'
+#     - if: '$CI_COMMIT_REF_NAME == "main"'
