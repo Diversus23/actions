@@ -166,10 +166,10 @@
  	мТекст = "<code>{{text}}</code>";
 	мГруппа.Вставить("code", мТекст);
 
- 	мТекст = "<input type=""checkbox"">";
+ 	мТекст = "<input disabled type=""checkbox"">";
 	мГруппа.Вставить("checkbox", мТекст);
 
- 	мТекст = "<input type=""checkbox"" checked>";
+ 	мТекст = "<input disabled type=""checkbox"" checked>";
 	мГруппа.Вставить("checkboxChecked", мТекст);
 
  	мТекст = "<button href=""{{href}}"" title=""{{title}}"" class=""no-link inline-flex items-center font-medium cursor-pointer transition-colors duration-200 ease-out focus:outline-none bg-blue-500 hover:bg-blue-700 text-white px-4 h-10 text-sm rounded-md param1-{{color??primary}} param2-{{param2}} param3-{{param3}}""><span>{{name??Кнопка}}</span></button>";
