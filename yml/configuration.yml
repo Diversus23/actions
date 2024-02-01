@@ -517,11 +517,14 @@ Allure:
     # Для какой версии получаем новости
     - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { $future_version = $VERSION } else { $future_version = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version" }
     - echo "Версия новости - $future_version"
+    - $site_version = $future_version.Replace(".", "-")
+    - $news_link = "https://softonit.ru/blog/news/update$CI_PROJECT_NAME/upd$CI_PROJECT_NAME-$site_version/"
+    - echo "Ссылка новости на сайте - $news_link"
     # Создаем новости из общего макета
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\news" --clear
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version"
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.txt" --template "SimpleTextWithoutVersion.txt" --productname "$CI_PROJECT_TITLE" --version "$future_version"
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --maximgwidth 540
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --newsurl "$news_link"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.txt" --template "SimpleTextWithoutVersion.txt" --productname "$CI_PROJECT_TITLE" --version "$future_version" --newsurl "$news_link"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --maximgwidth 540 --newsurl "$news_link"
     # Отправка новостей на сайт
     - echo "Отправка новостей на сайт"
     - oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default" --out "$CI_PROJECT_DIR\news.json"
