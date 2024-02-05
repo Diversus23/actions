@@ -1,6 +1,8 @@
 # Actions для 1C на базе oscript CI/CD
 
 [![Тестирование](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml/badge.svg)](https://github.com/Diversus23/actions1c/actions/workflows/testing.yml)
+[![https://softonit.ru](https://img.shields.io/website-up-down-green-red/http/shields.io.svg)](https://softonit.ru/)
+[![OpenYellow](https://img.shields.io/endpoint?url=https://openyellow.neocities.org/badges/1/639453612.json)](https://openyellow.notion.site/openyellow/24727888daa641af95514b46bee4d6f2?p=26cd0851e21046998a833c5c382e59a5&amp;pm=s)
 
 ## Что это такое и где будет полезно?
 
