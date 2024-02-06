@@ -151,12 +151,14 @@ Actions:
   script:
     # Обфускация
     - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\ИсходныйСЛС.zip" --mask "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\*.*"
+    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\ИсходныйДоксинумШаблоны.zip" --mask "$CI_PROJECT_DIR\it\src\CommonModules\ДоксинумШаблоны\*.*"
     - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\Module.bsl" --apikey $NETLENKA_APIKEY
     - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\it\src\CommonModules\ДоксинумШаблоны\Module.bsl" --apikey $NETLENKA_APIKEY
   artifacts:
     name: "СЛС"
     paths:
       - ИсходныйСЛС.zip
+      - ИсходныйДоксинумШаблоны.zip
       - $CI_PROJECT_DIR/it/src/CommonModules/СЛС/Module.bsl
       - $CI_PROJECT_DIR/it/src/CommonModules/ДоксинумШаблоны/Module.bsl
     expire_in: 1 day
@@ -188,8 +190,6 @@ Actions:
     # Очистка job
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\workspace"
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\config"
-  tags:
-    - test    
   rules:
     - if: '$LaunchMode != "RELEASE"'
 
@@ -568,7 +568,7 @@ Allure:
     # Сохранение необфусцированного модуля СЛС. Только для УИТ
     - if ($CI_PROJECT_NAME -eq 'it')
         {
-          oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\СЛС.zip" --mask "$CI_PROJECT_DIR\$PROJECT_NAME\src\CommonModules\СЛС\*.*;$CI_PROJECT_DIR\ИсходныйСЛС.zip";          
+          oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\СЛС.zip" --mask "$CI_PROJECT_DIR\$PROJECT_NAME\src\CommonModules\СЛС\*.*;$CI_PROJECT_DIR\ИсходныйСЛС.zip";
           $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS edt versionconfig --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME";
           oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\СЛС.zip" --to "$BUILD_PATH\$CONFIG_VERSION";
         }
