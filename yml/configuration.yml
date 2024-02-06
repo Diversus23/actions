@@ -188,6 +188,8 @@ Actions:
     # Очистка job
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\workspace"
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\config"
+  tags:
+    - test    
   rules:
     - if: '$LaunchMode != "RELEASE"'
 
