@@ -1,4 +1,15 @@
 # Основной yml-файл для обработок и отчетов 1С на платформе 1С с обычными и управляемыми формами
+# В основной сборке использовать вот этот код:
+# =============
+# include:
+#   - remote: 'https://raw.githubusercontent.com/Diversus23/actions/main/yml/epferf_thin_thick.yml'
+# =============
+# Требования:
+# 1. Название проекта и название обработки должны совпадать
+# 2. Запуск билда релиза осуществляется в ручном режиме на странице https://demo.softonit.ru/softonit/it/-/pipelines/new Необходимо выполнить запуск с переменными LaunchMode = "BUILD" (без кавычек)
+# 3. Выпуск релиза в свет осуществляется в ручном режиме на странице https://demo.softonit.ru/softonit/it/-/pipelines/new Необходимо выполнить запуск с переменными LaunchMode = "RELEASE" и VERSION = "3.1.17.1" нужная версия (без кавычек)
+# $LaunchMode == "BUILD" - создание релиза
+# $LaunchMode == "RELEASE" + $VERSION - выпуск релиза
 
 stages:
   - Подготовка
