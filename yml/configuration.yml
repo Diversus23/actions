@@ -176,8 +176,8 @@ Actions:
   script:
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\config" --clear
     # Обновление описания изменений в конфигурации
-    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\$CI_PROJECT_NAME\src\CommonTemplates\ОписаниеИзменений\Template.txt" --template Softonit.html --all }
-    - if ($CI_PROJECT_NAME -eq 'telegram') { oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\$CI_PROJECT_NAME\src\CommonTemplates\TelegramОписаниеИзменений\Template.txt" --template Softonit.html --all }
+    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\$CI_PROJECT_NAME\src\CommonTemplates\ОписаниеИзменений\Template.txt" --template Softonit.html --all --lazyload }
+    - if ($CI_PROJECT_NAME -eq 'telegram') { oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\$CI_PROJECT_NAME\src\CommonTemplates\TelegramОписаниеИзменений\Template.txt" --template Softonit.html --all --lazyload }
     # Конвертация проекта EDT в XML 1C
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
     - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\config" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
