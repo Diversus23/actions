@@ -195,16 +195,8 @@ SonarQube:
   script:
     # Обфускация
     - precommit1c --decompile "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.epf" "$CI_PROJECT_DIR\build\distrib"
-<<<<<<< HEAD
     - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE\ObjectModule.bsl" --apikey $NETLENKA_APIKEY
     - precommit1c --compile "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE" "$CI_PROJECT_DIR\build\distrib"
-=======
-    - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\build\distrib\ObjectModule.bsl" --apikey $NETLENKA_APIKEY
-    - precommit1c --compile "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE" "$CI_PROJECT_DIR\build\distrib"
-    - $OLD_FILE = $CI_PROJECT_TITLE + "_Исходный.epf"
-    - Rename-Item -Path "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.epf" -NewName "$OLD_FILE"
-    - Rename-Item -Path "$CI_PROJECT_DIR\build\distrib" -NewName "$CI_PROJECT_TITLE.epf"
->>>>>>> dbc7e114dd304679370d7fba10642831bc5bee72
 
     # Копируем файлы
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE.epf" --to "$CI_PROJECT_DIR\build\artifacts\files"
