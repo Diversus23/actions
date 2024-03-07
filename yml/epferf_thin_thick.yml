@@ -223,6 +223,7 @@ SonarQube:
     name: "artifacts_$CI_PROJECT_NAME"
     paths:
       - build/artifacts
+      - build/distrib
       - $CI_PROJECT_TITLE*.epf
     expire_in: 1 day
     when: always
