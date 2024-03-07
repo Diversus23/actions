@@ -97,9 +97,9 @@ Actions:
     paths:
       - src/
     expire_in: 1 day
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+  # rules:
+  #   - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+  #   - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
 
 #=========================================================
 #======================== Сонар ==========================
