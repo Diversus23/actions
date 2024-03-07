@@ -33,6 +33,7 @@
 	.ЗависитОт("v8storage")	
 	.ЗависитОт("v8runner")
 	.ЗависитОт("v8find")
+	.ЗависитОт("v8unpack")
 	.ЗависитОт("1connector")	
 	.ЗависитОт("coloratos")
 	.ЗависитОт("ParserFileV8i")

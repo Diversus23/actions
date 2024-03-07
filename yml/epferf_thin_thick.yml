@@ -82,25 +82,6 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"
   allow_failure: false
 
-# Только для проекта Управление IT-отделом 8
-Защита:
-  stage: Подготовка
-  needs: [Actions]
-  script:
-    # Распаковка обработки
-    # Обфускация
-    - precommit1c --decompile "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.epf" "$CI_PROJECT_DIR\src"
-    - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\src\ObjectModule.bsl" --apikey $NETLENKA_APIKEY
-    - precommit1c --compile "$CI_PROJECT_DIR\src" "$CI_PROJECT_DIR"
-  artifacts:
-    name: "src"
-    paths:
-      - src/
-    expire_in: 1 day
-  # rules:
-  #   - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
-  #   - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
-
 #=========================================================
 #======================== Сонар ==========================
 #=========================================================
@@ -212,6 +193,14 @@ SonarQube:
   needs: [Запись новостей на сайт]
   stage: Развертывание
   script:
+    # Обфускация
+    - precommit1c --decompile "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.epf" "$CI_PROJECT_DIR\distrib"
+    - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\distrib\ObjectModule.bsl" --apikey $NETLENKA_APIKEY
+    - precommit1c --compile "$CI_PROJECT_DIR\distrib" "$CI_PROJECT_DIR"
+    - $OLD_FILE = $CI_PROJECT_TITLE + "_Исходный.epf"
+    - Rename-Item -Path "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.epf" -NewName "$OLD_FILE"
+    - Rename-Item -Path "$CI_PROJECT_DIR\distrib" -NewName "$CI_PROJECT_TITLE.epf"
+
     # Копируем файлы
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.epf" --to "$CI_PROJECT_DIR\build\artifacts\files"
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.erf" --to "$CI_PROJECT_DIR\build\artifacts\files"
@@ -234,8 +223,9 @@ SonarQube:
     name: "artifacts_$CI_PROJECT_NAME"
     paths:
       - build/artifacts
+      - $CI_PROJECT_TITLE*.epf
     expire_in: 1 day
     when: always
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
-    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+  # rules:
+  #   - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+  #   - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
