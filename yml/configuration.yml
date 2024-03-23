@@ -120,7 +120,9 @@ before_script:
   - Write-Host "CI_PROJECT_DIR - $CI_PROJECT_DIR"
   - Write-Host "MASTER_BASE - $MASTER_BASE"
   - Write-Host "PIPELINE_BASE - $PIPELINE_BASE"
-  - git config --local core.quotepath false  
+  - git config --local core.quotepath false
+  - $UserName = "Администратор"
+  - if ($CI_PROJECT_NAME -eq "itmobile") { $UserName = ""; $MODEL_PASSWORD = ""; }
 
 #=========================================================
 # ===================== Подготовка =======================
@@ -183,9 +185,9 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
     - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\config" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
     # Загрузка исходников XML 1C в информационную базу
-    - oscript -encoding=utf-8 $ACTIONS infobase configloadfromxml --path "$CI_PROJECT_DIR\config" --connection "/F$PIPELINE_BASE" --user "Администратор" --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS infobase configloadfromxml --path "$CI_PROJECT_DIR\config" --connection "/F$PIPELINE_BASE" --user "$UserName" --processpath "$PROCESS_PATH"
     # Обновление конфигурации
-    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase setlegal --connection "/F$PIPELINE_BASE" --user "Администратор" --processpath "$PROCESS_PATH" }
+    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase setlegal --connection "/F$PIPELINE_BASE" --user "$UserName" --processpath "$PROCESS_PATH" }
     # Архивирование полученной базы и файла DoNotCopy.txt
     - oscript -encoding=utf-8 $ACTIONS zip add --file "$PIPELINE_BASE\base.zip" --mask "$PIPELINE_BASE\1Cv8.1cd;$PIPELINE_BASE\DoNotCopy.txt"
     # Очистка job
@@ -204,7 +206,7 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\extension-miko" --clear
     - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\it.miko" --path "$CI_PROJECT_DIR\build\extension-miko" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
     # Загрузка расширения МИКО в базу конвейера из XML 1C
-    - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "Администратор" --path "$CI_PROJECT_DIR\build\extension-miko" --name "ПодсистемаТелефонии40_УИТ8" --update --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "$UserName" --path "$CI_PROJECT_DIR\build\extension-miko" --name "ПодсистемаТелефонии40_УИТ8" --update --processpath "$PROCESS_PATH"
     # Повторное архивирование полученной базы и файла DoNotCopy.txt уже с расширением
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$PIPELINE_BASE" --mask "base.zip"
     - oscript -encoding=utf-8 $ACTIONS zip add --file "$PIPELINE_BASE\base.zip" --mask "$PIPELINE_BASE\1Cv8.1cd;$PIPELINE_BASE\DoNotCopy.txt"
@@ -225,7 +227,7 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\extension" --clear
     - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\telegram.РасширениеДляТестов" --path "$CI_PROJECT_DIR\build\extension" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
     # Загрузка расширения МИКО в базу конвейера из XML 1C
-    - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "Администратор" --path "$CI_PROJECT_DIR\build\extension" --name "РасширениеДляТестов" --update --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "$UserName" --path "$CI_PROJECT_DIR\build\extension" --name "РасширениеДляТестов" --update --processpath "$PROCESS_PATH"
     # Повторное архивирование полученной базы и файла DoNotCopy.txt уже с расширением
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$PIPELINE_BASE" --mask "base.zip"
     - oscript -encoding=utf-8 $ACTIONS zip add --file "$PIPELINE_BASE\base.zip" --mask "$PIPELINE_BASE\1Cv8.1cd;$PIPELINE_BASE\DoNotCopy.txt"
@@ -248,7 +250,7 @@ Actions:
     # Разворачиваем базу из архива в каталог с текущим CI
     - oscript -encoding=utf-8 $ACTIONS zip extract --file "$PIPELINE_BASE\base.zip" --path "$CI_PROJECT_DIR\base"
     # Выполняем проверку средствами платформы
-    - oscript -encoding=utf-8 $ACTIONS infobase configcheck --connection "/F$CI_PROJECT_DIR\base" --user "Администратор" --file "$CI_PROJECT_DIR\config_test_log_check.log"  --AllExtensions --ThinClient --WebClient --Server --ExternalConnection --ExternalConnectionServer --ThickClientManagedApplication --ThickClientServerManagedApplication --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS infobase configcheck --connection "/F$CI_PROJECT_DIR\base" --user "$UserName" --file "$CI_PROJECT_DIR\config_test_log_check.log"  --AllExtensions --ThinClient --WebClient --Server --ExternalConnection --ExternalConnectionServer --ThickClientManagedApplication --ThickClientServerManagedApplication --processpath "$PROCESS_PATH"
     # Очистка job
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\base"    
   artifacts:
@@ -305,7 +307,7 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS json write --file "$VAPARAMS" --key "ИмяФайлаЛогВыполненияСценариев" --str "./smoke_test_log$CI_NODE_INDEX.log"
     - oscript -encoding=utf-8 $ACTIONS json write --file "$VAPARAMS" --key "ПутьКФайлуДляВыгрузкиСтатусаВыполненияСценариев" --str "./smoke_test_status$CI_NODE_INDEX.log"
     # Прогоним тесты в базе для конвейера с помощью ванессы
-    - oscript -encoding=utf-8 $ACTIONS vanessa-automation run --connection "/F$BASE_TEST" --user "Администратор" -w "$CI_PROJECT_DIR" --vs "$CI_PROJECT_DIR\tests\VAParams.json" --pathvanessa "$VANESSA_AUTOMATION" --path "$CI_PROJECT_DIR\tests\features" --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS vanessa-automation run --connection "/F$BASE_TEST" --user "$UserName" -w "$CI_PROJECT_DIR" --vs "$CI_PROJECT_DIR\tests\VAParams.json" --pathvanessa "$VANESSA_AUTOMATION" --path "$CI_PROJECT_DIR\tests\features" --processpath "$PROCESS_PATH"
     # Остановим инструмент подсчета покрытия кода тестами
     - oscript -encoding=utf-8 $ACTIONS coverage41c stop -i "DefAlias" -u "http://127.0.0.1:$PORT" --file "$CI_PROJECT_DIR\cover$CI_NODE_INDEX.json" --processpath "$PROCESS_PATH"
     - oscript -encoding=utf-8 $ACTIONS pause --timeout 15
@@ -378,7 +380,7 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS json write --file "$VAPARAMS" --key "ИмяФайлаЛогВыполненияСценариев" --str "./main_test_log$CI_NODE_INDEX.log"
     - oscript -encoding=utf-8 $ACTIONS json write --file "$VAPARAMS" --key "ПутьКФайлуДляВыгрузкиСтатусаВыполненияСценариев" --str "./main_test_status$CI_NODE_INDEX.log"
     # Прогоним тесты в базе для конвейера с помощью ванессы
-    - oscript -encoding=utf-8 $ACTIONS vanessa-automation run --connection "/F$BASE_TEST" --user "Администратор" -w "$CI_PROJECT_DIR" --vs "$CI_PROJECT_DIR\tests\VAParams.json" --pathvanessa "$VANESSA_AUTOMATION" --path "$CI_PROJECT_DIR\tests\features" --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS vanessa-automation run --connection "/F$BASE_TEST" --user "$UserName" -w "$CI_PROJECT_DIR" --vs "$CI_PROJECT_DIR\tests\VAParams.json" --pathvanessa "$VANESSA_AUTOMATION" --path "$CI_PROJECT_DIR\tests\features" --processpath "$PROCESS_PATH"
     # Остановим инструмент подсчета покрытия кода тестами
     - oscript -encoding=utf-8 $ACTIONS coverage41c stop -i "DefAlias" -u "http://127.0.0.1:$PORT" --file "$CI_PROJECT_DIR\cover$CI_NODE_INDEX.json" --processpath "$PROCESS_PATH"
     - oscript -encoding=utf-8 $ACTIONS pause --timeout 15
@@ -558,9 +560,9 @@ Allure:
     # Сохраняем расширения для дистрибутива в общие файлы
     # Для УИТ расширение для МИКО
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\data\Общие файлы для дистрибутива\Общие файлы" --mask "ПодсистемаТелефонии40_УИТ8.cfe" }
-    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase extension save --connection "/F$PIPELINE_BASE" --user "Администратор" --name "ПодсистемаТелефонии40_УИТ8" --to "$CI_PROJECT_DIR\data\Общие файлы для дистрибутива\Общие файлы\ПодсистемаТелефонии40_УИТ8.cfe" }
+    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase extension save --connection "/F$PIPELINE_BASE" --user "$UserName" --name "ПодсистемаТелефонии40_УИТ8" --to "$CI_PROJECT_DIR\data\Общие файлы для дистрибутива\Общие файлы\ПодсистемаТелефонии40_УИТ8.cfe" }
     # Создание дистрибутива
-    - oscript -encoding=utf-8 $ACTIONS infobase distrib --connection "/F$PIPELINE_BASE" --user "Администратор" --path "$CI_PROJECT_DIR\build\distrib" --versions_path "$BUILD_PATH" --changelog "$CI_PROJECT_DIR\CHANGELOG.md"
+    - oscript -encoding=utf-8 $ACTIONS infobase distrib --connection "/F$PIPELINE_BASE" --user "$UserName" --path "$CI_PROJECT_DIR\build\distrib" --versions_path "$BUILD_PATH" --changelog "$CI_PROJECT_DIR\CHANGELOG.md"
     # Копируем их в каталог сборки и каталог отправки в облако
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\distrib\*.*" --to "$BUILD_PATH" --recursive
     - oscript -encoding=utf-8 $ACTIONS fs findcopy --from "$CI_PROJECT_DIR\build\distrib" --mask "*.zip" --to "$CI_PROJECT_DIR\build\artifacts" --recursive
@@ -591,15 +593,15 @@ Allure:
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR/docs/api/docs/Исходники_SwaggerUI" --mask "*.json" --remote "/api/docs" }
     # Обновление эталонной базы на версию $VERSION
     - echo "/S$MODEL_SERVER\$MODEL_BASE"
-    - oscript -encoding=utf-8 $ACTIONS infobase updatecfg --file "$BUILD_PATH/$VERSION/1Cv8.cf" --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "Администратор" --password "$MODEL_PASSWORD"
-    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase setlegal --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "Администратор" --password "$MODEL_PASSWORD" }
+    - oscript -encoding=utf-8 $ACTIONS infobase updatecfg --file "$BUILD_PATH/$VERSION/1Cv8.cf" --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "$UserName" --password "$MODEL_PASSWORD"
+    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase setlegal --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "$UserName" --password "$MODEL_PASSWORD" }
     # + Выгрузка эталонной базы в dt
-    - oscript -encoding=utf-8 $ACTIONS infobase dump --file "$MASTER_BASE/last.dt" --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "Администратор" --password "$MODEL_PASSWORD"    
+    - oscript -encoding=utf-8 $ACTIONS infobase dump --file "$MASTER_BASE/last.dt" --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "$UserName" --password "$MODEL_PASSWORD"    
     # + Загрузка эталонной базы в мастер-базу
-    - oscript -encoding=utf-8 $ACTIONS infobase dump --file "$MASTER_BASE/pre.dt" --connection "/F$MASTER_BASE" --user "Администратор"
-    - oscript -encoding=utf-8 $ACTIONS infobase restore --file "$MASTER_BASE/last.dt" --connection "/F$MASTER_BASE" --user "Администратор"
+    - oscript -encoding=utf-8 $ACTIONS infobase dump --file "$MASTER_BASE/pre.dt" --connection "/F$MASTER_BASE" --user "$UserName"
+    - oscript -encoding=utf-8 $ACTIONS infobase restore --file "$MASTER_BASE/last.dt" --connection "/F$MASTER_BASE" --user "$UserName"
     # + Очистка мастер-базы от "чувствительных" данных (пароль администратора, пароль ящика почты)
-    - oscript -encoding=utf-8 $ACTIONS infobase runcode --file "$ACTIONS_PATH/tools/ОчисткаЧувствительныхДанных.os" --connection "/F$MASTER_BASE" --user "Администратор" --password "$MODEL_PASSWORD"
+    - oscript -encoding=utf-8 $ACTIONS infobase runcode --file "$ACTIONS_PATH/tools/ОчисткаЧувствительныхДанных.os" --connection "/F$MASTER_BASE" --user "$UserName" --password "$MODEL_PASSWORD"
     # Обновление на сайте спецификаций API    
   allow_failure: false
   rules:
