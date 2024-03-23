@@ -122,7 +122,7 @@ before_script:
   - Write-Host "MASTER_BASE - $MASTER_BASE"
   - Write-Host "PIPELINE_BASE - $PIPELINE_BASE"
   - git config --local core.quotepath false
-  - if ($CI_PROJECT_NAME -eq "itmobile") { $UserName = "---";}
+  - if ($CI_PROJECT_NAME -eq "itmobile") { $UserName = "null";}
   - Write-Host "UserName - $UserName"
 
 #=========================================================
