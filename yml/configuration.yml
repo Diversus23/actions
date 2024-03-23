@@ -97,6 +97,7 @@ variables:
   PROCESS_PATH: "g:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
   BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
+  UserName: "Администратор"
 
 # Настройки по умолчанию для всех job-ов.
 #default:
@@ -121,7 +122,6 @@ before_script:
   - Write-Host "MASTER_BASE - $MASTER_BASE"
   - Write-Host "PIPELINE_BASE - $PIPELINE_BASE"
   - git config --local core.quotepath false
-  - $UserName = "Администратор"
   - if ($CI_PROJECT_NAME -eq "itmobile") { $UserName = ""; $MODEL_PASSWORD = ""; }
   - Write-Host "UserName - $UserName"
 
