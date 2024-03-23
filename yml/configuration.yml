@@ -64,7 +64,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2023-11-13-1"
+  YML_VERSION: "2024-03-23-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
