@@ -445,7 +445,7 @@ SonarQube:
         "-Dsonar.bsl.languageserver.overrideConfiguration=true",
         "-Dsonar.bsl.languageserver.configurationPath=$CI_PROJECT_DIR\.bsl-language-server.json",
         "-Dsonar.bsl.languageserver.diagnosticLanguage=ru",
-        "-Dsonar.bsl.languageserver.skipSupport=with support locked",
+        "-Dsonar.bsl.languageserver.skipSupport=with support",
         "-Dsonar.inclusions=**/*.bsl,**/*.os,**/*.xml,**/*.form,**/*.dcs",
         "-Dsonar.exclusions=**/*.html",
         "-Dsonar.lang.patterns.xml=**/*.xsd,**/*.xsl",
