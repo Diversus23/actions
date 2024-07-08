@@ -766,7 +766,7 @@
 
 	ПутьФайла = юТест.ИмяВременногоФайла("json");
 	мПараметры = СтрШаблон("--url ""%1"" --p1 ""%2"" --v1 ""%3"" --format json --out ""%4""",
-		"https://connectorhttp.ru/anything/params",
+		"https://httpbin.org/anything/params",
 		"name",
 		"Иванов",
 		ПутьФайла);
@@ -778,7 +778,7 @@
 
 	ПутьФайла = юТест.ИмяВременногоФайла("json");
 	мПараметры = СтрШаблон("--url ""%1"" --p1 ""%2"" --v1 ""%3"" --format json --out ""%4""",
-		"http://connectorhttp.ru/post",
+		"http://httpbin.org/post",
 		"name",
 		"Иванов",
 		ПутьФайла);
