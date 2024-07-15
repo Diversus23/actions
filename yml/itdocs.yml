@@ -54,8 +54,15 @@ Actions:
     # Возьмем эталонную базу и подготовим ее в конвейере
     - git clone --depth 5 https://github.com/Diversus23/actions.git $CI_PROJECT_DIR\actions
   allow_failure: false
+  artifacts:
+    name: "actions"
+    paths:
+      - actions
+    expire_in: 1 hrs
+    when: always
 
 Запись новостей на сайт:
+  needs: [Actions]
   stage: Новости
   when: always
   script:
@@ -98,7 +105,7 @@ Actions:
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
 
 Сборка дистрибутива:
-  needs: [Запись новостей на сайт]
+  needs: [Запись новостей на сайт, Actions]
   stage: Развертывание
   script:
     # Собираем архив с дистрибутивами full и upd
