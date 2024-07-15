@@ -29,6 +29,8 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
+  # Список баз конвейера
+  PIPELINE_PATH: "g:/gitlab/pipeline_base"
   # Где хранится рабочая база, с которой будем работать в
   PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
   # Команда запуска SonarSсanner (или полный путь к ней)
