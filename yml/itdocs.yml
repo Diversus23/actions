@@ -2,7 +2,6 @@ stages:
   - Подготовка
   - Новости
   - Развертывание
-  - Завершение
 
 # Переменные для работы
 variables:
@@ -14,12 +13,8 @@ variables:
   ARTIFACT_COMPRESSION_LEVEL: "fast" 
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
-  # Список баз конвейера
-  PIPELINE_PATH: "g:/gitlab/pipeline_base"
-  # Где хранится рабочая база, с которой будем работать в
-  PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
   # Путь к actions.os
-  ACTIONS_PATH: "$PIPELINE_BASE/actions"
+  ACTIONS_PATH: "$CI_PROJECT_DIR/actions"
   ACTIONS: "$ACTIONS_PATH/src/actions.os"
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
   BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
@@ -57,9 +52,7 @@ Actions:
     # Если версия не задана указываем на это при выпуске релиза
     - if ($VERSION -eq $null -and $LaunchMode -eq "RELEASE") {echo "Не указана переменная VERSION для публикации релиза"; exit 1;}
     # Возьмем эталонную базу и подготовим ее в конвейере
-    - New-Item -Path "$PIPELINE_BASE" -ItemType Directory
-    - git clone --depth 5 https://github.com/Diversus23/actions.git $PIPELINE_BASE\actions
-    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"
+    - git clone --depth 5 https://github.com/Diversus23/actions.git $CI_PROJECT_DIR\actions
   allow_failure: false
 
 Запись новостей на сайт:
@@ -114,10 +107,10 @@ Actions:
     - $ARTIFACT_NAME_FULL = $ARTIFACT_NAME + "_full.zip"
     - $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
     # Добавляем readme
-    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\files"
-    - Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\files\letter.html" -NewName "README.html"
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\docs"
+    - Rename-Item -Path "$CI_PROJECT_DIR\build\docs\letter.html" -NewName "README.html"
     # Делаем архивы
-    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL.zip" --mask "$CI_PROJECT_DIR\*.docx;$CI_PROJECT_DIR\*.pptx;$CI_PROJECT_DIR\*.xlsx;$CI_PROJECT_DIR\*.pdf;$CI_PROJECT_DIR\*.html"
+    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL.zip" --mask "$CI_PROJECT_DIR\docs\*.*"
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL.zip" --to "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD.zip"
     # Загрузка в облако S3
     - aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_FULL"
@@ -137,9 +130,3 @@ Actions:
     - if: '$CI_COMMIT_REF_NAME == "main"'
     - if: '$CI_COMMIT_REF_NAME == "release"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "release"'
-
-Завершение:
-  stage: Завершение
-  script:
-    - Remove-item "$PIPELINE_BASE"
-  allow_failure: false
