@@ -139,5 +139,5 @@ Actions:
 Завершение:
   stage: Завершение
   script:
-    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$PIPELINE_BASE"
+    - Remove-item "$PIPELINE_BASE"
   allow_failure: false
