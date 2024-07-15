@@ -64,7 +64,6 @@ Actions:
 Запись новостей на сайт:
   needs: [Actions]
   stage: Новости
-  when: always
   script:
     # Для релиза проверим, что такая версия существует в changelog
     - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { oscript -encoding=utf-8 $ACTIONS changelog check-version --file "$CI_PROJECT_DIR\CHANGELOG.md" --version "$VERSION" }
