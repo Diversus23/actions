@@ -1,0 +1,136 @@
+stages:
+  - Подготовка
+  - Новости
+  - Развертывание
+
+# Переменные для работы
+variables:
+  # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
+  GIT_DEPTH: 5
+  # Использовать быстрое сжатие.
+  FF_USE_FASTZIP: "true"
+  # Сжатие артефактов выше среднего.
+  ARTIFACT_COMPRESSION_LEVEL: "fast" 
+  # Сжатие кэша быстрое.
+  CACHE_COMPRESSION_LEVEL: "fast"
+  # Где хранится рабочая база, с которой будем работать в
+  PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
+  # Путь к actions.os
+  ACTIONS_PATH: "$PIPELINE_BASE/actions"
+  ACTIONS: "$ACTIONS_PATH/src/actions.os"
+  # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
+  BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
+
+# Настройки по умолчанию для всех job-ов
+default:
+  # Все jobs прерываемые, если будут изменения в в текущей ветки, то текущее задание будет прервано и начнется новое
+  interruptible: true
+
+# Всегда выполняется перед стартом по умолчанию для всех job-ов.
+before_script:
+  - chcp 65001
+  - $LINE = '[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("UTF-8")'
+  - Invoke-Expression $LINE
+  - $LINE = '[Console]::InputEncoding = [System.Text.Encoding]::GetEncoding("UTF-8")'
+  - Invoke-Expression $LINE
+  - Write-Host "YML_VERSION - $YML_VERSION"
+  - Write-Host "LaunchMode - $LaunchMode"
+  - Write-Host "CI_PROJECT_TITLE - $CI_PROJECT_TITLE"
+  - Write-Host "CI_PROJECT_NAME - $CI_PROJECT_NAME"
+  - Write-Host "CI_COMMIT_REF_NAME - $CI_COMMIT_REF_NAME"
+  - Write-Host "CI_PIPELINE_SOURCE - $CI_PIPELINE_SOURCE"  
+  - Write-Host "CI_PIPELINE_ID - $CI_PIPELINE_ID"
+  - Write-Host "CI_PROJECT_DIR - $CI_PROJECT_DIR"
+  - Write-Host "PIPELINE_BASE - $PIPELINE_BASE"
+  - git config --local core.quotepath false
+
+#=========================================================
+# ===================== Подготовка =======================
+#=========================================================
+
+Actions:
+  stage: Подготовка
+  script:
+    # Если версия не задана указываем на это при выпуске релиза
+    - if ($VERSION -eq $null -and $LaunchMode -eq "RELEASE") {echo "Не указана переменная VERSION для публикации релиза"; exit 1;}
+    # Возьмем эталонную базу и подготовим ее в конвейере
+    - New-Item -Path "$PIPELINE_BASE" -ItemType Directory
+    - git clone --depth 5 https://github.com/Diversus23/actions.git $PIPELINE_BASE\actions
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"
+  allow_failure: false
+
+Запись новостей на сайт:
+  stage: Новости
+  when: always
+  script:
+    # Для релиза проверим, что такая версия существует в changelog
+    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { oscript -encoding=utf-8 $ACTIONS changelog check-version --file "$CI_PROJECT_DIR\CHANGELOG.md" --version "$VERSION" }
+    # Для какой версии получаем новости
+    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { $future_version = $VERSION } else { $future_version = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version" }  
+    - echo "Версия новости - $future_version"
+    - $site_version = $future_version.Replace(".", "-")
+    - $news_link = "https://softonit.ru/blog/news/update$CI_PROJECT_NAME/upd$CI_PROJECT_NAME-$site_version/"
+    - echo "Ссылка новости на сайте - $news_link"
+    # Создаем новости из общего макета
+    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\news" --clear
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --news_url "$news_link"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.txt" --template "SimpleTextWithoutVersion.txt" --productname "$CI_PROJECT_TITLE" --version "$future_version" --news_url "$news_link"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --maximgwidth 540 --news_url "$news_link"
+    # Отправка новостей на сайт
+    - echo "Отправка новостей на сайт"
+    - oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default" --out "$CI_PROJECT_DIR\news.json"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "html" --filevalue "$CI_PROJECT_DIR\build\news\news.html"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "txt" --filevalue "$CI_PROJECT_DIR\build\news\news.txt"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "version" --str "$future_version"
+    # Если публикация обновления, то сразу публикуем новость в блоге
+    - if ($LaunchMode -eq "RELEASE") { $is_future_version = "0" } else { $is_future_version = "1" }
+    - echo "Это описание будущей версии - $is_future_version"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "is_future_version" --str "$is_future_version"
+    - oscript -encoding=utf-8 $ACTIONS http post --url "$NEWS_SCRIPT_UPDATE" --fileparams "$CI_PROJECT_DIR\news.json" --p1 "action" --v1 "setnews"
+  allow_failure: false
+  artifacts:
+    name: "news"
+    paths:
+      - build/news
+    expire_in: 1 day
+    when: always
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+
+Сборка дистрибутива:
+  needs: [Запись новостей на сайт]
+  stage: Развертывание
+  script:
+    # Собираем архив с дистрибутивами full и upd
+    - $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
+    - $ARTIFACT_NAME = $CI_PROJECT_NAME + "_" + $CONFIG_VERSION.Replace(".", "_")
+    - $ARTIFACT_NAME_FULL = $ARTIFACT_NAME + "_full.zip"
+    - $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
+    # Добавляем readme
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\files"
+    - Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\files\letter.html" -NewName "README.html"
+    # Делаем архивы
+    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL.zip" --mask "$CI_PROJECT_DIR\*.docx;$CI_PROJECT_DIR\*.pptx;$CI_PROJECT_DIR\*.xlsx;$CI_PROJECT_DIR\*.pdf;$CI_PROJECT_DIR\*.html"
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL.zip" --to "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD.zip"
+    # Загрузка в облако S3
+    - aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_FULL"
+    - aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_UPD"
+  allow_failure: false
+  artifacts:
+    name: "artifacts_$CI_PROJECT_NAME"
+    paths:
+      - build/artifacts
+      - build/distrib
+      - $CI_PROJECT_TITLE.epf
+    expire_in: 1 day
+    when: always
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "release"'
