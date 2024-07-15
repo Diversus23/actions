@@ -2,6 +2,7 @@ stages:
   - Подготовка
   - Новости
   - Развертывание
+  - Завершение
 
 # Переменные для работы
 variables:
@@ -134,3 +135,9 @@ Actions:
     - if: '$CI_COMMIT_REF_NAME == "main"'
     - if: '$CI_COMMIT_REF_NAME == "release"'
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "release"'
+
+Завершение:
+  stage: Завершение
+  script:
+    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$PIPELINE_BASE"
+  allow_failure: false
