@@ -114,7 +114,7 @@ Actions:
     - $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
     # Добавляем readme
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\docs"
-    - Rename-Item -Path "$CI_PROJECT_DIR\build\docs\letter.html" -NewName "README.html"
+    - Rename-Item -Path "$CI_PROJECT_DIR\docs\letter.html" -NewName "README.html"
     # Делаем архивы
     - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL.zip" --mask "$CI_PROJECT_DIR\docs\*.*"
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL.zip" --to "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD.zip"

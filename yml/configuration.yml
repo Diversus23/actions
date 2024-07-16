@@ -518,6 +518,9 @@ Allure:
   stage: Развертывание
   when: always
   script:
+    # Восстанавливаем файл ДоксинумШаблоны
+    - $DOCSINUM_TEMPLATES = "$CI_PROJECT_DIR\ИсходныйДоксинумШаблоны.zip"
+    - if (Test-Path $DOCSINUM_TEMPLATES) { oscript -encoding=utf-8 $ACTIONS zip extract --file "$CI_PROJECT_DIR\ИсходныйДоксинумШаблоны.zip" --path "$CI_PROJECT_DIR\it\src\CommonModules\ДоксинумШаблоны" }
     # Для релиза проверим, что такая версия существует в changelog
     - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { oscript -encoding=utf-8 $ACTIONS changelog check-version --file "$CI_PROJECT_DIR\CHANGELOG.md" --version "$VERSION" }
     # Для какой версии получаем новости
