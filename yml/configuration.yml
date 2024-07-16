@@ -549,6 +549,9 @@ Allure:
 Сборка дистрибутива:
   stage: Развертывание
   script:
+    # Восстанавливаем файл ДоксинумШаблоны
+    - $DOCSINUM_TEMPLATES = "$CI_PROJECT_DIR\ИсходныйДоксинумШаблоны.zip"
+    - if (Test-Path $DOCSINUM_TEMPLATES) { oscript -encoding=utf-8 $ACTIONS zip extract --file "$CI_PROJECT_DIR\ИсходныйДоксинумШаблоны.zip" --path "$CI_PROJECT_DIR\it\src\CommonModules\ДоксинумШаблоны" }
     # Сохраняем расширения для дистрибутива в общие файлы
     # Для УИТ расширение для МИКО
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\data\Общие файлы для дистрибутива\Общие файлы" --mask "ПодсистемаТелефонии40_УИТ8.cfe" }
