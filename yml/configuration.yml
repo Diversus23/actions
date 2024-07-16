@@ -554,7 +554,7 @@ Allure:
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\data\Общие файлы для дистрибутива\Общие файлы" --mask "ПодсистемаТелефонии40_УИТ8.cfe" }
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS infobase extension save --connection "/F$PIPELINE_BASE" --user "$UserName" --name "ПодсистемаТелефонии40_УИТ8" --to "$CI_PROJECT_DIR\data\Общие файлы для дистрибутива\Общие файлы\ПодсистемаТелефонии40_УИТ8.cfe" }
     # Создание дистрибутива
-    - oscript -encoding=utf-8 $ACTIONS infobase distrib --connection "/F$PIPELINE_BASE" --user "$UserName" --path "$CI_PROJECT_DIR\build\distrib" --versions_path "$BUILD_PATH" --changelog "$CI_PROJECT_DIR\CHANGELOG.md"
+    - oscript -encoding=utf-8 $ACTIONS infobase distrib --connection "/F$PIPELINE_BASE" --user "$UserName" --path "$CI_PROJECT_DIR\build\distrib" --versions_path "$BUILD_PATH" --changelog "$CI_PROJECT_DIR\CHANGELOG.md" --maximgwidth 540 --parser_configuration_src "$CI_PROJECT_DIR\it"
     # Копируем их в каталог сборки и каталог отправки в облако
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\distrib\*.*" --to "$BUILD_PATH" --recursive
     - oscript -encoding=utf-8 $ACTIONS fs findcopy --from "$CI_PROJECT_DIR\build\distrib" --mask "*.zip" --to "$CI_PROJECT_DIR\build\artifacts" --recursive
