@@ -141,7 +141,6 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"    
     # Если старая сборка прерывается, то новая удаляет все запущенные процессы
     - oscript -encoding=utf-8 $ACTIONS process killpath --processpath "$PROCESS_PATH"
-  allow_failure: false
 
 #=========================================================
 #======================== Сборка =========================
