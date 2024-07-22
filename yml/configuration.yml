@@ -18,6 +18,7 @@ stages:
   - Подготовка
   # + Скачивание actions    
   - Сборка
+  - Сборка расширений
   # + Защита конфигурации (только для УИТ, возможно еще для чего-нибудь) (релиз)
   # + Создание базы из эталанной
   # + Выгрузка из EDT исходников в XML 1C
@@ -182,10 +183,13 @@ Actions:
       - $CI_PROJECT_DIR/it/src/CommonModules/ДоксинумШаблоны/Module.bsl
     expire_in: 1 day
 
+#=========================================================
+#================== Сборка расширений ====================
+#=========================================================
+
 # Только для УИТ
 Сборка расширения МИКО:
-  stage: Сборка
-  needs: [Сборка базы]
+  stage: Сборка расширений
   script:
     # Конвертация проекта EDT в XML 1C
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
@@ -205,8 +209,7 @@ Actions:
 
 # Только для УИТ
 Сборка расширения Telegram:
-  stage: Сборка
-  needs: [Сборка базы]
+  stage: Сборка расширений
   script:
     # Конвертация проекта EDT в XML 1C
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
