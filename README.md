@@ -51,7 +51,7 @@ before_script:
     only:
         refs:
         - develop
-        - master
+        - main
         - merge_requests
 
 Проверка конфигурации на ошибки:
