@@ -421,7 +421,7 @@ SonarQube:
     - if ($COVERAGE_REPORTS) { Write-Host "$COVERAGE_REPORTS"; $SONAR_PROJECT = $SONAR_PROJECT + "_coverage"; }
     - $SONAR_ARGUMENT_ARRAY =
         "-Dsonar.host.url=$SONAR_HOST_URL",
-        "-Dsonar.login=$SONAR_LOGIN",
+        "-Dsonar.token=$SONAR_LOGIN",
         "-Dsonar.projectName=$SONAR_PROJECT",
         "-Dsonar.projectKey=$SONAR_PROJECT",
         "-Dsonar.projectBaseDir=$CI_PROJECT_DIR\$CI_PROJECT_NAME",
