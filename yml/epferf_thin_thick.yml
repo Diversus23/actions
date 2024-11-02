@@ -82,7 +82,6 @@ Actions:
     - New-Item -Path "$PIPELINE_BASE" -ItemType Directory
     - git clone --depth 5 https://github.com/Diversus23/actions.git $PIPELINE_BASE\actions
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"
-  allow_failure: false
 
 #=========================================================
 #======================== Сонар ==========================
