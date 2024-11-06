@@ -194,34 +194,41 @@ SonarQube:
   needs: [Запись новостей на сайт]
   stage: Развертывание
   script:
-    # Обфускация
-    - precommit1c --decompile "$CI_PROJECT_DIR\$CI_PROJECT_TITLE.epf" "$CI_PROJECT_DIR\build\distrib"
-    - oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE\ObjectModule.bsl" --apikey $NETLENKA_APIKEY
-    - precommit1c --compile "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE" "$CI_PROJECT_DIR\build\distrib"
-    # Копируем файлы
-    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE.epf" --to "$CI_PROJECT_DIR\build\artifacts\files"
-    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\distrib\$CI_PROJECT_TITLE.erf" --to "$CI_PROJECT_DIR\build\artifacts\files"
-    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\docs\*.pdf" --to "$CI_PROJECT_DIR\build\artifacts\files"
-    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\files"
-    - Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\files\letter.html" -NewName "README.html"
-    # Собираем архив с дистрибутивами full и upd
-    - $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
-    - $ARTIFACT_NAME = $CI_PROJECT_NAME + "_" + $CONFIG_VERSION.Replace(".", "_")
-    - $ARTIFACT_NAME_FULL = $ARTIFACT_NAME + "_full.zip"
-    - $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
-    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL" --mask "$CI_PROJECT_DIR\build\artifacts\files\*.*"
-    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD" --mask "$CI_PROJECT_DIR\build\artifacts\files\*.*"
-    # Обновление
-    # Загрузка в облако S3
-    - aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_FULL"
-    - aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_UPD"
+    # Ищем файлы Все обработки и отчеты (*.epf, *.erf в корне)
+    - $files = Get-ChildItem "$CI_PROJECT_DIR\*.e?f"
+    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\distrib" --clear
+    # Обфускация внешних отчетов и обработок в корне и создание архивов для всех файлов *.epf, *.erf
+    - foreach ($f in $files)
+        {
+          $fileName = $f.Name
+          $baseName = $f.Basename
+          $fileFullName = $f.FullName
+          precommit1c --decompile "$fileFullName" "$CI_PROJECT_DIR\build"
+          oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\build\$baseName\ObjectModule.bsl" --apikey $NETLENKA_APIKEY
+          precommit1c --compile "$CI_PROJECT_DIR\build\$baseName" "$CI_PROJECT_DIR\build\distrib"
+          $distribFileName = "$CI_PROJECT_DIR\build\distrib\$fileName"
+
+          oscript -encoding=utf-8 $ACTIONS fs copy --from "$distribFileName" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
+          oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\docs\*.pdf" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
+          oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
+          Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\$baseName\letter.html" -NewName "README.html"
+          
+          $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
+          $ARTIFACT_NAME = $CI_PROJECT_NAME + "_" + $CONFIG_VERSION.Replace(".", "_")
+          $ARTIFACT_NAME_FULL = $ARTIFACT_NAME + "_full.zip"
+          $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
+          oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
+          oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
+          
+          aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_FULL"
+          aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_UPD"
+        }
   allow_failure: false
   artifacts:
     name: "artifacts_$CI_PROJECT_NAME"
     paths:
       - build/artifacts
       - build/distrib
-      - $CI_PROJECT_TITLE.epf
     expire_in: 1 day
     when: always
   rules:
