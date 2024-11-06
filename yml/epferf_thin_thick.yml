@@ -215,7 +215,9 @@ SonarQube:
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$distribFileName" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\docs\*.pdf" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
+        oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\changelog.html" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
         Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\$baseName\letter.html" -NewName "README.html"
+        Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\$baseName\changelog.html" -NewName "CHANGELOG.html"
         
         # Архивирование
         $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
