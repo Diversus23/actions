@@ -221,7 +221,7 @@ SonarQube:
         
         # Архивирование
         $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
-        $ARTIFACT_NAME = $CI_PROJECT_NAME + "_" + $CONFIG_VERSION.Replace(".", "_")
+        $ARTIFACT_NAME = $baseName + "_" + $CONFIG_VERSION.Replace(".", "_")
         $ARTIFACT_NAME_FULL = $ARTIFACT_NAME + "_full.zip"
         $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
         oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
