@@ -192,8 +192,7 @@ SonarQube:
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
 
 # Создание новой версии расширения imgloader (установка картинок)
-Сборка расширения:
-  needs: [Запись новостей на сайт]
+Сборка расширения для Google Chrome:
   stage: Развертывание
   script:    
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\chromium_extension\build"
