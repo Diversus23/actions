@@ -195,7 +195,7 @@ SonarQube:
 Сборка расширения для Google Chrome:
   stage: Развертывание
   script:
-    - Set-Location -Path "$CI_PROJECT_DIR"
+    - cd "$CI_PROJECT_DIR\chromium_extension"
     - npm install
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR/chromium_extension/build"
     - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR/chromium_extension" --mask "imgloader.zip"
