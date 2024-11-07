@@ -194,9 +194,11 @@ SonarQube:
 # Создание новой версии расширения imgloader (установка картинок)
 Сборка расширения для Google Chrome:
   stage: Развертывание
-  script:    
-    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\chromium_extension\build"
-    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR\chromium_extension" --mask "imgloader.zip"
+  script:
+    - Set-Location -Path "$CI_PROJECT_DIR"
+    - npm install
+    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR/chromium_extension/build"
+    - oscript -encoding=utf-8 $ACTIONS fs delete --path "$CI_PROJECT_DIR/chromium_extension" --mask "imgloader.zip"
     - node "$CI_PROJECT_DIR/chromium_extension/node_modules/webpack/bin/webpack.js" --mode=production --config "$CI_PROJECT_DIR/chromium_extension/config/webpack.config.js"
     - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR/imgloader.zip" --mask "$CI_PROJECT_DIR/chromium_extension/build/*.*"
   allow_failure: false
