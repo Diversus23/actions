@@ -227,7 +227,7 @@ SonarQube:
         $fileFullName = $f.FullName
         
         # Обфускация обработки
-        Netlenka1C --mode ultimate --source "$fileFullName"
+        "c:\tools\Netlenka1c\Netlenka1C.exe" --mode ultimate --source "$fileFullName"
 
         # Защищенный файл обработки / отчета
         $distribFileName = "$CI_PROJECT_DIR\Protected\$fileName"
