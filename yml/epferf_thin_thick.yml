@@ -227,12 +227,10 @@ SonarQube:
         $fileFullName = $f.FullName
         
         # Обфускация обработки
-        echo "Защита файла $fileFullName"
-        "Netlenka1C.exe" --source "$fileFullName"
+        Netlenka1C --source "$fileFullName"
 
         # Защищенный файл обработки / отчета
         $distribFileName = "$CI_PROJECT_DIR\Protected\$fileName"
-        echo "Защищенный файла обработки $distribFileName"
 
         # Новости в дистрибутив
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$distribFileName" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
