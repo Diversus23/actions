@@ -225,17 +225,12 @@ SonarQube:
         $fileName = $f.Name
         $baseName = $f.Basename
         $fileFullName = $f.FullName
-
-        # Обфускация всех файлов *.bsl
-        v8unpack -E "$fileFullName" "$CI_PROJECT_DIR/build/$baseName"
-        $filesBSL = Get-ChildItem "$CI_PROJECT_DIR/$baseName/*.bsl" -recurse
-        foreach ($fbsl in $filesBSL) {
-          $fbslFullName = $fbsl.FullName;
-          oscript -encoding=utf-8 $ACTIONS netlenka module --in "$fbslFullName" --apikey "$NETLENKA_APIKEY"
-        }
-        $distribFileName = "$CI_PROJECT_DIR\build\distrib\$fileName"
-        v8unpack -B "$CI_PROJECT_DIR/build/$baseName" "$distribFileName"
         
+        # Обфускация обработки
+        Netlenka1C --mode ultimate --source "$fileFullName"
+
+        # Защищенный файл обработки / отчета
+        $distribFileName = "$CI_PROJECT_DIR\Protected\$fileName"
 
         # Новости в дистрибутив
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$distribFileName" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
