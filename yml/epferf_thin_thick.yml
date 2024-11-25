@@ -217,7 +217,7 @@ SonarQube:
   stage: Развертывание
   script:
     # Ищем файлы Все обработки и отчеты (*.epf, *.erf в корне)
-    - $files = Get-ChildItem "$CI_PROJECT_DIR\*.e?f"
+    - $files = Get-ChildItem "$CI_PROJECT_DIR/*.e?f"
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\distrib" --clear
     # Обфускация внешних отчетов и обработок в корне и создание архивов для всех файлов *.epf, *.erf
     - |
@@ -226,11 +226,16 @@ SonarQube:
         $baseName = $f.Basename
         $fileFullName = $f.FullName
 
-        # Обфускация
-        precommit1c --decompile "$fileFullName" "$CI_PROJECT_DIR\build"
-        oscript -encoding=utf-8 $ACTIONS netlenka module --in "$CI_PROJECT_DIR\build\$baseName\ObjectModule.bsl" --apikey "$NETLENKA_APIKEY"
-        precommit1c --compile "$CI_PROJECT_DIR\build\$baseName" "$CI_PROJECT_DIR\build\distrib"
+        # Обфускация всех файлов *.bsl
+        v8unpack -E "$fileFullName" "$CI_PROJECT_DIR/build/$baseName"
+        $filesBSL = Get-ChildItem "$CI_PROJECT_DIR/$baseName/*.bsl" -recurse
+        foreach ($fbsl in $filesBSL) {
+          $fbslFullName = $fbsl.FullName;
+          oscript -encoding=utf-8 $ACTIONS netlenka module --in "$fbslFullName" --apikey "$NETLENKA_APIKEY"
+        }
         $distribFileName = "$CI_PROJECT_DIR\build\distrib\$fileName"
+        v8unpack -B "$CI_PROJECT_DIR/build/$baseName" "$distribFileName"
+        
 
         # Новости в дистрибутив
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$distribFileName" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
