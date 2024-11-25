@@ -229,7 +229,7 @@ SonarQube:
         # Обфускация обработки
         Netlenka1C --source "$fileFullName"
 
-        # Защищенный файл обработки / отчета
+        # Защищенный файл обработки
         $distribFileName = "$CI_PROJECT_DIR\Protected\$fileName"
 
         # Новости в дистрибутив
