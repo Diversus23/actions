@@ -244,13 +244,22 @@ SonarQube:
         $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
         $ARTIFACT_NAME = $baseName + "_" + $CONFIG_VERSION.Replace(".", "_")
         $ARTIFACT_NAME_FULL = $ARTIFACT_NAME + "_full.zip"
-        $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
+        $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"        
         oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
         oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
         
         # Отправка на S3
         aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_FULL"
         aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_UPD"
+
+        # Если есть демо-версия, которая скачивается по ссылке
+        $HAVE_DEMO = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.demo"
+        if ($HAVE_DEMO) {
+          $ARTIFACT_DEMO = $baseName + "_demo.zip"
+          oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_DEMO" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
+          aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_DEMO"
+        }
+
       }
   allow_failure: false
   artifacts:
