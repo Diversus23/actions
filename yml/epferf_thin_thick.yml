@@ -152,36 +152,45 @@ SonarQube:
   stage: Развертывание
   when: always
   script:
-    # Для релиза проверим, что такая версия существует в changelog
-    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { oscript -encoding=utf-8 $ACTIONS changelog check-version --file "$CI_PROJECT_DIR\CHANGELOG.md" --version "$VERSION" }
-    # Для какой версии получаем новости
-    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { $future_version = $VERSION } else { $future_version = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version" }  
-    - echo "Версия новости - $future_version"
-    - $site_version = $future_version.Replace(".", "-")
-    - $news_link = "https://softonit.ru/blog/news/update$CI_PROJECT_NAME/upd$CI_PROJECT_NAME-$site_version/"
-    - echo "Ссылка новости на сайте - $news_link"
-    # Создаем новости из общего макета
-    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\news" --clear
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --news_url "$news_link"
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\upd.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --lazyload --news_url "$news_link"
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --maximgwidth 540 --news_url "$news_link"
-    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\changelog.html" --template "Softonit.html" --all --lazyload
-    # Отправка новостей на сайт
-    - echo "Отправка новостей на сайт"
-    - oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default" --out "$CI_PROJECT_DIR\news.json"
-    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "html" --filevalue "$CI_PROJECT_DIR\build\news\news.html"
-    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "upd" --filevalue "$CI_PROJECT_DIR\build\news\upd.html"
-    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "version" --str "$future_version"
-    # Если публикация обновления, то сразу публикуем новость в блоге
-    - if ($LaunchMode -eq "RELEASE") { $is_future_version = "0" } else { $is_future_version = "1" }
-    - echo "Это описание будущей версии - $is_future_version"
-    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "is_future_version" --str "$is_future_version"
-    - oscript -encoding=utf-8 $ACTIONS http post --url "$NEWS_SCRIPT_UPDATE" --fileparams "$CI_PROJECT_DIR\news.json" --p1 "action" --v1 "setnews"
+    - $files = Get-ChildItem "$CI_PROJECT_DIR/*.e?f"
+    - |
+      foreach ($f in $files) {
+        $fileName = $f.Name
+        $baseName = $f.Basename
+        $fileFullName = $f.FullName
+
+        # Для релиза проверим, что такая версия существует в changelog
+        - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { oscript -encoding=utf-8 $ACTIONS changelog check-version --file "$CI_PROJECT_DIR\CHANGELOG.md" --version "$VERSION" }
+        # Для какой версии получаем новости
+        - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { $future_version = $VERSION } else { $future_version = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version" }  
+        - echo "Версия новости - $future_version"
+        - $site_version = $future_version.Replace(".", "-")
+        - $news_link = "https://softonit.ru/blog/news/update$CI_PROJECT_NAME/upd$CI_PROJECT_NAME-$site_version/"
+        - echo "Ссылка новости на сайте - $news_link"
+        # Создаем новости из общего макета
+        - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\$baseName\news" --clear
+        - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\$baseName\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --news_url "$news_link"
+        - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\$baseName\news\upd.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --lazyload --news_url "$news_link"
+        - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\$baseName\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --maximgwidth 540 --news_url "$news_link"
+        - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\$baseName\news\changelog.html" --template "Softonit.html" --all --lazyload
+        # Отправка новостей на сайт
+        - echo "Отправка новостей на сайт"
+        - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\settings.json" --key "default.site_id_program" --str "$baseName"
+        - oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default" --out "$CI_PROJECT_DIR\news.json"
+        - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "html" --filevalue "$CI_PROJECT_DIR\build\$baseName\news\news.html"
+        - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "upd" --filevalue "$CI_PROJECT_DIR\build\$baseName\news\upd.html"
+        - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "version" --str "$future_version"        
+        # Если публикация обновления, то сразу публикуем новость в блоге
+        - if ($LaunchMode -eq "RELEASE") { $is_future_version = "0" } else { $is_future_version = "1" }
+        - echo "Это описание будущей версии - $is_future_version"
+        - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "is_future_version" --str "$is_future_version"
+        - oscript -encoding=utf-8 $ACTIONS http post --url "$NEWS_SCRIPT_UPDATE" --fileparams "$CI_PROJECT_DIR\news.json" --p1 "action" --v1 "setnews"
+      }
   allow_failure: false
   artifacts:
     name: "news"
     paths:
-      - build/news
+      - build
     expire_in: 1 day
     when: always
   rules:
@@ -232,11 +241,13 @@ SonarQube:
         # Защищенный файл обработки
         $distribFileName = "$CI_PROJECT_DIR\Protected\$fileName"
 
+        oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\settings.json" --key "default.site_id_program" --str "$baseName"
+
         # Новости в дистрибутив
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$distribFileName" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
         oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\docs\*.pdf" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
-        oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
-        oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\changelog.html" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
+        oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\$baseName\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
+        oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\$baseName\news\changelog.html" --to "$CI_PROJECT_DIR\build\artifacts\$baseName"
         Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\$baseName\letter.html" -NewName "README.html"
         Rename-Item -Path "$CI_PROJECT_DIR\build\artifacts\$baseName\changelog.html" -NewName "CHANGELOG.html"
         
@@ -249,8 +260,8 @@ SonarQube:
         oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
         
         # Отправка на S3
-        aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_FULL"
-        aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_UPD"
+        aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$baseName" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_FULL"
+        aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$baseName" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_NAME_UPD"
 
         # Если есть демо-версия, которая скачивается по ссылке
         $HAVE_DEMO = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.demo"
