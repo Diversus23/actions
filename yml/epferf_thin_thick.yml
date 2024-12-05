@@ -254,7 +254,7 @@ SonarQube:
 
         # Если есть демо-версия, которая скачивается по ссылке
         $HAVE_DEMO = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.demo"
-        if ($HAVE_DEMO) {
+        if (!empty($HAVE_DEMO)) {
           $ARTIFACT_DEMO = $baseName + "_demo.zip"
           oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_DEMO" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
           aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$baseName" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_DEMO"
