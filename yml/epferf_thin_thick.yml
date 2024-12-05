@@ -20,7 +20,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2024-03-06-1"
+  YML_VERSION: "2024-12-05-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -257,7 +257,7 @@ SonarQube:
         if ($HAVE_DEMO) {
           $ARTIFACT_DEMO = $baseName + "_demo.zip"
           oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_DEMO" --mask "$CI_PROJECT_DIR\build\artifacts\$baseName\*.*"
-          aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_DEMO"
+          aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$baseName" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "$ARTIFACT_DEMO"
         }
 
       }
