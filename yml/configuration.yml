@@ -164,7 +164,7 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\config" --clear    
     # Конвертация проекта EDT в XML 1C
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
-    - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\config" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS edt cli export --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\config" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
     # Загрузка исходников XML 1C в информационную базу
     - oscript -encoding=utf-8 $ACTIONS infobase configloadfromxml --path "$CI_PROJECT_DIR\config" --connection "/F$PIPELINE_BASE" --user "$UserName" --processpath "$PROCESS_PATH"
     # Обновление конфигурации
@@ -194,7 +194,7 @@ Actions:
     # Конвертация проекта EDT в XML 1C
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\extension-miko" --clear
-    - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\it.miko" --path "$CI_PROJECT_DIR\build\extension-miko" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS edt cli export --project "$CI_PROJECT_DIR\it.miko" --path "$CI_PROJECT_DIR\build\extension-miko" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
     # Загрузка расширения МИКО в базу конвейера из XML 1C
     - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "$UserName" --path "$CI_PROJECT_DIR\build\extension-miko" --name "ПодсистемаТелефонии40_УИТ8" --update --processpath "$PROCESS_PATH"
     # Повторное архивирование полученной базы и файла DoNotCopy.txt уже с расширением
@@ -214,7 +214,7 @@ Actions:
     # Конвертация проекта EDT в XML 1C
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
     - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\extension" --clear
-    - oscript -encoding=utf-8 $ACTIONS edt srctoxml --project "$CI_PROJECT_DIR\telegram.РасширениеДляТестов" --path "$CI_PROJECT_DIR\build\extension" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
+    - oscript -encoding=utf-8 $ACTIONS edt cli export --project "$CI_PROJECT_DIR\telegram.РасширениеДляТестов" --path "$CI_PROJECT_DIR\build\extension" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
     # Загрузка расширения МИКО в базу конвейера из XML 1C
     - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$PIPELINE_BASE" --user "$UserName" --path "$CI_PROJECT_DIR\build\extension" --name "РасширениеДляТестов" --update --processpath "$PROCESS_PATH"
     # Повторное архивирование полученной базы и файла DoNotCopy.txt уже с расширением
