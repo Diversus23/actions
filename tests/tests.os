@@ -207,6 +207,7 @@
 
 Процедура Тест_Должен_Выполнить_Команду_changelog_txt() Экспорт
 
+	// oscript ../src/actions.os changelog convert --in "./fixtures/changelog.md" --out "./fixtures/changelog.txt" --template "SimpleTextWithoutVersion.txt"
 	ПутьФайлаТеста = ОбъединитьПути(КаталогТестовыхФикстур(), "changelog.md");
 	ПутьФайлаТестаРезультат = юТест.ИмяВременногоФайла("txt");
 	ПутьФайлаТестаСравнить = ОбъединитьПути(КаталогТестовыхФикстур(), "changelog.txt");
@@ -239,6 +240,7 @@
 
 Процедура Тест_Должен_Выполнить_Команду_changelog_htmlfull() Экспорт
 
+	// oscript ../src/actions.os changelog convert --in "./fixtures/changelog.md" --out "./fixtures/changelog.Standart.html" --template "Standart.html" --version 1.0.0.1
 	ПутьФайлаТеста = ОбъединитьПути(КаталогТестовыхФикстур(), "changelog.md");
 	ПутьФайлаТестаРезультат = юТест.ИмяВременногоФайла("txt");
 	ПутьФайлаТестаСравнить = ОбъединитьПути(КаталогТестовыхФикстур(), "changelog.Standart.html");
