@@ -143,7 +143,10 @@ Actions:
     # Если старая сборка прерывается, то новая удаляет все запущенные процессы
     - oscript -encoding=utf-8 $ACTIONS process killpath --processpath "$PROCESS_PATH"
   rules:
-    - if: true
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 #=========================================================
 #======================== Сборка =========================
@@ -185,7 +188,10 @@ Actions:
       - $CI_PROJECT_DIR/it/src/CommonModules/ДоксинумШаблоны/Module.bsl
     expire_in: 1 day
   rules:
-    - if: true
+    - if: '$CI_PIPELINE_SOURCE == "schedule"'
+    - if: '$CI_PIPELINE_SOURCE == "web"'
+    - if: '$CI_PIPELINE_SOURCE == "push"'
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
 
 #=========================================================
 #================== Сборка расширений ====================
