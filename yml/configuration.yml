@@ -64,7 +64,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2024-03-23-3"
+  YML_VERSION: "2025-03-13-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -74,7 +74,7 @@ variables:
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
   # Сервер эталонных баз и эталонная база
-  MODEL_SERVER: "192.168.1.40"
+  MODEL_SERVER: "192.168.88.246"
   MODEL_BASE: "${CI_PROJECT_NAME}demoref"
   # Список мастер-баз
   MASTER_PATH: "g:/gitlab/master_base"
@@ -142,6 +142,8 @@ Actions:
     - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"    
     # Если старая сборка прерывается, то новая удаляет все запущенные процессы
     - oscript -encoding=utf-8 $ACTIONS process killpath --processpath "$PROCESS_PATH"
+  rules:
+    - if: true
 
 #=========================================================
 #======================== Сборка =========================
@@ -182,6 +184,8 @@ Actions:
       - $CI_PROJECT_DIR/it/src/CommonModules/СЛС/Module.bsl
       - $CI_PROJECT_DIR/it/src/CommonModules/ДоксинумШаблоны/Module.bsl
     expire_in: 1 day
+  rules:
+    - if: true
 
 #=========================================================
 #================== Сборка расширений ====================
@@ -545,8 +549,10 @@ Allure:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
     - if: '$CI_COMMIT_REF_NAME == "main"'
     - if: '$CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_COMMIT_REF_NAME == "release4"'
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release4"'
 
 Сборка дистрибутива:
   stage: Развертывание
@@ -576,6 +582,7 @@ Allure:
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release4"'
 
 #=========================================================
 #==================== Выход релиза =======================
@@ -603,6 +610,7 @@ Allure:
   allow_failure: false
   rules:
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "RELEASE" && $CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "RELEASE" && $CI_COMMIT_REF_NAME == "release4"'
 
 #=========================================================
 #===================== Завершение ========================
