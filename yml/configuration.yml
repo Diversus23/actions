@@ -159,7 +159,7 @@ Actions:
     - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\$CI_PROJECT_NAME\src\CommonTemplates\ОписаниеИзменений\Template.txt" --template Softonit.html --all --lazyload }
     - if ($CI_PROJECT_NAME -eq 'telegram') { oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\$CI_PROJECT_NAME\src\CommonTemplates\TelegramОписаниеИзменений\Template.txt" --template Softonit.html --all --lazyload }
     # Обфускация / защита модулей
-    - $NEED_OBFUSCATE = $CI_PROJECT_NAME -eq 'it' -and (($CI_PIPELINE_SOURCE -eq "schedule" -and $LaunchMode -eq "BUILD") -or ($CI_COMMIT_REF_NAME -eq "release"))
+    $NEED_OBFUSCATE = $CI_PROJECT_NAME -eq 'it' -and (($CI_PIPELINE_SOURCE -eq "schedule" -and $LaunchMode -eq "BUILD") -or ($CI_COMMIT_REF_NAME -eq "release") -or ($CI_COMMIT_REF_NAME -eq "release4"))
     - echo "Нужна обфускация - $NEED_OBFUSCATE"
     - if ($NEED_OBFUSCATE) { oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\ИсходныйСЛС.zip" --mask "$CI_PROJECT_DIR\it\src\CommonModules\СЛС\*.*" }
     - if ($NEED_OBFUSCATE) { oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\ИсходныйДоксинумШаблоны.zip" --mask "$CI_PROJECT_DIR\it\src\CommonModules\ДоксинумШаблоны\*.*" }
