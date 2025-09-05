@@ -1,0 +1,42 @@
+# docs/pandoc.yml
+
+# --- Опции Pandoc (верхний уровень) ---
+from: gfm
+pdf-engine: xelatex
+standalone: true          # <-- критично, гарантирует \documentclass и \begin{document}
+toc: true
+number-sections: true
+input-files:
+  - README.md
+  - 01-intro.md
+output-file: /usr/docs/Documentation.pdf
+pdf-engine-opts:
+  - -interaction=nonstopmode
+  - -halt-on-error
+
+# --- Метаданные документа ---
+metadata:
+  title: "Подтверждение дисконтной карты по SMS в 1С"
+  date: "2025-09-05"
+  subject: "Markdown"
+  keywords: [sms, смс, дисконтные карты, софтонит, подтверждение]
+  lang: ru-RU
+
+# --- Переменные шаблона LaTeX ---
+variables:
+  fontsize: 12pt
+  geometry:
+    - a4paper
+    - margin=2cm
+  mainfont: "Open Sans"
+  monofont: "DejaVu Sans Mono"
+
+  # Цветные ссылки (поддерживается дефолтным шаблоном Pandoc)
+  colorlinks: true
+  linkcolor: blue
+  urlcolor: blue
+  citecolor: blue
+
+  # Переименовать заголовок оглавления (в дефолтном шаблоне)
+  lof-title: "Оглавление"   # для списка рисунков; для TOC ниже:
+  lot-title: "Оглавление"   # для списка таблиц
