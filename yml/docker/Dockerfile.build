@@ -1,0 +1,25 @@
+FROM pandoc/latex:3.1-ubuntu
+ENV DEBIAN_FRONTEND=noninteractive TZ=Europe/Moscow
+
+# 1) Переводим репозитории на https
+RUN sed -i 's|http://archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g; \
+            s|http://security.ubuntu.com/ubuntu|https://security.ubuntu.com/ubuntu|g' \
+        /etc/apt/sources.list \
+ && apt-get update -o Acquire::Retries=5 -o Acquire::http::Timeout=30 -o Acquire::https::Timeout=30 \
+ && apt-get install -y --no-install-recommends \
+      fonts-dejavu \
+      fonts-freefont-ttf \
+      fonts-open-sans \
+      fonts-noto \
+      fonts-noto-cjk \
+      fontconfig \
+ && fc-cache -f -v \
+ && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /usr/docs
+COPY ./docs/ /usr/docs/
+
+RUN pandoc README.md \
+    -f gfm \
+    --pdf-engine=xelatex \
+    -o /usr/docs/Documentation.pdf
