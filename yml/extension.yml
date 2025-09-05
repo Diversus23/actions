@@ -1,0 +1,279 @@
+# Основной yml-файл для расширений 1С на платформе 1С с управляемыми формами
+# В основной сборке использовать вот этот код:
+# =============
+# include:
+#   - remote: 'https://raw.githubusercontent.com/Diversus23/actions/main/yml/extensions.yml'
+# =============
+# Требования:
+# 1. Название проекта и название обработки должны совпадать
+  # 2. Запуск билда релиза осуществляется в ручном режиме на странице https://demo.softonit.ru/softonit/discountsms/-/pipelines/new Необходимо выполнить запуск с переменными LaunchMode = "BUILD" (без кавычек)
+# 3. Выпуск релиза в свет осуществляется в ручном режиме на странице https://demo.softonit.ru/softonit/discountsms/-/pipelines/new Необходимо выполнить запуск с переменными LaunchMode = "RELEASE" и VERSION = "1.0.0.0" нужная версия (без кавычек)
+# $LaunchMode == "BUILD" - создание релиза
+# $LaunchMode == "RELEASE" + $VERSION - выпуск релиза
+
+stages:
+  - Подготовка
+  - Сонар  
+  - Развертывание
+  - Деплой
+
+# Переменные для работы
+variables:
+  # Версия файла yml (не забывать изменять при изменении yml-файла)
+  YML_VERSION: "2025-09-01"
+  # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
+  GIT_DEPTH: 5
+  # Использовать быстрое сжатие.
+  FF_USE_FASTZIP: "true"
+  # Сжатие артефактов выше среднего.
+  ARTIFACT_COMPRESSION_LEVEL: "fast" 
+  # Сжатие кэша быстрое.
+  CACHE_COMPRESSION_LEVEL: "fast"
+  # Где хранится рабочая база, с которой будем работать в
+  PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
+  # Команда запуска SonarSсanner (или полный путь к ней)
+  SONAR_SCANNER: "c:/tools/sonar-scanner/bin/sonar-scanner.bat"
+  # Команда запуска Coverage41C (или полный путь к ней)
+  COVERAGE41C: "c:/tools/coverage41C/bin/Coverage41C.bat"
+  # Путь к actions.os
+  ACTIONS_PATH: "$PIPELINE_BASE/actions"
+  ACTIONS: "$ACTIONS_PATH/src/actions.os"
+  # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
+  BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
+  # Каталог контролируемых процессов (куда сохраняем информацию обо всем, что было запущено)
+  PROCESS_PATH: "g:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
+  # Список мастер-баз
+  MASTER_PATH: "g:/gitlab/master_base"
+  # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
+  MASTER_BASE: "$MASTER_PATH/$CI_PROJECT_NAME"
+  # Имя пользователя для загрузки расширения в базу
+  UserName: "Администратор"
+  BASE_PATH: "$CI_PROJECT_DIR/base"
+
+# Настройки по умолчанию для всех job-ов
+default:
+  # Все jobs прерываемые, если будут изменения в в текущей ветки, то текущее задание будет прервано и начнется новое
+  interruptible: true
+  # Таймаут по умолчанию для одного job 2 часа
+  # timeout: 180m
+
+# Всегда выполняется перед стартом по умолчанию для всех job-ов.
+before_script:
+  - chcp 65001
+  - $LINE = '[Console]::OutputEncoding = [System.Text.Encoding]::GetEncoding("UTF-8")'
+  - Invoke-Expression $LINE
+  - $LINE = '[Console]::InputEncoding = [System.Text.Encoding]::GetEncoding("UTF-8")'
+  - Invoke-Expression $LINE
+  - Write-Host "YML_VERSION - $YML_VERSION"
+  - Write-Host "LaunchMode - $LaunchMode"
+  - Write-Host "CI_PROJECT_TITLE - $CI_PROJECT_TITLE"
+  - Write-Host "CI_PROJECT_NAME - $CI_PROJECT_NAME"
+  - Write-Host "CI_COMMIT_REF_NAME - $CI_COMMIT_REF_NAME"
+  - Write-Host "CI_PIPELINE_SOURCE - $CI_PIPELINE_SOURCE"  
+  - Write-Host "CI_PIPELINE_ID - $CI_PIPELINE_ID"
+  - Write-Host "CI_PROJECT_DIR - $CI_PROJECT_DIR"
+  - Write-Host "PIPELINE_BASE - $PIPELINE_BASE"
+  - git config --local core.quotepath false
+  - if ($CI_PROJECT_NAME -eq "itmobile") { $UserName = "null";}
+  - Write-Host "UserName - $UserName"  
+
+#=========================================================
+# ===================== Подготовка =======================
+#=========================================================
+
+Actions:
+  stage: Подготовка
+  script:
+    # Если версия не задана указываем на это при выпуске релиза
+    - if ($VERSION -eq $null -and $LaunchMode -eq "RELEASE") {echo "Не указана переменная VERSION для публикации релиза"; exit 1;}
+    # Возьмем эталонную базу и подготовим ее в конвейере
+    - New-Item -Path "$PIPELINE_BASE" -ItemType Directory
+    - git clone --depth 5 https://github.com/Diversus23/actions.git $PIPELINE_BASE\actions
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\settings.json" --to "$PIPELINE_BASE"
+
+#=========================================================
+#======================== Сонар ==========================
+#=========================================================
+
+SonarQube:
+  stage: Сонар
+  variables:
+    SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
+  cache:
+    key: "$CI_PROJECT_NAME-SONAR_CACHE"
+    paths:
+      - .sonar/cache
+  script:
+    # Определяем версию конфигурации из исходников
+    - $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
+    # Формируем параметры запуска сонар-сканера с учетом замеров
+    - $FILES = Get-Childitem -Path "$CI_PROJECT_DIR" -Name "genericCoverage*.xml"
+    - $COVERAGE_REPORTS = "";
+    - foreach ($FILE in $FILES) { $comma = ""; if ($COVERAGE_REPORTS) { $comma = ","; }; $COVERAGE_REPORTS = $COVERAGE_REPORTS + $comma + "$CI_PROJECT_DIR\" + $FILE; }
+    - $SONAR_PROJECT = $CI_PROJECT_NAME
+    - if ($COVERAGE_REPORTS) { Write-Host "$COVERAGE_REPORTS"; $SONAR_PROJECT = $SONAR_PROJECT + "_coverage"; }
+    - $SONAR_ARGUMENT_ARRAY =
+        "-Dsonar.host.url=$SONAR_HOST_URL",
+        "-Dsonar.token=$SONAR_LOGIN",
+        "-Dsonar.projectName=$SONAR_PROJECT",
+        "-Dsonar.projectKey=$SONAR_PROJECT",
+        "-Dsonar.projectBaseDir=$CI_PROJECT_DIR",
+        "-Dsonar.sourceEncoding=UTF-8",
+        "-Dsonar.qualitygate.wait=true",
+        "-Dsonar.qualitygate.timeout=1800",
+        "-Dsonar.bsl.calculateLineCover=true",
+        "-Dsonar.coverageReportPaths=$COVERAGE_REPORTS",
+        "-Dsonar.bsl.languageserver.overrideConfiguration=true",
+        "-Dsonar.bsl.languageserver.configurationPath=$CI_PROJECT_DIR\.bsl-language-server.json",
+        "-Dsonar.bsl.languageserver.diagnosticLanguage=ru",
+        "-Dsonar.inclusions=**/*.bsl,**/*.os,**/*.xml,**/*.form,**/*.dcs",
+        "-Dsonar.exclusions=**/*.html",
+        "-Dsonar.lang.patterns.xml=**/*.xsd,**/*.xsl",
+        "-Dsonar.scm.provider=git",
+        "-Dsonar.scm.enabled=true",
+        "-Dsonar.pullrequest.key=$CI_MERGE_REQUEST_ID",
+        "-Dsonar.pullrequest.branch=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME",
+        "-Dsonar.pullrequest.base=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME",
+        "-Dsonar.projectVersion=$CONFIG_VERSION";        
+    # Запускаем сканер
+    - Start-Process -FilePath $SONAR_SCANNER -ArgumentList $SONAR_ARGUMENT_ARRAY -NoNewWindow -Wait
+    # Запрашиваем у API сонара результат проверки
+    - $BRANCH_NAME = "branch=$CI_COMMIT_REF_NAME"
+    - if ($CI_MERGE_REQUEST_IID -ne $null -and $CI_MERGE_REQUEST_IID -ne "") {$BRANCH_NAME = "pullRequest=$CI_MERGE_REQUEST_IID"}
+    - $SONAR_BRANCH_URL = "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$CI_PROJECT_NAME&$BRANCH_NAME"
+    - oscript -encoding=utf-8 $ACTIONS http get --url "$SONAR_BRANCH_URL" --login "$SONAR_LOGIN" --out "$CI_PROJECT_DIR\sonar_status.json"
+    - $SONAR_PROJECT_STATUS = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\sonar_status.json" --key "projectStatus.status"
+    # Роняем задание если порог качества не пройден (раскомментировать, если у вас порог качества в норме)
+    #- if ($SONAR_PROJECT_STATUS -ne "OK") {echo "Порог качества сонара не пройден"; exit 1}
+    # Останавливаем конвейер, если любые тесты упали    
+    - oscript -encoding=utf-8 $ACTIONS vanessa-automation check-errors --path "." --mask "*test_log*.log"
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "ALLTEST"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "ALLTEST" && $CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME != "release"'
+
+#=========================================================
+#==================== Развертывание ======================
+#=========================================================
+
+Запись новостей на сайт:
+  stage: Развертывание
+  when: always
+  script:
+    # Для релиза проверим, что такая версия существует в changelog
+    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { oscript -encoding=utf-8 $ACTIONS changelog check-version --file "$CI_PROJECT_DIR\CHANGELOG.md" --version "$VERSION" }
+    # Для какой версии получаем новости
+    - if ($LaunchMode -eq "RELEASE" -and $VERSION -ne $null) { $future_version = $VERSION } else { $future_version = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version" }
+    - echo "Версия новости - $future_version"
+    - $site_version = $future_version.Replace(".", "-")
+    - $news_link = "https://softonit.ru/blog/news/update$CI_PROJECT_NAME/upd$CI_PROJECT_NAME-$site_version/"
+    - echo "Ссылка новости на сайте - $news_link"
+    # Создаем новости из общего макета
+    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\news" --clear
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\news.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --news_url "$news_link"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\upd.html" --template "SimpleWithoutVersion.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --lazyload --news_url "$news_link"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\letter.html" --template "Letter.html" --productname "$CI_PROJECT_TITLE" --version "$future_version" --maximgwidth 540 --news_url "$news_link"
+    - oscript -encoding=utf-8 $ACTIONS changelog convert --in "$CI_PROJECT_DIR\CHANGELOG.md" --out "$CI_PROJECT_DIR\build\news\changelog.html" --template "Softonit.html" --all --lazyload
+    # Отправка новостей на сайт
+    - echo "Отправка новостей на сайт"
+    - oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default" --out "$CI_PROJECT_DIR\news.json"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "html" --filevalue "$CI_PROJECT_DIR\build\news\news.html"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "upd" --filevalue "$CI_PROJECT_DIR\build\news\upd.html"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "version" --str "$future_version"
+    - oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR\build\news" --mask "changelog.html" --remote "/upd/$CI_PROJECT_NAME/"
+    # Если публикация обновления, то сразу публикуем новость в блоге
+    - if ($LaunchMode -eq "RELEASE") { $is_future_version = "0" } else { $is_future_version = "1" }
+    - echo "Это описание будущей версии - $is_future_version"
+    - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "is_future_version" --str "$is_future_version"
+    - oscript -encoding=utf-8 $ACTIONS http post --url "$NEWS_SCRIPT_UPDATE" --fileparams "$CI_PROJECT_DIR\news.json" --p1 "action" --v1 "setnews"
+  allow_failure: false
+  artifacts:
+    paths:
+      - build/news
+    expire_in: 1 day
+    when: always
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+
+# Делаем Documentation.pdf
+Создание документации:
+  stage: Развертывание
+  script:
+    - '$ErrorActionPreference = "Stop"'
+    # Сборка образа: Dockerfile.build лежит в docker/, контекст — корень репо
+    - docker build -t softonit/pandoc:build -f "$CI_PROJECT_DIR\docker\Dockerfile.build" "$CI_PROJECT_DIR"
+    - docker create --name extract softonit/pandoc:build
+    - docker cp extract:/usr/docs/Documentation.pdf "$CI_PROJECT_DIR\Documentation.pdf"
+    - docker rm -f extract
+  artifacts:
+    name: "Documentation"
+    expire_in: 24 hrs
+    paths:
+      - Documentation.pdf
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+
+# Общий для всех проектов
+Сборка расширения:
+  needs: [Запись новостей на сайт]
+  stage: Развертывание
+  script:
+    # Копирование эталонного проекта в базу конвейера
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$MASTER_BASE\1Cv8.1CD" --to "$BASE_PATH"
+    # Конвертация проекта EDT в XML 1C
+    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\workspace" --clear
+    - oscript -encoding=utf-8 $ACTIONS fs newpath --path "$CI_PROJECT_DIR\build\extension" --clear
+    - oscript -encoding=utf-8 $ACTIONS edt cli export --project "$CI_PROJECT_DIR\$CI_PROJECT_NAME" --path "$CI_PROJECT_DIR\build\extension" --workspace "$CI_PROJECT_DIR\workspace" --processpath "$PROCESS_PATH"
+    # Загрузка расширения в базу конвейера из XML 1C
+    - oscript -encoding=utf-8 $ACTIONS infobase extension loadfromsrc --connection "/F$BASE_PATH" --user "$UserName" --path "$CI_PROJECT_DIR\build\extension" --name "$CI_PROJECT_NAME" --update --processpath "$PROCESS_PATH"
+    # Сохранение расширения из базы в файл cfe
+    - oscript -encoding=utf-8 $ACTIONS infobase extension save --connection "/F$BASE_PATH" --user "$UserName" --to "$CI_PROJECT_DIR\$CI_PROJECT_NAME.cfe" --name "$CI_PROJECT_NAME" --processpath "$PROCESS_PATH"
+  artifacts:
+    paths:
+      - $CI_PROJECT_DIR/*.cfe
+    expire_in: 1 day
+    when: always
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "main"'
+    - if: '$CI_COMMIT_REF_NAME == "release"'
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
+
+Сборка дистрибутива:
+  needs: [Сборка расширения, Создание документации]
+  stage: Деплой
+  script:
+    # Копирование файлов в каталог артефактов
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\*.cfe" --to "$CI_PROJECT_DIR\build\artifacts\$CI_PROJECT_NAME"
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\letter.html" --to "$CI_PROJECT_DIR\build\artifacts\$CI_PROJECT_NAME"
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\news\changelog.html" --to "$CI_PROJECT_DIR\build\artifacts\$CI_PROJECT_NAME"
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\*.pdf" --to "$CI_PROJECT_DIR\build\artifacts\$CI_PROJECT_NAME\docs"
+
+    # Архивирование
+    - $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
+    - $ARTIFACT_NAME = $CI_PROJECT_NAME + "_" + $CONFIG_VERSION.Replace(".", "_")
+    - $ARTIFACT_NAME_FULL = $ARTIFACT_NAME + "_full.zip"
+    - $ARTIFACT_NAME_UPD = $ARTIFACT_NAME + "_upd.zip"
+    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_FULL" --mask "$CI_PROJECT_DIR\build\artifacts\$CI_PROJECT_NAME\*.*"
+    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\artifacts\$ARTIFACT_NAME_UPD" --mask "$CI_PROJECT_DIR\build\artifacts\$CI_PROJECT_NAME\*.*"
+
+    # Делаем архивацию расширения
+    - oscript -encoding=utf-8 $ACTIONS zip add --file "$CI_PROJECT_DIR\build\$CI_PROJECT_NAME.zip" --mask "$CI_PROJECT_DIR\*.cfe"
+    # Копируем их в каталог сборки и каталог отправки в облако
+    - oscript -encoding=utf-8 $ACTIONS fs copy --from "$CI_PROJECT_DIR\build\distrib\*.*" --to "$BUILD_PATH" --recursive
+    - oscript -encoding=utf-8 $ACTIONS fs findcopy --from "$CI_PROJECT_DIR\build\distrib" --mask "*.zip" --to "$CI_PROJECT_DIR\build\artifacts" --recursive
+    # Загрузка в облако S3
+    - aws.exe s3 cp "$CI_PROJECT_DIR\build\artifacts" "s3://$AWS_BUCKET/distrib/$CI_PROJECT_NAME" --endpoint-url $AWS_HOSTNAME --recursive --exclude "*" --include "*.zip"
+  allow_failure: false
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "BUILD"'
+    - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "BUILD" && $CI_COMMIT_REF_NAME == "release"'
