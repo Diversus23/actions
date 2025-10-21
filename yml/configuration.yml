@@ -74,12 +74,12 @@ variables:
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
   # Сервер эталонных баз и эталонная база
-  MODEL_SERVER: "192.168.88.246"
+  MODEL_SERVER: "192.168.1.104"
   MODEL_BASE: "${CI_PROJECT_NAME}demoref"
   # Список мастер-баз
-  MASTER_PATH: "g:/gitlab/master_base"
+  MASTER_PATH: "f:/gitlab/master_base"
   # Список баз конвейера
-  PIPELINE_PATH: "g:/gitlab/pipeline_base"
+  PIPELINE_PATH: "f:/gitlab/pipeline_base"
   # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
   MASTER_BASE: "$MASTER_PATH/$CI_PROJECT_NAME"
   # Где хранится рабочая база, с которой будем работать в
@@ -94,7 +94,7 @@ variables:
   ACTIONS_PATH: "$PIPELINE_BASE/actions"
   ACTIONS: "$ACTIONS_PATH/src/actions.os"
   # Каталог контролируемых процессов (куда сохраняем информацию обо всем, что было запущено)
-  PROCESS_PATH: "g:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
+  PROCESS_PATH: "f:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
   BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
   UserName: "Администратор"
