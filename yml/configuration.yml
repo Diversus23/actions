@@ -96,7 +96,7 @@ variables:
   # Каталог контролируемых процессов (куда сохраняем информацию обо всем, что было запущено)
   PROCESS_PATH: "f:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
-  BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
+  BUILD_PATH: "D:/Обмен/Старый сервер/Distr/C/Work/$CI_PROJECT_NAME"
   UserName: "Администратор"
 
 # Настройки по умолчанию для всех job-ов.
