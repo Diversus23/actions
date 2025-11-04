@@ -64,7 +64,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2025-03-13-1"
+  YML_VERSION: "2025-11-04-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -74,12 +74,12 @@ variables:
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
   # Сервер эталонных баз и эталонная база
-  MODEL_SERVER: "192.168.1.104"
+  MODEL_SERVER: "192.168.88.105"
   MODEL_BASE: "${CI_PROJECT_NAME}demoref"
   # Список мастер-баз
-  MASTER_PATH: "f:/gitlab/master_base"
+  MASTER_PATH: "e:/gitlab/master_base"
   # Список баз конвейера
-  PIPELINE_PATH: "f:/gitlab/pipeline_base"
+  PIPELINE_PATH: "e:/gitlab/pipeline_base"
   # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
   MASTER_BASE: "$MASTER_PATH/$CI_PROJECT_NAME"
   # Где хранится рабочая база, с которой будем работать в
@@ -94,9 +94,9 @@ variables:
   ACTIONS_PATH: "$PIPELINE_BASE/actions"
   ACTIONS: "$ACTIONS_PATH/src/actions.os"
   # Каталог контролируемых процессов (куда сохраняем информацию обо всем, что было запущено)
-  PROCESS_PATH: "f:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
+  PROCESS_PATH: "e:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
-  BUILD_PATH: "D:/Обмен/Старый сервер/Distr/C/Work/$CI_PROJECT_NAME"
+  BUILD_PATH: "c:/Work/$CI_PROJECT_NAME"
   UserName: "Администратор"
 
 # Настройки по умолчанию для всех job-ов.
