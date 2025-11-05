@@ -539,7 +539,7 @@ Allure:
     - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "html" --filevalue "$CI_PROJECT_DIR\build\news\news.html"
     - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "upd" --filevalue "$CI_PROJECT_DIR\build\news\upd.html"
     - oscript -encoding=utf-8 $ACTIONS json write --file "$CI_PROJECT_DIR\news.json" --key "version" --str "$future_version"
-    - oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR\build\news" --mask "changelog.html" --remote "/upd/$CI_PROJECT_NAME/"
+    - oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR\build\news" --mask "changelog.html" --remote "/upd/$CI_PROJECT_NAME/" --passive
     # Если публикация обновления, то сразу публикуем новость в блоге
     - if ($LaunchMode -eq "RELEASE") { $is_future_version = "0" } else { $is_future_version = "1" }
     - echo "Это описание будущей версии - $is_future_version"
@@ -600,7 +600,7 @@ Allure:
     # + Опубликовать новость на сайте (делается на шаге Запись новостей на сайт) для версии $VERSION
     # + Открыть обновление на сайте для версии $VERSION (делается на шаге Запись новостей на сайт)
     # Обновление API на сайте (только для УИТ)
-    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR/docs/api/docs/Исходники_SwaggerUI" --mask "*.json" --remote "/api/docs" }
+    - if ($CI_PROJECT_NAME -eq 'it') { oscript -encoding=utf-8 $ACTIONS ftp put --server "$FTP_HOSTNAME" --login "$FTP_USERNAME" --password "$FTP_PASSWORD" --local "$CI_PROJECT_DIR/docs/api/docs/Исходники_SwaggerUI" --mask "*.json" --remote "/api/docs" --passive }
     # Обновление эталонной базы на версию $VERSION
     - echo "/S$MODEL_SERVER\$MODEL_BASE"
     - oscript -encoding=utf-8 $ACTIONS infobase updatecfg --file "$BUILD_PATH/$VERSION/1Cv8.cf" --connection "/S$MODEL_SERVER\$MODEL_BASE" --user "$UserName" --password "$MODEL_PASSWORD"
