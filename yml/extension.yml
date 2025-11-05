@@ -20,7 +20,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2025-09-01"
+  YML_VERSION: "2025-11-05-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -41,9 +41,9 @@ variables:
   # Каталог версий для сборки (необходимые cfu/сf файлы для сборки дистрибутива)
   BUILD_PATH: "C:/Work/$CI_PROJECT_NAME"
   # Каталог контролируемых процессов (куда сохраняем информацию обо всем, что было запущено)
-  PROCESS_PATH: "g:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
+  PROCESS_PATH: "e:/gitlab/cancel_builds/$CI_PROJECT_NAME/$CI_COMMIT_REF_NAME"
   # Список мастер-баз
-  MASTER_PATH: "g:/gitlab/master_base"
+  MASTER_PATH: "e:/master_base"
   # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
   MASTER_BASE: "$MASTER_PATH/$CI_PROJECT_NAME"
   # Имя пользователя для загрузки расширения в базу
