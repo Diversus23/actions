@@ -20,7 +20,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2024-12-05-1"
+  YML_VERSION: "2025-11-05-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -30,7 +30,7 @@ variables:
   # Сжатие кэша быстрое.
   CACHE_COMPRESSION_LEVEL: "fast"
   # Список баз конвейера
-  PIPELINE_PATH: "g:/gitlab/pipeline_base"
+  PIPELINE_PATH: "e:/gitlab/pipeline_base"
   # Где хранится рабочая база, с которой будем работать в
   PIPELINE_BASE: "$PIPELINE_PATH/$CI_PROJECT_NAME/$CI_PIPELINE_ID"
   # Команда запуска SonarSсanner (или полный путь к ней)
