@@ -77,7 +77,7 @@ variables:
   MODEL_SERVER: "192.168.88.105"
   MODEL_BASE: "${CI_PROJECT_NAME}demoref"
   # Список мастер-баз
-  MASTER_PATH: "e:/gitlab/master_base"
+  MASTER_PATH: "e:/master_base"
   # Список баз конвейера
   PIPELINE_PATH: "e:/gitlab/pipeline_base"
   # Где хранится подготовленная база проекта (которая берется за основу и в которую загружаются изменения)
