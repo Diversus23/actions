@@ -6,3 +6,4 @@ oscript_modules/
 *.ospx
 coverage/
 settings.json
+mcp-server.log
