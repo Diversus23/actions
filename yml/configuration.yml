@@ -434,10 +434,22 @@ SonarQube:
       artifacts: true
       optional: true
   script:
-    # Версия конфигурации — читаем напрямую из Configuration.mdo (аналог "edt versionconfig" на onescript)
+    # Версия конфигурации — читаем напрямую из Configuration.mdo (аналог "edt versionconfig" на onescript).
+    # В образе sonar-scanner-cli:11 нет утилиты find, поэтому ищем файл средствами bash (globstar),
+    # с приоритетом стандартного пути EDT-проекта <проект>/src/Configuration/Configuration.mdo.
     - |
-      MDO=$(find "$CI_PROJECT_DIR/$CI_PROJECT_NAME" -name Configuration.mdo | head -n1)
-      CONFIG_VERSION=$(grep -o '<version>[0-9.]*</version>' "$MDO" | head -n1 | sed -E 's#</?version>##g')
+      shopt -s globstar nullglob
+      MDO="$CI_PROJECT_DIR/$CI_PROJECT_NAME/src/Configuration/Configuration.mdo"
+      if [ ! -f "$MDO" ]; then
+        MDO=""
+        for f in "$CI_PROJECT_DIR/$CI_PROJECT_NAME"/**/Configuration.mdo; do MDO="$f"; break; done
+      fi
+      if [ -z "$MDO" ] || [ ! -f "$MDO" ]; then
+        echo "ВНИМАНИЕ: Configuration.mdo не найден — версия конфигурации не определена"
+        CONFIG_VERSION=""
+      else
+        CONFIG_VERSION=$(grep -o '<version>[0-9.]*</version>' "$MDO" | head -n1 | sed -E 's#</?version>##g')
+      fi
       echo "Версия конфигурации - $CONFIG_VERSION"
     # Формируем список отчётов о покрытии (артефакты тестовых задач лежат в корне $CI_PROJECT_DIR)
     - |
