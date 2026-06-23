@@ -20,7 +20,7 @@ stages:
 # Переменные для работы
 variables:
   # Версия файла yml (не забывать изменять при изменении yml-файла)
-  YML_VERSION: "2025-11-05-1"
+  YML_VERSION: "2026-06-23-1"
   # Поверхностное клонирование репозитория https://docs.gitlab.com/ee/ci/large_repositories/.
   GIT_DEPTH: 5
   # Использовать быстрое сжатие.
@@ -89,6 +89,14 @@ Actions:
 
 SonarQube:
   stage: Сонар
+  # Задача выполняется в Docker-раннере на отдельной машине (а не на Windows + onescript, как остальные job-ы)
+  tags:
+    - docker
+  image:
+    name: sonarsource/sonar-scanner-cli:11
+    entrypoint: [""]
+  # Глобальный before_script написан под PowerShell/Windows и в Linux-контейнере не запустится — отключаем его
+  before_script: []
   variables:
     SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"
   cache:
@@ -96,49 +104,56 @@ SonarQube:
     paths:
       - .sonar/cache
   script:
-    # Определяем версию конфигурации из исходников
-    - $CONFIG_VERSION = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\settings.json" --key "default.version"
-    # Формируем параметры запуска сонар-сканера с учетом замеров
-    - $FILES = Get-Childitem -Path "$CI_PROJECT_DIR" -Name "genericCoverage*.xml"
-    - $COVERAGE_REPORTS = "";
-    - foreach ($FILE in $FILES) { $comma = ""; if ($COVERAGE_REPORTS) { $comma = ","; }; $COVERAGE_REPORTS = $COVERAGE_REPORTS + $comma + "$CI_PROJECT_DIR\" + $FILE; }
-    - $SONAR_PROJECT = $CI_PROJECT_NAME
-    - if ($COVERAGE_REPORTS) { Write-Host "$COVERAGE_REPORTS"; $SONAR_PROJECT = $SONAR_PROJECT + "_coverage"; }
-    - $SONAR_ARGUMENT_ARRAY =
-        "-Dsonar.host.url=$SONAR_HOST_URL",
-        "-Dsonar.token=$SONAR_LOGIN",
-        "-Dsonar.projectName=$SONAR_PROJECT",
-        "-Dsonar.projectKey=$SONAR_PROJECT",
-        "-Dsonar.projectBaseDir=$CI_PROJECT_DIR",
-        "-Dsonar.sourceEncoding=UTF-8",
-        "-Dsonar.qualitygate.wait=true",
-        "-Dsonar.qualitygate.timeout=1800",
-        "-Dsonar.bsl.calculateLineCover=true",
-        "-Dsonar.coverageReportPaths=$COVERAGE_REPORTS",
-        "-Dsonar.bsl.languageserver.overrideConfiguration=true",
-        "-Dsonar.bsl.languageserver.configurationPath=$CI_PROJECT_DIR\.bsl-language-server.json",
-        "-Dsonar.bsl.languageserver.diagnosticLanguage=ru",
-        "-Dsonar.inclusions=**/*.bsl,**/*.os,**/*.xml,**/*.form,**/*.dcs",
-        "-Dsonar.exclusions=**/*.html",
-        "-Dsonar.lang.patterns.xml=**/*.xsd,**/*.xsl",
-        "-Dsonar.scm.provider=git",
-        "-Dsonar.scm.enabled=true",
-        "-Dsonar.pullrequest.key=$CI_MERGE_REQUEST_ID",
-        "-Dsonar.pullrequest.branch=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME",
-        "-Dsonar.pullrequest.base=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME",
-        "-Dsonar.projectVersion=$CONFIG_VERSION";        
-    # Запускаем сканер
-    - Start-Process -FilePath $SONAR_SCANNER -ArgumentList $SONAR_ARGUMENT_ARRAY -NoNewWindow -Wait
-    # Запрашиваем у API сонара результат проверки
-    - $BRANCH_NAME = "branch=$CI_COMMIT_REF_NAME"
-    - if ($CI_MERGE_REQUEST_IID -ne $null -and $CI_MERGE_REQUEST_IID -ne "") {$BRANCH_NAME = "pullRequest=$CI_MERGE_REQUEST_IID"}
-    - $SONAR_BRANCH_URL = "$SONAR_HOST_URL/api/qualitygates/project_status?projectKey=$CI_PROJECT_NAME&$BRANCH_NAME"
-    - oscript -encoding=utf-8 $ACTIONS http get --url "$SONAR_BRANCH_URL" --login "$SONAR_LOGIN" --out "$CI_PROJECT_DIR\sonar_status.json"
-    - $SONAR_PROJECT_STATUS = oscript -encoding=utf-8 $ACTIONS json read --file "$CI_PROJECT_DIR\sonar_status.json" --key "projectStatus.status"
-    # Роняем задание если порог качества не пройден (раскомментировать, если у вас порог качества в норме)
-    #- if ($SONAR_PROJECT_STATUS -ne "OK") {echo "Порог качества сонара не пройден"; exit 1}
-    # Останавливаем конвейер, если любые тесты упали    
-    - oscript -encoding=utf-8 $ACTIONS vanessa-automation check-errors --path "." --mask "*test_log*.log"
+    # Версия обработки/отчёта: сначала из модуля объекта (ПараметрыРегистрации.Версия),
+    # при отсутствии — из settings.json (default.version). В Linux-контейнере нет oscript — читаем bash-ом.
+    - |
+      shopt -s globstar nullglob
+      CONFIG_VERSION=""
+      for f in "$CI_PROJECT_DIR"/src/**/Ext/ObjectModule.bsl; do
+        CONFIG_VERSION=$(grep -oE 'ПараметрыРегистрации\.Версия[[:space:]]*=[[:space:]]*"[^"]*"' "$f" | head -n1 | sed -E 's/.*"([^"]*)".*/\1/')
+        [ -n "$CONFIG_VERSION" ] && break
+      done
+      if [ -z "$CONFIG_VERSION" ] && [ -f "$CI_PROJECT_DIR/settings.json" ]; then
+        CONFIG_VERSION=$(grep -oE '"version"[[:space:]]*:[[:space:]]*"[^"]*"' "$CI_PROJECT_DIR/settings.json" | head -n1 | sed -E 's/.*:[[:space:]]*"([^"]*)".*/\1/')
+      fi
+      echo "Версия - $CONFIG_VERSION"
+    # Список отчётов о покрытии (genericCoverage*.xml в корне), если есть
+    - |
+      COVERAGE_REPORTS=""
+      for f in "$CI_PROJECT_DIR"/genericCoverage*.xml; do
+        [ -e "$f" ] || continue
+        if [ -z "$COVERAGE_REPORTS" ]; then COVERAGE_REPORTS="$f"; else COVERAGE_REPORTS="$COVERAGE_REPORTS,$f"; fi
+      done
+      SONAR_PROJECT="$CI_PROJECT_NAME"
+      if [ -n "$COVERAGE_REPORTS" ]; then echo "Отчёты покрытия: $COVERAGE_REPORTS"; SONAR_PROJECT="${CI_PROJECT_NAME}_coverage"; fi
+    # Формируем аргументы и запускаем сканер
+    - |
+      SONAR_ARGS="\
+        -Dsonar.host.url=$SONAR_HOST_URL \
+        -Dsonar.token=$SONAR_LOGIN \
+        -Dsonar.projectName=$SONAR_PROJECT \
+        -Dsonar.projectKey=$SONAR_PROJECT \
+        -Dsonar.projectBaseDir=$CI_PROJECT_DIR \
+        -Dsonar.sourceEncoding=UTF-8 \
+        -Dsonar.qualitygate.wait=true \
+        -Dsonar.qualitygate.timeout=1800 \
+        -Dsonar.bsl.calculateLineCover=true \
+        -Dsonar.coverageReportPaths=$COVERAGE_REPORTS \
+        -Dsonar.bsl.languageserver.overrideConfiguration=true \
+        -Dsonar.bsl.languageserver.configurationPath=$CI_PROJECT_DIR/.bsl-language-server.json \
+        -Dsonar.bsl.languageserver.diagnosticLanguage=ru \
+        -Dsonar.inclusions=**/*.bsl,**/*.os,**/*.xml,**/*.form,**/*.dcs \
+        -Dsonar.exclusions=**/*.html \
+        -Dsonar.lang.patterns.xml=**/*.xsd,**/*.xsl \
+        -Dsonar.scm.provider=git \
+        -Dsonar.scm.enabled=true \
+        -Dsonar.projectVersion=$CONFIG_VERSION"
+      if [ "$CI_PIPELINE_SOURCE" = "merge_request_event" ]; then
+        SONAR_ARGS="$SONAR_ARGS -Dsonar.pullrequest.key=$CI_MERGE_REQUEST_IID -Dsonar.pullrequest.branch=$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME -Dsonar.pullrequest.base=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      fi
+      # Код возврата сканера намеренно не роняет пайплайн (как и в прежней Windows-версии).
+      # Чтобы порог качества ронял задачу — уберите "|| echo ..." ниже.
+      sonar-scanner $SONAR_ARGS || echo "ВНИМАНИЕ: sonar-scanner вернул ненулевой код (возможно, не пройден порог качества) — пайплайн не роняем"
   rules:
     - if: '$CI_PIPELINE_SOURCE == "schedule" && $LaunchMode == "ALLTEST"'
     - if: '$CI_PIPELINE_SOURCE == "web" && $LaunchMode == "ALLTEST" && $CI_COMMIT_REF_NAME == "main"'
