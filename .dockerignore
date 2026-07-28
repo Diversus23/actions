@@ -1,0 +1,7 @@
+.git
+.github
+.sonar
+tests
+oscript_modules
+out
+README.md
