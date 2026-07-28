@@ -35,7 +35,7 @@ RUN set -eux; \
       for f in src/Модули/*.os; do [ -f "$f" ] || continue; echo "    <module name=\"$(basename "$f" .os)\" file=\"$f\"/>"; done; \
       echo '</package-def>'; \
     } > lib.config; \
-    cat lib.config oscript-md
+    cat lib.config
 
 WORKDIR /opt/actions
 
