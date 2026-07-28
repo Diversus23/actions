@@ -36,8 +36,10 @@ oscript src\actions.os markdown convert --in tests\fixtures\readme.md --out test
 Опция `--title` задает заголовок документа (подстановка `{{Title}}` в шаблоне). Если она не указана, используется значение `--productname`.
 
 ```cmd
-oscript src\actions.os markdown convert --in README.md --out README.html --template Softonit.html --title "Личный кабинет 2.0"
+oscript src\actions.os markdown convert --in README.md --out README.html --title "Личный кабинет 2.0"
 ```
+
+Шаблон по умолчанию — `Github.html`: страница с типографикой в стиле GitHub, без шапки и ссылок на соцсети. Для документа, оформленного как новость об обновлении, укажите `--template Softonit.html`.
 
 ##### Подготовка документа для отправки по почте
 
