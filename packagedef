@@ -38,6 +38,7 @@
 	.ЗависитОт("coloratos")
 	.ЗависитОт("ParserFileV8i")
 	.ЗависитОт("allurehelper")
+	.ЗависитОт("oscript-md")
 
 	.РазработкаЗависитОт("1testrunner")
 	.РазработкаЗависитОт("asserts")

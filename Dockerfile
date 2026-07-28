@@ -20,7 +20,22 @@ RUN apt-get update \
 
 # Пакеты OneScript ставим и глобально (видно в /var/oscript/lib),
 # и локально в oscript_modules ниже через "opm install -l".
-RUN opm install asserts tempfiles json fs logos cli ftp v8storage v8runner v8find v8unpack 1connector coloratos ParserFileV8i allurehelper
+RUN opm install asserts tempfiles json fs logos cli ftp v8storage v8runner v8find v8unpack 1connector coloratos ParserFileV8i allurehelper oscript-md
+
+# Пакет oscript-md 0.1.0 приходит из хаба без lib.config, поэтому директива
+# "#Использовать oscript-md" его не находит. Генерируем описание пакета из состава
+# каталогов src/Классы и src/Модули (вложенные каталоги библиотека подключает сама).
+RUN set -eux; \
+    LIB_DIR="$(dirname "$(find / -type d -name 'oscript-md' -path '*/lib/*' -print -quit)")/oscript-md"; \
+    cd "$LIB_DIR"; \
+    { \
+      echo '<?xml version="1.0" encoding="utf-8"?>'; \
+      echo '<package-def xmlns="http://oscript.io/schemas/lib-config/1.0">'; \
+      for f in src/Классы/*.os; do [ -f "$f" ] || continue; echo "    <class name=\"$(basename "$f" .os)\" file=\"$f\"/>"; done; \
+      for f in src/Модули/*.os; do [ -f "$f" ] || continue; echo "    <module name=\"$(basename "$f" .os)\" file=\"$f\"/>"; done; \
+      echo '</package-def>'; \
+    } > lib.config; \
+    cat lib.config oscript-md
 
 WORKDIR /opt/actions
 
