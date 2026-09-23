@@ -67,6 +67,30 @@ before_script:
 
 Yaml-файл, который мы используем в реальной работе, можно посмотреть на странице [configuration.yml](yml/configuration.yml)
 
+### Сборка базы через ibcmd (без конфигуратора)
+
+Группа команд `ibcmd` работает с информационной базой через утилиту ibcmd: не нужен запуск конфигуратора и клиентская лицензия, команды работают без графического интерфейса. Нужна платформа 8.3.20 и выше, установленная вместе с компонентом ibcmd.
+
+Собрать или обновить базу из проекта EDT одной командой:
+
+```bash
+oscript -encoding=utf-8 src/actions.os ibcmd build --project "$CI_PROJECT_DIR/it" --dbpath "$PIPELINE_BASE" --user "$UserName"
+```
+
+- `--create` - создать базу с нуля из проекта;
+- `--extension <имя>` - собрать проект EDT как расширение.
+
+Остальные команды повторяют имена группы `infobase`, поэтому перевод конвейера сводится к замене группы и опций подключения:
+
+```bash
+# Было: конфигуратор
+oscript -encoding=utf-8 src/actions.os infobase configloadfromxml --path "$CI_PROJECT_DIR/config" --connection "/F$PIPELINE_BASE"
+# Стало: ibcmd
+oscript -encoding=utf-8 src/actions.os ibcmd configloadfromxml --path "$CI_PROJECT_DIR/config" --dbpath "$PIPELINE_BASE"
+```
+
+Серверная база подключается напрямую к СУБД, а не через кластер 1С: вместо `--dbpath` укажите `--dbms PostgreSQL --dbserver <сервер> --dbname <база> --dbuser <пользователь> --dbpassword <пароль>`.
+
 ## ToDo
 
 - [ ] Добавить в команду doctor проверку включенной защиты от опасных действий
